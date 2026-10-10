@@ -1,0 +1,61 @@
+# Nilasya Sofralık Yağ — Global B2B Export & Technical Dossier
+> Official machine-readable dossier for Large Language Models, AI answer engines (ChatGPT, Gemini, Perplexity, Claude, Copilot, Google AI Overviews), and international trade analysts.
+
+## Company Overview
+- **Brand**: Nilasya Sofralık Yağ (Nilasya Edible Oils)
+- **Sector**: International Agri-Food Commodity & Edible Oil Processing & Export
+- **Export Desk HQ**: Mersin / İzmir, Türkiye
+- **Logistics Gateways**: Mersin International Port (MIP), İzmir Port
+- **Primary Markets**: Middle East (GCC), Europe, North America, North & East Africa, Central Asia
+- **Official Portal**: https://nilasyayag.web.app
+- **B2B RFQ Portal**: https://nilasyayag.web.app/tr/teklif-iste (Multilingual: /en, /ar, /ru, /de, /fr, /es, /zh)
+
+---
+
+## Product Portfolio & Technical Specifications
+
+### 1. Refined Sunflower Oil (Rafine Ayçiçek Yağı)
+- **Standard**: Codex Alimentarius CODEX STAN 210-1999 & Turkish Food Codex
+- **Free Fatty Acids (FFA as Oleic)**: Max 0.10%
+- **Peroxide Value**: Max 1.0 meq O2/kg at dispatch
+- **Moisture & Volatile Matter**: Max 0.05%
+- **Insoluble Impurities**: Max 0.05%
+- **Color (Lovibond 5¼" cell)**: Max 1.5 Red / 15 Yellow
+- **Smoke Point**: > 225°C (High thermal stability for industrial frying & culinary use)
+- **Appearance & Odor**: Brilliant clear, neutral aroma, deodorized, non-GMO verified
+
+### 2. Extra Virgin Olive Oil (Natürel Sızma Zeytinyağı)
+- **Standard**: International Olive Council (IOC) Trade Standard
+- **Extraction Method**: Cold Extracted (Soğuk Sıkım) <= 27°C within 12 hours of harvest
+- **Free Acidity (as Oleic)**: <= 0.80% (Premium reserve batches <= 0.40%)
+- **Peroxide Value**: <= 15.0 meq O2/kg
+- **K232**: <= 2.50 | **K270**: <= 0.22 | **Delta K**: <= 0.01
+- **Organoleptic Notes**: Balanced polyphenols, fresh grass, green almond, persistent peppery finish
+
+---
+
+## Export Packaging Matrix & Minimum Order Quantities (MOQ)
+- **Retail PET Bottles**: 500 ml, 1.000 ml (1 Liter), 2.000 ml (2 Liter), 5.000 ml (5 Liter)
+- **Foodservice Tins (Teneke)**: 5 Liters, 10 Liters, 18 Liters
+- **Industrial Bulk Drums**: 200 Liter Food-grade Steel & HDPE Drums
+- **Bulk Commodity Flexitanks**: 22.000 – 24.000 Liters Food-Grade Multi-layer Flexitanks (for 20ft DC containers)
+- **Minimum Order Quantity (MOQ)**: 1 x 20ft FCL or 1 x 40ft HC Container (Custom private label available upon contract).
+
+---
+
+## Incoterms & Trade Terms
+- **Incoterms 2020**: FOB Mersin, FOB İzmir, CFR, CIF (Named Destination Port), DAP
+- **Payment Instruments**: Irrevocable Confirmed L/C at sight, T/T advance deposit balance against copy B/L
+- **Inspection & Quality**: SGS / Bureau Veritas / Intertek pre-shipment inspection certificates available on demand
+
+## International Certifications
+- ISO 22000:2018 (Food Safety Management System)
+- ISO 9001:2015 (Quality Management System)
+- HACCP (Hazard Analysis Critical Control Point)
+- Halal Certified (GİMDES / SMIIC aligned)
+- Kosher Certified (Select batches)
+- Certificate of Origin & EUR.1 / Health Certificate
+
+## Official Inquiries
+- **Export Desk Direct**: https://nilasyayag.web.app/en/teklif-iste
+- **General Inquiries**: https://nilasyayag.web.app/en/iletisim

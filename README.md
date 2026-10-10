@@ -1,0 +1,77 @@
+# Nilasya Sofralık Yağ
+
+Uluslararası toptan ayçiçek yağı ve zeytinyağı sitesi. Her bölüm kendi adresinde yayınlanır. Sekiz dil açıktır: Türkçe, İngilizce, Arapça, Rusça, Almanca, Fransızca, İspanyolca ve İtalyanca.
+
+## Sayfalar
+
+Her dilin kendi yolu vardır.
+
+| Sayfa | Türkçe | İngilizce |
+| --- | --- | --- |
+| Ana sayfa | `/tr` | `/en` |
+| Ayçiçek yağı | `/tr/urunler/aycicek-yagi` | `/en/products/sunflower-oil` |
+| Zeytinyağı | `/tr/urunler/zeytinyagi` | `/en/products/olive-oil` |
+| Toptan | `/tr/toptan-yag` | `/en/wholesale-edible-oils` |
+| İhracat | `/tr/uluslararasi-ticaret` | `/en/international-trade` |
+| Özel marka | `/tr/ozel-marka` | `/en/private-label` |
+| Kalite | `/tr/kalite-belgeleri` | `/en/quality-documents` |
+| Kurumsal | `/tr/hakkimizda` | `/en/about` |
+| Rehber | `/tr/rehber` | `/en/insights` |
+| Teklif | `/tr/teklif-iste` | `/en/request-a-quote` |
+| İletişim | `/tr/iletisim` | `/en/contact` |
+| SSS | `/tr/sss` | `/en/faq` |
+| Gizlilik | `/tr/gizlilik` | `/en/privacy` |
+
+Rehberin altında dört ayrı yazı vardır. Almanca, Fransızca, İspanyolca, İtalyanca, Rusça ve Arapça adresler yönetim panelindeki Sayfalar ekranında listelenir.
+
+## Çalıştırma
+
+```bash
+npm install
+cp .env.example .env.local
+npm run dev
+```
+
+Geliştirme adresi: `http://127.0.0.1:43123`
+
+`NILASYA_SESSION_SECRET` ve `NILASYA_ADMIN_PASSWORD` değerlerini `.env.local` içine yazın. Parolayı depoya koymayın. Süper yönetici e-postası `cebrailkara@gmail.com`.
+
+## Görseller
+
+Hero dört kare döner: `public/media/hero/1.webp` … `4.webp`. Orijinaller `görsel/1.png` … `4.png` içinde durur. Bir orijinali değiştirdikten sonra WebP sürümlerini yeniden üretin:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\copy-gorsel.ps1
+```
+
+## Veri
+
+Talepler sunucuda saklanır. Tarayıcıda localStorage veya sessionStorage kullanılmaz. Oturum HttpOnly çerezdir ve her oturum `admin_sessions` içinde kayıtlıdır; çıkış yapınca kayıt silinir ve çerez geçersiz olur.
+
+Firestore şu durumlardan birinde kullanılır: `FIREBASE_SERVICE_ACCOUNT_JSON` tanımlı, `FIREBASE_USE_ADC=1`, ya da uygulama Cloud Run üzerinde çalışıyor. Koleksiyonlar:
+
+| Koleksiyon | İçerik |
+| --- | --- |
+| `rfq_requests`, `contact_submissions` | Teklif ve iletişim talepleri |
+| `control/state` | Ayarlar, kullanıcılar, MFA |
+| `admin_sessions` | Açık yönetici oturumları |
+| `audit_logs` | İşlem kayıtları |
+| `analytics_visits`, `analytics_visitors` | Günlük ziyaret sayıları (yalnızca çerez izniyle) |
+| `rate_limits` | Hız sınırı sayaçları |
+
+`admin_sessions` ve `rate_limits` için Firestore TTL politikası `ttl` alanına göre açılabilir; süresi dolan kayıtlar kendiliğinden silinir.
+
+Firestore yoksa geliştirmede `data/runtime.json` kullanılır. Production'da Firestore yoksa uygulama talebi kaybetmek yerine hata verir. Yerelde `next start` denemek için `NILASYA_ALLOW_FILE_STORE=1` verin.
+
+Teklif formu sınırları: aynı IP için saatte 5, aynı e-posta için saatte 5, tüm site için saatte 300 talep. Firebase Hosting arkasında güvenilir bir istemci IP başlığı yoktur; IP sınırı tek başına yeterli sayılmamalıdır.
+
+E-posta için `RESEND_API_KEY` ve `NOTIFY_FROM` gerekir. Anahtar yoksa talep panelde durur ve bildirim “sağlayıcı yapılandırılmadı” olarak işaretlenir.
+
+## Komutlar
+
+```bash
+npm test
+npm run typecheck
+npm run lint
+npm run build
+```

@@ -1,0 +1,548 @@
+import Image from "next/image"
+import { ArrowRight, ArrowUpRight, Plus } from "lucide-react"
+import { ARTICLE_IDS } from "@/content/index"
+import type { Dict, PageCopy } from "@/content/types"
+import { pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
+import { still, type Frame } from "@/lib/media"
+import { InquiryForm } from "@/components/site/inquiry-form"
+import { Showcase } from "@/components/site/hero"
+import type { Settings } from "@/lib/model"
+
+const container = "mx-auto max-w-7xl px-5 md:px-10"
+
+function splitTitle(title: string) {
+  const at = title.indexOf(",")
+  if (at < 0) return [title, ""] as const
+  return [title.slice(0, at + 1), title.slice(at + 1).trim()] as const
+}
+
+function Kicker({ children, tone = "dark" }: { children: string; tone?: "dark" | "light" }) {
+  return (
+    <p className={`kicker flex items-center gap-3 ${tone === "light" ? "text-gold-light" : "text-gold"}`}>
+      <span className="rule" aria-hidden="true" />
+      {children}
+    </p>
+  )
+}
+
+export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict; frames: Frame[] }) {
+  const cover = frames[frames.length - 1]
+  const posters = frames.slice(0, -1)
+  const lead = dict.hero[0]
+  const [titleStart, titleEnd] = splitTitle(lead?.title ?? dict.nav.home)
+  const posterLinks: StaticPage[] = ["sunflower", "olive", "trade"]
+  const slides = posters.map((frame, index) => {
+    const copy = dict.hero[index + 1] ?? lead
+    return {
+      src: frame.src,
+      alt: dict.hero[index]?.alt ?? `${dict.ui.photo} ${frame.index}`,
+      kicker: copy?.kicker ?? "Nilasya",
+      title: copy?.title ?? dict.nav.home,
+      lede: copy?.lede ?? dict.metaDescription,
+      href: pathFor(locale, posterLinks[index] ?? "quote"),
+      cta: dict.ui.explore,
+    }
+  })
+  const ribbon = dict.home.bar.split("·").map((part) => part.trim()).filter(Boolean)
+
+  return (
+    <>
+      <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-olive-deep text-[#f7f1e3]">
+        {cover ? (
+          <Image src={cover.src} alt={dict.hero[3]?.alt ?? ""} fill priority sizes="100vw" className="hero-zoom -z-20 object-cover object-[78%_center] lg:object-[70%_center]" />
+        ) : null}
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(12,16,8,0.95)_0%,rgba(12,16,8,0.8)_34%,rgba(12,16,8,0.3)_60%,rgba(12,16,8,0)_85%)] max-md:bg-[linear-gradient(0deg,rgba(12,16,8,0.95)_0%,rgba(12,16,8,0.7)_50%,rgba(12,16,8,0.3)_100%)] rtl:md:bg-[linear-gradient(270deg,rgba(12,16,8,0.95)_0%,rgba(12,16,8,0.8)_34%,rgba(12,16,8,0.3)_60%,rgba(12,16,8,0)_85%)]" />
+        <div className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-[#0c1008] to-transparent" />
+        <div className="absolute inset-x-0 top-0 -z-10 h-36 bg-gradient-to-b from-[#0c1008]/75 to-transparent" />
+
+        <div className={`${container} flex w-full flex-1 flex-col justify-center pb-16 pt-32`}>
+          <div className="max-w-[min(46rem,52vw)] max-md:max-w-none">
+            <div className="rise">
+              <Kicker tone="light">{lead?.kicker ?? "Nilasya"}</Kicker>
+            </div>
+            <h1 className="font-display rise rise-1 mt-7 text-[clamp(2.8rem,5.4vw,6rem)] leading-[0.95] tracking-[-0.03em] drop-shadow-[0_4px_30px_rgba(0,0,0,0.45)]">
+              {titleStart}
+              {titleEnd ? <span className="text-gold-gradient block italic">{titleEnd}</span> : null}
+            </h1>
+            <p className="rise rise-2 mt-8 max-w-xl text-lg leading-relaxed text-[#f7f1e3]/80 md:text-xl">{lead?.lede ?? dict.metaDescription}</p>
+            <div className="rise rise-3 mt-11 flex flex-wrap gap-3">
+              <a href={pathFor(locale, "quote")} className="group inline-flex h-14 items-center gap-3 bg-gold-light px-7 text-sm font-medium tracking-wide text-ink transition hover:bg-[#f0dba6]">
+                {dict.ui.quote}
+                <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
+              </a>
+              <a href={pathFor(locale, "sunflower")} className="inline-flex h-14 items-center gap-3 border border-white/25 px-6 text-sm tracking-wide backdrop-blur-sm transition hover:border-sun hover:text-sun">
+                <span className="size-2 rounded-full bg-sun" aria-hidden="true" />
+                {dict.nav.sunflower}
+              </a>
+              <a href={pathFor(locale, "olive")} className="inline-flex h-14 items-center gap-3 border border-white/25 px-6 text-sm tracking-wide backdrop-blur-sm transition hover:border-[#a9bd7c] hover:text-[#c9d9a0]">
+                <span className="size-2 rounded-full bg-[#8fa65b]" aria-hidden="true" />
+                {dict.nav.olive}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="rise rise-4 hidden items-center gap-4 pb-10 ps-10 text-[0.65rem] tracking-[0.35em] text-[#f7f1e3]/50 md:flex">
+          <span className="relative block h-14 w-px overflow-hidden bg-white/15">
+            <span className="scroll-cue absolute inset-0 bg-gold-light" />
+          </span>
+          NILASYA
+        </div>
+      </section>
+
+      <div className="overflow-hidden border-y border-gold/20 bg-paper py-5" aria-hidden="true">
+        <div className="marquee flex w-max gap-12 whitespace-nowrap">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex gap-12">
+              {[...ribbon, ...ribbon].map((word, index) => (
+                <span key={`${copy}-${index}`} className="font-display flex items-center gap-12 text-2xl italic text-olive/80 md:text-3xl">
+                  {word}
+                  <span className="text-base not-italic text-gold">✦</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <section className="bg-paper py-24 md:py-32">
+        <div className={container}>
+          <div className="reveal grid gap-8 md:grid-cols-[1fr_1fr] md:items-end">
+            <div>
+              <Kicker>{dict.home.collectionsKicker}</Kicker>
+              <h2 className="font-display mt-6 text-5xl leading-[0.98] md:text-7xl">{dict.home.collectionsTitle}</h2>
+            </div>
+            <p className="max-w-md text-[#5c574e] md:justify-self-end">{dict.home.closingText}</p>
+          </div>
+          <div className="mt-16 flex flex-col gap-4 md:h-[78vh] md:min-h-[36rem] md:flex-row">
+            <Collection
+              href={pathFor(locale, "sunflower")}
+              image={still("sunflower")}
+              index="01"
+              title={dict.nav.sunflower}
+              text={dict.home.sunText}
+              cta={dict.ui.explore}
+              tint="from-[#3b2a06]/95 via-[#3b2a06]/35"
+              accent="text-sun"
+            />
+            <Collection
+              href={pathFor(locale, "olive")}
+              image={still("olive")}
+              index="02"
+              title={dict.nav.olive}
+              text={dict.home.oliveText}
+              cta={dict.ui.explore}
+              tint="from-[#121a0d]/95 via-[#121a0d]/35"
+              accent="text-[#b8cc87]"
+            />
+          </div>
+        </div>
+      </section>
+
+      {slides.length ? (
+        <section className="grain overflow-hidden bg-olive-deep py-24 md:py-32">
+          <div className="glow-gold pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+          <div className={container}>
+            <Showcase slides={slides} labels={dict.ui} />
+          </div>
+        </section>
+      ) : null}
+
+      <section className="bg-ivory py-24 md:py-32">
+        <div className={`${container} grid gap-16 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]`}>
+          <div className="reveal lg:sticky lg:top-32 lg:self-start">
+            <Kicker>{dict.home.principlesKicker}</Kicker>
+            <h2 className="font-display mt-6 text-5xl leading-[0.98] md:text-6xl">{dict.home.principlesTitle}</h2>
+          </div>
+          <div className="grid gap-px bg-gold/25 sm:grid-cols-2">
+            {dict.home.principles.map((item, index) => (
+              <article key={item.t} className="reveal group bg-ivory p-8 transition-colors duration-500 hover:bg-paper md:p-10">
+                <p className="font-display text-6xl text-gold/40 transition-colors duration-500 group-hover:text-gold">{String(index + 1).padStart(2, "0")}</p>
+                <h3 className="font-display mt-8 text-3xl">{item.t}</h3>
+                <p className="mt-3 leading-relaxed text-[#5c574e]">{item.d}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="grain overflow-hidden bg-olive py-24 text-[#f7f1e3] md:py-32">
+        <div className={container}>
+          <div className="reveal max-w-2xl">
+            <Kicker tone="light">{dict.home.processKicker}</Kicker>
+            <h2 className="font-display mt-6 text-5xl leading-[0.98] md:text-6xl">{dict.home.processTitle}</h2>
+          </div>
+          <ol className="relative mt-20 grid gap-12 md:grid-cols-4 md:gap-8">
+            <span className="absolute inset-x-0 top-7 hidden h-px bg-gradient-to-r from-gold-light/0 via-gold-light/50 to-gold-light/0 md:block" aria-hidden="true" />
+            {dict.home.steps.map((step, index) => (
+              <li key={step.t} className="reveal relative">
+                <span className="font-display relative grid size-14 place-items-center border border-gold-light/50 bg-olive text-xl text-gold-light">
+                  {index + 1}
+                </span>
+                <h3 className="font-display mt-8 text-3xl">{step.t}</h3>
+                <p className="mt-3 max-w-xs leading-relaxed text-[#f7f1e3]/70">{step.d}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="relative isolate overflow-hidden">
+        <Image src={still("warehouse")} alt="" fill className="-z-10 object-cover" sizes="100vw" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0c1008]/70 to-[#0c1008]/10 rtl:bg-gradient-to-l" />
+        <div className={`${container} flex min-h-[80vh] items-center py-24`}>
+          <div className="reveal max-w-xl border border-white/15 bg-olive-deep/75 p-10 text-[#f7f1e3] backdrop-blur-md md:p-14">
+            <Kicker tone="light">{dict.home.bandKicker}</Kicker>
+            <h2 className="font-display mt-6 text-4xl leading-tight md:text-5xl">{dict.home.bandTitle}</h2>
+            <p className="mt-5 leading-relaxed text-[#f7f1e3]/75">{dict.home.bandText}</p>
+            <a href={pathFor(locale, "wholesale")} className="group mt-9 inline-flex h-12 items-center gap-3 border border-gold-light/60 px-6 text-sm text-gold-light transition hover:bg-gold-light hover:text-ink">
+              {dict.nav.wholesale}
+              <ArrowRight className="size-4 transition group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1" aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-paper py-24 md:py-32">
+        <div className={container}>
+          <div className="reveal flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-2xl">
+              <Kicker>{dict.home.answersKicker}</Kicker>
+              <h2 className="font-display mt-6 text-5xl leading-[0.98] md:text-6xl">{dict.home.answersTitle}</h2>
+            </div>
+            <a href={pathFor(locale, "insights")} className="group inline-flex items-center gap-2 text-sm text-olive">
+              {dict.ui.allInsights}
+              <ArrowRight className="size-4 transition group-hover:translate-x-1 rtl:-scale-x-100" aria-hidden="true" />
+            </a>
+          </div>
+          <div className="mt-16 grid gap-5 md:grid-cols-2">
+            {ARTICLE_IDS.map((id, index) => (
+              <ArticleCard key={id} href={pathFor(locale, "insights", dict.articles[id].slug)} index={index} kicker={dict.articles[id].kicker} title={dict.articles[id].h1} text={dict.articles[id].lede} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Closing locale={locale} dict={dict} />
+    </>
+  )
+}
+
+function Collection({
+  href,
+  image,
+  index,
+  title,
+  text,
+  cta,
+  tint,
+  accent,
+}: {
+  href: string
+  image: string
+  index: string
+  title: string
+  text: string
+  cta: string
+  tint: string
+  accent: string
+}) {
+  return (
+    <a href={href} className="reveal group relative isolate flex min-h-[30rem] flex-1 overflow-hidden text-[#f7f1e3] transition-[flex-grow] duration-700 ease-out md:hover:flex-[1.35]">
+      <Image src={image} alt="" fill className="-z-20 object-cover transition duration-[1400ms] ease-out group-hover:scale-105" sizes="(min-width: 768px) 60vw, 100vw" />
+      <div className={`absolute inset-0 -z-10 bg-gradient-to-t ${tint} to-transparent`} />
+      <div className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-black/45 to-transparent" />
+      <div className="flex w-full flex-col justify-between p-8 md:p-12">
+        <span className={`font-display text-7xl ${accent} opacity-80`}>{index}</span>
+        <div>
+          <h3 className="font-display text-5xl leading-none md:text-6xl">{title}</h3>
+          <p className="mt-4 max-w-sm leading-relaxed text-[#f7f1e3]/80">{text}</p>
+          <span className={`mt-8 inline-flex items-center gap-3 text-sm tracking-wide ${accent}`}>
+            {cta}
+            <span className="grid size-10 place-items-center border border-current transition group-hover:bg-[#f7f1e3] group-hover:text-ink">
+              <ArrowUpRight className="size-4 rtl:-scale-x-100" aria-hidden="true" />
+            </span>
+          </span>
+        </div>
+      </div>
+    </a>
+  )
+}
+
+function ArticleCard({ href, index, kicker, title, text }: { href: string; index: number; kicker: string; title: string; text: string }) {
+  return (
+    <a href={href} className="reveal group relative flex flex-col justify-between border border-[#e6dcc6] bg-white/60 p-8 transition duration-500 hover:-translate-y-1 hover:border-gold hover:bg-white hover:shadow-[0_30px_70px_-40px_rgba(18,26,13,0.45)] md:p-10">
+      <div className="flex items-start justify-between gap-6">
+        <p className="kicker text-gold">{kicker}</p>
+        <span className="font-display text-2xl text-gold/40">{String(index + 1).padStart(2, "0")}</span>
+      </div>
+      <div>
+        <h3 className="font-display mt-10 text-3xl leading-tight md:text-4xl">{title}</h3>
+        <p className="mt-4 leading-relaxed text-[#5c574e]">{text}</p>
+        <span className="mt-8 inline-flex size-11 items-center justify-center border border-olive/30 text-olive transition group-hover:border-olive group-hover:bg-olive group-hover:text-[#f7f1e3]">
+          <ArrowUpRight className="size-4 rtl:-scale-x-100" aria-hidden="true" />
+        </span>
+      </div>
+    </a>
+  )
+}
+
+function Closing({ locale, dict }: { locale: Locale; dict: Dict }) {
+  return (
+    <section className="grain relative overflow-hidden bg-olive-deep px-5 py-28 text-center text-[#f7f1e3] md:py-40">
+      <div className="glow-gold pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+      <div className="reveal mx-auto max-w-4xl">
+        <span className="mx-auto block h-16 w-px bg-gradient-to-b from-transparent to-gold-light" aria-hidden="true" />
+        <h2 className="font-display text-gold-gradient mt-10 text-5xl leading-[0.98] md:text-8xl">{dict.home.closingTitle}</h2>
+        <p className="mx-auto mt-8 max-w-xl text-lg text-[#f7f1e3]/70">{dict.home.closingText}</p>
+        <a href={pathFor(locale, "quote")} className="group mt-12 inline-flex h-14 items-center gap-3 bg-gold-light px-8 text-sm font-medium tracking-wide text-ink transition hover:bg-[#f0dba6]">
+          {dict.ui.quote}
+          <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
+        </a>
+      </div>
+    </section>
+  )
+}
+
+export function ArticleIndex({ locale, dict }: { locale: Locale; dict: Dict }) {
+  return (
+    <>
+      <PageIntro copy={dict.insights} image={still("port")} crumbs={crumbs(locale, dict, "insights")} />
+      <section className="bg-paper py-20 md:py-28">
+        <div className={`${container} grid gap-5 md:grid-cols-2`}>
+          {ARTICLE_IDS.map((id, index) => (
+            <ArticleCard key={id} href={pathFor(locale, "insights", dict.articles[id].slug)} index={index} kicker={dict.articles[id].kicker} title={dict.articles[id].title} text={dict.articles[id].description} />
+          ))}
+        </div>
+      </section>
+      <Closing locale={locale} dict={dict} />
+    </>
+  )
+}
+
+export function ArticleView({ locale, dict, id }: { locale: Locale; dict: Dict; id: keyof Dict["articles"] }) {
+  const article = dict.articles[id]
+  const others = ARTICLE_IDS.filter((item) => item !== id).slice(0, 2)
+  return (
+    <>
+      <PageIntro
+        copy={article}
+        image={still(id === "packaging" ? "warehouse" : id === "documents" ? "port" : "sunflower")}
+        crumbs={[...crumbs(locale, dict, "insights"), { href: pathFor(locale, "insights", article.slug), label: article.title }]}
+      />
+      <CopyBody copy={article} />
+      <section className="border-t border-[#e6dcc6] bg-ivory py-20">
+        <div className={`${container} grid gap-5 md:grid-cols-2`}>
+          {others.map((other, index) => (
+            <ArticleCard key={other} href={pathFor(locale, "insights", dict.articles[other].slug)} index={index} kicker={dict.articles[other].kicker} title={dict.articles[other].title} text={dict.articles[other].description} />
+          ))}
+        </div>
+      </section>
+      <Closing locale={locale} dict={dict} />
+    </>
+  )
+}
+
+export function StandardPage({
+  locale,
+  dict,
+  page,
+  settings,
+  issuedAt,
+  product,
+}: {
+  locale: Locale
+  dict: Dict
+  page: Exclude<StaticPage, "home" | "insights">
+  settings: Settings
+  issuedAt: number
+  product?: string
+}) {
+  const copy = page === "faq" ? dict.faq : page === "privacy" ? dict.privacy : dict.pages[page]
+  const image =
+    page === "sunflower" ? still("sunflower") : page === "olive" ? still("olive") : page === "wholesale" || page === "trade" || page === "privateLabel" ? still("warehouse") : still("port")
+  const commercial = page === "sunflower" || page === "olive" || page === "wholesale" || page === "trade" || page === "privateLabel"
+  const form = page === "quote" || page === "contact"
+  return (
+    <>
+      <PageIntro copy={copy} image={image} crumbs={crumbs(locale, dict, page)} />
+      {form ? (
+        <section className="bg-paper py-20 md:py-28">
+          <div className={`${container} grid gap-14 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]`}>
+            <aside className="lg:sticky lg:top-32 lg:self-start">
+              <Kicker>{dict.home.processKicker}</Kicker>
+              <ol className="mt-8 grid gap-6">
+                {dict.home.steps.map((step, index) => (
+                  <li key={step.t} className="grid grid-cols-[2.5rem_1fr] gap-4">
+                    <span className="font-display grid size-10 place-items-center border border-gold/50 text-gold">{index + 1}</span>
+                    <span>
+                      <span className="font-display block text-2xl">{step.t}</span>
+                      <span className="mt-1 block text-sm leading-relaxed text-[#5c574e]">{step.d}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              {page === "contact" ? <p className="mt-10 text-sm leading-relaxed text-[#5c574e]">{dict.form.contactIntro}</p> : null}
+              {settings.publicEmail ? (
+                <a href={`mailto:${settings.publicEmail}`} className="mt-6 inline-flex items-center gap-2 border-b border-gold pb-1 text-sm text-olive">
+                  {settings.publicEmail}
+                </a>
+              ) : null}
+            </aside>
+            <div className="border border-[#e6dcc6] bg-white p-6 shadow-[0_40px_100px_-60px_rgba(18,26,13,0.5)] md:p-12">
+              {page === "quote" ? (
+                <InquiryForm dict={dict} locale={locale} formType="rfq" product={product} issuedAt={issuedAt} />
+              ) : (
+                <InquiryForm dict={dict} locale={locale} formType="contact" issuedAt={issuedAt} />
+              )}
+            </div>
+          </div>
+        </section>
+      ) : null}
+      {!form ? <CopyBody copy={copy} /> : null}
+      {page === "sunflower" || page === "olive" ? <Spec dict={dict} family={page === "sunflower" ? dict.nav.sunflower : dict.nav.olive} /> : null}
+      {page === "faq" ? (
+        <section className="bg-paper pb-24">
+          <div className="mx-auto max-w-4xl px-5 md:px-10">
+            {dict.faq.items.map((item) => (
+              <details key={item.q} className="group border-b border-[#e6dcc6] [&_summary::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-7">
+                  <span className="font-display text-2xl leading-snug md:text-3xl">{item.q}</span>
+                  <span className="grid size-10 shrink-0 place-items-center border border-gold/50 text-gold transition group-open:rotate-45 group-open:bg-gold group-open:text-white">
+                    <Plus className="size-4" aria-hidden="true" />
+                  </span>
+                </summary>
+                <p className="max-w-3xl pb-8 leading-relaxed text-[#4a453c]">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      ) : null}
+      {commercial ? <QuoteBand locale={locale} dict={dict} product={page === "olive" ? "olive" : page === "sunflower" ? "sunflower" : "both"} /> : null}
+      {!form && !commercial ? <Closing locale={locale} dict={dict} /> : null}
+    </>
+  )
+}
+
+function QuoteBand({ locale, dict, product }: { locale: Locale; dict: Dict; product: string }) {
+  return (
+    <section className="grain relative overflow-hidden bg-olive-deep text-[#f7f1e3]">
+      <div className="glow-gold pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+      <div className={`${container} flex flex-col gap-10 py-20 md:flex-row md:items-center md:justify-between md:py-24`}>
+        <div className="max-w-2xl">
+          <Kicker tone="light">{dict.nav.quote}</Kicker>
+          <h2 className="font-display mt-6 text-4xl leading-tight md:text-6xl">{dict.home.closingTitle}</h2>
+          <p className="mt-5 text-[#f7f1e3]/70">{dict.home.closingText}</p>
+        </div>
+        <a href={`${pathFor(locale, "quote")}?product=${product}`} className="group inline-flex h-14 w-fit shrink-0 items-center gap-3 bg-gold-light px-8 text-sm font-medium tracking-wide text-ink transition hover:bg-[#f0dba6]">
+          {dict.ui.quote}
+          <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
+        </a>
+      </div>
+    </section>
+  )
+}
+
+function Spec({ dict, family }: { dict: Dict; family: string }) {
+  const rows = [
+    [dict.ui.family, family],
+    [dict.ui.shipsFrom, dict.ui.shipsFromValue],
+    [dict.ui.model, dict.ui.modelValue],
+    [dict.ui.packing, dict.ui.packingValue],
+  ]
+  return (
+    <section className="bg-paper pb-24">
+      <div className="mx-auto max-w-5xl px-5 md:px-10">
+        <div className="border border-[#e6dcc6] bg-ivory p-8 md:p-12">
+          <Kicker>{family}</Kicker>
+          <h2 className="font-display mt-5 text-4xl">{dict.ui.specifications}</h2>
+          <dl className="mt-8 divide-y divide-[#e0d5bd] border-y border-[#e0d5bd]">
+            {rows.map(([term, value]) => (
+              <div key={term} className="grid gap-2 py-5 md:grid-cols-[14rem_1fr] md:gap-8">
+                <dt className="kicker pt-1 text-stone">{term}</dt>
+                <dd className="text-lg leading-relaxed">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function CopyBody({ copy }: { copy: PageCopy }) {
+  return (
+    <section className="bg-paper py-20 md:py-28">
+      <div className={`${container} grid gap-14 lg:grid-cols-[minmax(0,3fr)_minmax(0,7fr)]`}>
+        <nav className="hidden lg:sticky lg:top-32 lg:block lg:self-start" aria-label={copy.kicker}>
+          <p className="kicker text-gold">{copy.kicker}</p>
+          <ol className="mt-6 grid gap-3 border-s border-[#e6dcc6] ps-5 text-sm">
+            {copy.sections.map((section, index) => (
+              <li key={section.h}>
+                <a href={`#s-${index + 1}`} className="text-[#5c574e] transition hover:text-olive">
+                  {section.h}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+        <article className="max-w-3xl">
+          {copy.sections.map((section, index) => (
+            <section key={section.h} id={`s-${index + 1}`} className="reveal scroll-mt-32 border-t border-[#e6dcc6] pt-10 first:border-t-0 first:pt-0 [&+section]:mt-14">
+              <p className="font-display text-xl text-gold">{String(index + 1).padStart(2, "0")}</p>
+              <h2 className="font-display mt-3 text-4xl leading-tight md:text-5xl">{section.h}</h2>
+              {section.p.map((paragraph, paragraphIndex) => (
+                <p key={paragraph} className={`mt-5 leading-[1.8] text-[#3c3832] ${paragraphIndex === 0 ? "text-lg md:text-xl" : ""}`}>
+                  {paragraph}
+                </p>
+              ))}
+              {section.b ? (
+                <ul className="mt-7 grid gap-3">
+                  {section.b.map((item) => (
+                    <li key={item} className="flex items-start gap-4 border border-[#ece3cf] bg-white/60 px-5 py-4">
+                      <span className="mt-2 size-1.5 shrink-0 rotate-45 bg-gold" aria-hidden="true" />
+                      <span className="text-[#3c3832]">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </section>
+          ))}
+        </article>
+      </div>
+    </section>
+  )
+}
+
+function PageIntro({ copy, image, crumbs }: { copy: PageCopy; image: string; crumbs: { href: string; label: string }[] }) {
+  return (
+    <section className="relative isolate flex min-h-[72vh] overflow-hidden bg-olive-deep text-[#f7f1e3]">
+      <Image src={image} alt="" fill priority className="hero-zoom -z-20 object-cover" sizes="100vw" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#0c1008] via-[#0c1008]/55 to-[#0c1008]/35" />
+      <div className={`${container} flex w-full flex-col justify-end pb-16 pt-36 md:pb-20`}>
+        <nav className="rise mb-8 flex flex-wrap items-center gap-2 text-xs tracking-wide text-[#f7f1e3]/60" aria-label="Breadcrumb">
+          {crumbs.map((crumb, index) => (
+            <span key={crumb.href} className="flex items-center gap-2">
+              {index > 0 ? <span className="text-gold-light/60">/</span> : null}
+              <a href={crumb.href} className="transition hover:text-gold-light" aria-current={index === crumbs.length - 1 ? "page" : undefined}>
+                {crumb.label}
+              </a>
+            </span>
+          ))}
+        </nav>
+        <div className="rise rise-1">
+          <Kicker tone="light">{copy.kicker}</Kicker>
+        </div>
+        <h1 className="font-display rise rise-2 mt-6 max-w-5xl text-[clamp(2.75rem,6vw,5.75rem)] leading-[0.96] tracking-[-0.025em]">{copy.h1}</h1>
+        <p className="rise rise-3 mt-7 max-w-2xl text-lg leading-relaxed text-[#f7f1e3]/80">{copy.lede}</p>
+      </div>
+    </section>
+  )
+}
+
+function crumbs(locale: Locale, dict: Dict, page: StaticPage) {
+  return [
+    { href: pathFor(locale, "home"), label: dict.nav.home },
+    { href: pathFor(locale, page), label: dict.nav[page] },
+  ]
+}

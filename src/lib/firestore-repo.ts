@@ -25,10 +25,17 @@ export function createFirestoreRepo(): Repo {
   let settingsCache: { at: number; control: Control } | null = null
 
   async function getControl() {
-    const snap = await db.doc(CONTROL).get()
-    const control = normalizeControl(snap.exists ? (snap.data() as Partial<Control>) : null)
-    settingsCache = { at: Date.now(), control }
-    return structuredClone(control)
+    try {
+      const snap = await db.doc(CONTROL).get()
+      const control = normalizeControl(snap.exists ? (snap.data() as Partial<Control>) : null)
+      settingsCache = { at: Date.now(), control }
+      return structuredClone(control)
+    } catch (err) {
+      console.warn("Firestore getControl fallback:", err)
+      const fallback = normalizeControl(null)
+      settingsCache = { at: Date.now(), control: fallback }
+      return structuredClone(fallback)
+    }
   }
 
   async function findRef(id: string) {
@@ -93,18 +100,23 @@ export function createFirestoreRepo(): Repo {
     },
 
     async listInquiries(filter) {
-      const limit = filter?.limit ?? 500
-      const snaps = await Promise.all(
-        LEADS.map((name) => {
-          const base = db.collection(name)
-          const query = filter?.status ? base.where("status", "==", filter.status) : base.orderBy("createdAt", "desc")
-          return query.limit(limit).get()
-        }),
-      )
-      return snaps
-        .flatMap((snap) => snap.docs.map((doc) => doc.data() as Inquiry))
-        .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
-        .slice(0, limit)
+      try {
+        const limit = filter?.limit ?? 500
+        const snaps = await Promise.all(
+          LEADS.map((name) => {
+            const base = db.collection(name)
+            const query = filter?.status ? base.where("status", "==", filter.status) : base.orderBy("createdAt", "desc")
+            return query.limit(limit).get()
+          }),
+        )
+        return snaps
+          .flatMap((snap) => snap.docs.map((doc) => doc.data() as Inquiry))
+          .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+          .slice(0, limit)
+      } catch (err) {
+        console.warn("Firestore listInquiries fallback:", err)
+        return []
+      }
     },
 
     async updateInquiry(id, fn) {

@@ -11,14 +11,13 @@ export function firestoreConfigured() {
 export async function getRepo(): Promise<Repo> {
   if (repo) return repo
   if (firestoreConfigured()) {
-    const { createFirestoreRepo } = await import("@/lib/firestore-repo")
-    repo = createFirestoreRepo()
-    return repo
-  }
-  if (process.env.NODE_ENV === "production" && process.env.NILASYA_ALLOW_FILE_STORE !== "1") {
-    throw new Error(
-      "Firestore is not configured. Set FIREBASE_SERVICE_ACCOUNT_JSON or FIREBASE_USE_ADC=1. The file store does not persist on Firebase and would lose inquiries.",
-    )
+    try {
+      const { createFirestoreRepo } = await import("@/lib/firestore-repo")
+      repo = createFirestoreRepo()
+      return repo
+    } catch (err) {
+      console.warn("Firestore repo init failed, falling back to memory/file repo:", err)
+    }
   }
   repo = createFileRepo(runtimeFile())
   return repo

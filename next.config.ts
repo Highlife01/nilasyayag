@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   output: "standalone",
-  serverExternalPackages: ["firebase-admin"],
+  serverExternalPackages: ["firebase-admin", "firebase-functions"],
   images: { formats: ["image/webp", "image/avif"] },
   turbopack: {
     rules: {

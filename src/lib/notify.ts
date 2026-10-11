@@ -1,7 +1,8 @@
 import type { Inquiry } from "@/lib/model"
+import { EXPORT_EMAIL } from "@/lib/site"
 
 export async function notifyInquiry(inquiry: Inquiry): Promise<Inquiry["notification"]> {
-  const to = process.env.NOTIFY_EMAIL || "cebrailkara@gmail.com"
+  const to = process.env.NOTIFY_EMAIL || EXPORT_EMAIL
   const key = process.env.RESEND_API_KEY
   const from = process.env.NOTIFY_FROM
   if (!key || !from) {

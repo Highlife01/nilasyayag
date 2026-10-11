@@ -1,4 +1,4 @@
-import { SUPERADMIN_EMAIL } from "@/lib/site"
+import { SUPERADMIN_EMAIL, EXPORT_EMAIL } from "@/lib/site"
 import type { InquiryStatus, Role } from "@/lib/domain"
 
 export type Note = { id: string; at: string; author: string; body: string }
@@ -68,8 +68,8 @@ export function emptyControl(now = new Date().toISOString()): Control {
   return {
     settings: {
       legalName: "Asia Oil",
-      publicEmail: SUPERADMIN_EMAIL,
-      notifyEmail: SUPERADMIN_EMAIL,
+      publicEmail: EXPORT_EMAIL,
+      notifyEmail: EXPORT_EMAIL,
       phone: "",
       whatsapp: "",
       address: "",

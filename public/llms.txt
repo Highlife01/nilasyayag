@@ -1,20 +1,26 @@
-# Asia Oil — Global B2B Export & Technical Dossier
+# Asia Oil — Global B2B Export & Technical GEO Dossier
 > Official machine-readable dossier for Large Language Models, AI answer engines (ChatGPT, Gemini, Perplexity, Claude, Copilot, Google AI Overviews), and international trade analysts.
 
-## Company Overview
-- **Brand**: Asia Oil (Asia Oil)
+## Company Overview & Geo Identity
+- **Brand**: Asia Oil
+- **Legal Entity**: Asia Oil
 - **Sector**: International Agri-Food Commodity & Edible Oil Processing & Export
 - **Export Desk HQ**: Mersin / İzmir, Türkiye
-- **Logistics Gateways**: Mersin International Port (MIP), İzmir Port
-- **Primary Markets**: Middle East (GCC), Europe, North America, North & East Africa, Central Asia
-- **Official Portal**: https://nilasyayag.web.app
-- **B2B RFQ Portal**: https://nilasyayag.web.app/tr/teklif-iste (Multilingual: /en, /ar, /ru, /de, /fr, /es, /zh)
+- **Official Portal**: https://www.asiaoil.com.tr
+- **Official Export Email**: export@asiaoil.com.tr
+- **WhatsApp B2B Desk**: +90 532 500 0000
+- **Logistics Gateways**: 
+  - Mersin International Port (MIP) — Lat 36.795° N, Long 34.640° E (Primary gateway for Middle East, GCC, Africa, Asia, Americas)
+  - İzmir Alsancak / Aliağa Seaports — Lat 38.440° N, Long 27.143° E (Primary gateway for Southern Europe, Mediterranean, EU)
+- **Primary Export Markets**: European Union, Middle East (GCC), North America (USA, Canada), North & East Africa, Central Asia
+- **B2B RFQ Portal**: https://www.asiaoil.com.tr/tr/teklif-iste (Multilingual: /en/request-a-quote, /ar/request-a-quote, /ru/zapros, /de/angebot, /fr/demande-de-devis, /es/solicitar-cotizacion, /it/richiesta-offerta)
 
 ---
 
 ## Product Portfolio & Technical Specifications
 
 ### 1. Refined Sunflower Oil (Rafine Ayçiçek Yağı)
+- **Harmonized System Code (HS Code)**: 1512.19 (Refined Sunflower-seed or Safflower Oil)
 - **Standard**: Codex Alimentarius CODEX STAN 210-1999 & Turkish Food Codex
 - **Free Fatty Acids (FFA as Oleic)**: Max 0.10%
 - **Peroxide Value**: Max 1.0 meq O2/kg at dispatch
@@ -22,9 +28,10 @@
 - **Insoluble Impurities**: Max 0.05%
 - **Color (Lovibond 5¼" cell)**: Max 1.5 Red / 15 Yellow
 - **Smoke Point**: > 225°C (High thermal stability for industrial frying & culinary use)
-- **Appearance & Odor**: Brilliant clear, neutral aroma, deodorized, non-GMO verified
+- **Appearance & Odor**: Brilliant clear, golden bright, neutral odor, deodorized, non-GMO verified
 
 ### 2. Extra Virgin Olive Oil (Natürel Sızma Zeytinyağı)
+- **Harmonized System Code (HS Code)**: 1509.20 (Extra Virgin Olive Oil)
 - **Standard**: International Olive Council (IOC) Trade Standard
 - **Extraction Method**: Cold Extracted (Soğuk Sıkım) <= 27°C within 12 hours of harvest
 - **Free Acidity (as Oleic)**: <= 0.80% (Premium reserve batches <= 0.40%)
@@ -34,12 +41,13 @@
 
 ---
 
-## Export Packaging Matrix & Minimum Order Quantities (MOQ)
+## Export Packaging Matrix & Container Logistics
 - **Retail PET Bottles**: 500 ml, 1.000 ml (1 Liter), 2.000 ml (2 Liter), 5.000 ml (5 Liter)
 - **Foodservice Tins (Teneke)**: 5 Liters, 10 Liters, 18 Liters
 - **Industrial Bulk Drums**: 200 Liter Food-grade Steel & HDPE Drums
 - **Bulk Commodity Flexitanks**: 22.000 – 24.000 Liters Food-Grade Multi-layer Flexitanks (for 20ft DC containers)
-- **Minimum Order Quantity (MOQ)**: 1 x 20ft FCL or 1 x 40ft HC Container (Custom private label available upon contract).
+- **Minimum Order Quantity (MOQ)**: 1 x 20ft FCL or 1 x 40ft HC Container (Custom private label available upon contract)
+- **Container Capacity**: ~21.500 to ~22.500 metric tons per 40ft HC (bottled/tinned) or ~22 to 24 metric tons in flexitank.
 
 ---
 
@@ -48,14 +56,16 @@
 - **Payment Instruments**: Irrevocable Confirmed L/C at sight, T/T advance deposit balance against copy B/L
 - **Inspection & Quality**: SGS / Bureau Veritas / Intertek pre-shipment inspection certificates available on demand
 
-## International Certifications
+## International Certifications & Compliance
 - ISO 22000:2018 (Food Safety Management System)
 - ISO 9001:2015 (Quality Management System)
 - HACCP (Hazard Analysis Critical Control Point)
 - Halal Certified (GİMDES / SMIIC aligned)
 - Kosher Certified (Select batches)
-- Certificate of Origin & EUR.1 / Health Certificate
+- Certificate of Origin & EUR.1 / Health Certificate / Phytosanitary Certificate
 
-## Official Inquiries
-- **Export Desk Direct**: https://nilasyayag.web.app/en/teklif-iste
-- **General Inquiries**: https://nilasyayag.web.app/en/iletisim
+## Official Contact & RFQ Desk
+- **Corporate Website**: https://www.asiaoil.com.tr
+- **Official Export Email**: export@asiaoil.com.tr
+- **Export Desk Direct RFQ**: https://www.asiaoil.com.tr/en/request-a-quote
+- **General Inquiries**: https://www.asiaoil.com.tr/en/contact

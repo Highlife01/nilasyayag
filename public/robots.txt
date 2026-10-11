@@ -27,5 +27,5 @@ Allow: /
 Disallow: /admin
 
 # Sitemaps & Host
-Sitemap: https://nilasyayag.web.app/sitemap.xml
-Host: https://nilasyayag.web.app
+Sitemap: https://www.asiaoil.com.tr/sitemap.xml
+Host: https://www.asiaoil.com.tr

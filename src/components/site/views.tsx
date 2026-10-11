@@ -487,11 +487,9 @@ export function StandardPage({
                 ))}
               </ol>
               {page === "contact" ? <p className="mt-10 text-sm leading-relaxed text-[#5c574e]">{dict.form.contactIntro}</p> : null}
-              {settings.publicEmail ? (
-                <a href={`mailto:${settings.publicEmail}`} className="mt-6 inline-flex items-center gap-2 border-b border-gold pb-1 text-sm text-olive">
-                  {settings.publicEmail}
-                </a>
-              ) : null}
+              <a href={`mailto:${settings.publicEmail || "export@asiaoil.com.tr"}`} className="mt-6 inline-flex items-center gap-2 border-b border-gold pb-1 text-sm text-olive">
+                {settings.publicEmail || "export@asiaoil.com.tr"}
+              </a>
             </aside>
             <div className="border border-[#e6dcc6] bg-white p-6 shadow-[0_40px_100px_-60px_rgba(18,26,13,0.5)] md:p-12">
               {page === "quote" ? (

@@ -1,7 +1,7 @@
 import { writeFileSync } from "node:fs"
 import path from "node:path"
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nilasyayag.web.app"
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.asiaoil.com.tr"
 const root = path.resolve(import.meta.dirname, "..")
 
 const PUBLISHED_LOCALES = ["tr", "en", "ar", "ru", "de", "fr", "es", "it"]

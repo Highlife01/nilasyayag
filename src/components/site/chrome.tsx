@@ -140,11 +140,9 @@ export function SiteFrame({
               <Wordmark size="lg" />
             </a>
             <p className="mt-6 max-w-xs text-sm leading-relaxed text-[#f7f1e3]/65">{dict.footer.note}</p>
-            {settings.publicEmail ? (
-              <a className="mt-6 inline-flex items-center gap-2 text-sm text-gold-light hover:underline" href={`mailto:${settings.publicEmail}`}>
-                {settings.publicEmail}
-              </a>
-            ) : null}
+            <a className="mt-6 inline-flex items-center gap-2 text-sm text-gold-light hover:underline" href={`mailto:${settings.publicEmail || "export@asiaoil.com.tr"}`}>
+              {settings.publicEmail || "export@asiaoil.com.tr"}
+            </a>
             {settings.phone ? <p className="mt-2 text-sm text-[#f7f1e3]/80">{settings.phone}</p> : null}
             <p className="mt-2 text-sm text-[#f7f1e3]/50">{settings.country}</p>
           </div>

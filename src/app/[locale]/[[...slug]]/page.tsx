@@ -82,15 +82,58 @@ export default async function LocalePage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            name: "Asia Oil",
-            url: siteUrl(),
-            email: settings.publicEmail || undefined,
-            areaServed: "Worldwide",
-            knowsAbout: ["Sunflower oil", "Olive oil", "Edible oil wholesale"],
-          }),
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Corporation",
+              name: "Asia Oil",
+              legalName: "Asia Oil",
+              url: siteUrl(),
+              logo: `${siteUrl()}/icon.svg`,
+              image: `${siteUrl()}/media/hero/master-banner.webp`,
+              email: "export@asiaoil.com.tr",
+              telephone: "+905325000000",
+              address: {
+                "@type": "PostalAddress",
+                addressCountry: "TR",
+                addressLocality: "Mersin / İzmir",
+                addressRegion: "Akdeniz & Ege",
+              },
+              geo: {
+                "@type": "GeoCoordinates",
+                latitude: "36.7950",
+                longitude: "34.6400",
+              },
+              areaServed: [
+                { "@type": "AdministrativeArea", name: "Worldwide" },
+                { "@type": "AdministrativeArea", name: "Middle East" },
+                { "@type": "AdministrativeArea", name: "European Union" },
+                { "@type": "AdministrativeArea", name: "North America" },
+                { "@type": "AdministrativeArea", name: "Africa" },
+                { "@type": "AdministrativeArea", name: "Central Asia" },
+              ],
+              knowsAbout: [
+                "Refined Sunflower Oil (HS 1512.19)",
+                "Extra Virgin Olive Oil (HS 1509.20)",
+                "Bulk Edible Oil Export",
+                "FOB Mersin & CIF Port Logistics",
+                "Private Label Edible Oils",
+              ],
+              contactPoint: {
+                "@type": "ContactPoint",
+                email: "export@asiaoil.com.tr",
+                contactType: "sales and export desk",
+                availableLanguage: ["Turkish", "English", "Arabic", "Russian", "German", "French", "Spanish", "Italian"],
+              },
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Asia Oil",
+              url: siteUrl(),
+              inLanguage: ["tr", "en", "ar", "ru", "de", "fr", "es", "it"],
+            },
+          ]),
         }}
       />
     </SiteFrame>

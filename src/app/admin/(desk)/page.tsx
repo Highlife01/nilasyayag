@@ -14,7 +14,7 @@ import {
 } from "lucide-react"
 
 export const metadata = {
-  title: "Genel Bakış · Nilasya Global Control Center",
+  title: "Genel Bakış · Asia Oil Control Center",
   robots: { index: false, follow: false },
 }
 
@@ -49,7 +49,7 @@ export default async function OverviewPage() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs text-[#e4c98a] backdrop-blur font-medium">
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Nilasya Sofralık Yağ Executive Control Center</span>
+              <span>Asia Oil Executive Control Center</span>
             </div>
             <h1 className="font-display mt-3 text-3xl md:text-4xl font-bold tracking-tight text-[#fbf9f4]">
               Hoş Geldiniz, Cebrail Bey

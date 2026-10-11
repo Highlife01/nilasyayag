@@ -2,7 +2,7 @@ import type { Dict } from "@/content/types"
 
 const en: Dict = {
   metaDescription:
-    "Nilasya Sofralık Yağ supplies sunflower oil and olive oil to professional buyers. Request a wholesale quotation from Türkiye.",
+    "Asia Oil supplies sunflower oil and olive oil to professional buyers. Request a wholesale quotation from Türkiye.",
   nav: {
     home: "Home",
     sunflower: "Sunflower oil",
@@ -43,28 +43,28 @@ const en: Dict = {
   },
   hero: [
     {
-      kicker: "Nilasya",
+      kicker: "Asia Oil",
       title: "Sunflower oil and olive oil, offered to professional buyers",
       lede: "A quotation desk in Türkiye. Two collections, kept apart. The next step is a written offer, not a checkout.",
-      alt: "Nilasya photograph 1",
+      alt: "Asia Oil photograph 1",
     },
     {
       kicker: "Sunflower oil",
       title: "Ask for the specification with the quantity",
       lede: "Tell us the product, the packing and the destination. The desk replies with a quotation for that shipment.",
-      alt: "Nilasya photograph 2",
+      alt: "Asia Oil photograph 2",
     },
     {
       kicker: "Olive oil",
       title: "Olive oil, in its own conversation",
       lede: "Grade and documents are confirmed on the lot you are buying. They are not printed here as a permanent claim.",
-      alt: "Nilasya photograph 3",
+      alt: "Asia Oil photograph 3",
     },
     {
       kicker: "International trade",
       title: "From the inquiry to the port you named",
       lede: "Company, contact, quantity and destination are enough to open the file. Sanctions and product rules are checked before an offer.",
-      alt: "Nilasya photograph 4",
+      alt: "Asia Oil photograph 4",
     },
   ],
   home: {
@@ -100,7 +100,7 @@ const en: Dict = {
   pages: {
     sunflower: {
       title: "Sunflower oil supplier",
-      description: "Wholesale sunflower oil from Nilasya Sofralık Yağ. Request a quotation for container, bulk or distribution supply from Türkiye.",
+      description: "Wholesale sunflower oil from Asia Oil. Request a quotation for container, bulk or distribution supply from Türkiye.",
       kicker: "Sunflower oil",
       h1: "Sunflower oil for wholesale buyers",
       lede: "This collection is edible sunflower oil for professional buyers. The desk confirms the specification, the packing and the shipment after you write. Nothing on this page is a public price.",
@@ -116,7 +116,7 @@ const en: Dict = {
           h: "What is confirmed later",
           p: [
             "A specification sheet belongs to the offer, not to the marketing page. Laboratory values, crop season and packing artwork are shared when they describe the goods being quoted.",
-            "Until that file is approved, Nilasya does not print a certificate number or a bottle claim here.",
+            "Until that file is approved, Asia Oil does not print a certificate number or a bottle claim here.",
           ],
           b: ["Bulk, when the corridor allows it", "Drums and IBC", "Packed bottles after the specification is agreed"],
         },
@@ -124,7 +124,7 @@ const en: Dict = {
     },
     olive: {
       title: "Olive oil exporter",
-      description: "Wholesale olive oil from Nilasya Sofralık Yağ. Grades and documents are confirmed per lot. Request a quotation.",
+      description: "Wholesale olive oil from Asia Oil. Grades and documents are confirmed per lot. Request a quotation.",
       kicker: "Olive oil",
       h1: "Olive oil, quoted lot by lot",
       lede: "Olive oil is not folded into the sunflower offer. Tell us the grade you need and the destination. The desk confirms what can be supplied and which documents belong to that lot.",
@@ -150,7 +150,7 @@ const en: Dict = {
       description: "Wholesale sunflower oil and olive oil for distributors and importers. Container, bulk and distribution inquiries.",
       kicker: "Wholesale",
       h1: "Wholesale without a public price list",
-      lede: "Nilasya sells to companies. A container buyer, a bulk buyer and a distributor do not receive the same questions, so the form asks which one you are.",
+      lede: "Asia Oil sells to companies. A container buyer, a bulk buyer and a distributor do not receive the same questions, so the form asks which one you are.",
       sections: [
         {
           h: "Three ways to open the file",
@@ -188,7 +188,7 @@ const en: Dict = {
       description: "Private label sunflower oil and olive oil, discussed per contract. Label artwork is not published before approval.",
       kicker: "Private label",
       h1: "Your brand, after the specification is agreed",
-      lede: "Private label can be discussed for sunflower oil and olive oil. Bottle, volume, artwork and grade are agreed before anything is produced. This page does not show a finished Nilasya label.",
+      lede: "Private label can be discussed for sunflower oil and olive oil. Bottle, volume, artwork and grade are agreed before anything is produced. This page does not show a finished Asia Oil label.",
       sections: [
         {
           h: "What to send with the inquiry",
@@ -202,10 +202,10 @@ const en: Dict = {
     },
     quality: {
       title: "Quality and documents",
-      description: "Which edible oil documents Nilasya prepares per shipment, and which claims are intentionally absent until a file is approved.",
+      description: "Which edible oil documents Asia Oil prepares per shipment, and which claims are intentionally absent until a file is approved.",
       kicker: "Quality",
       h1: "Documents that belong to a shipment",
-      lede: "Buyers ask for a specification, a lot analysis, origin paperwork and a packing list. Nilasya assembles that set for the goods being sold. The website does not display a certificate that has not been approved for publication.",
+      lede: "Buyers ask for a specification, a lot analysis, origin paperwork and a packing list. Asia Oil assembles that set for the goods being sold. The website does not display a certificate that has not been approved for publication.",
       sections: [
         {
           h: "Usually requested",
@@ -219,11 +219,11 @@ const en: Dict = {
       ],
     },
     about: {
-      title: "About Nilasya",
-      description: "Nilasya Sofralık Yağ is a wholesale desk for sunflower oil and olive oil, exporting from Türkiye.",
+      title: "About Asia Oil",
+      description: "Asia Oil is a wholesale desk for sunflower oil and olive oil, exporting from Türkiye.",
       kicker: "The company",
-      h1: "Nilasya Sofralık Yağ",
-      lede: "Nilasya is the commercial desk for sunflower oil and olive oil sold to professional buyers. Enquiries are handled from Türkiye. The legal address, tax number and bank details are shared with identified buyers during contracting.",
+      h1: "Asia Oil",
+      lede: "Asia Oil is the commercial desk for sunflower oil and olive oil sold to professional buyers. Enquiries are handled from Türkiye. The legal address, tax number and bank details are shared with identified buyers during contracting.",
       sections: [
         {
           h: "What this website is",
@@ -237,7 +237,7 @@ const en: Dict = {
     },
     contact: {
       title: "Contact",
-      description: "Contact the Nilasya edible oil desk. Inquiries are stored for the commercial team.",
+      description: "Contact the Asia Oil edible oil desk. Inquiries are stored for the commercial team.",
       kicker: "Contact",
       h1: "Write to the desk",
       lede: "Use the form for a general message or a quotation. The record is stored for the commercial team and a notification is prepared for the authorised address.",
@@ -268,7 +268,7 @@ const en: Dict = {
     quotation: {
       slug: "how-to-request-a-bulk-sunflower-oil-quotation",
       title: "How to request a bulk sunflower oil quotation",
-      description: "What to send Nilasya when you want a bulk or container quotation for sunflower oil.",
+      description: "What to send Asia Oil when you want a bulk or container quotation for sunflower oil.",
       kicker: "Quotation",
       h1: "How can I request a bulk sunflower oil quotation?",
       lede: "Send the company name, the person responsible, an email, a phone number, the destination, the quantity and the packing you want priced. That is enough for the desk to open a file.",
@@ -283,7 +283,7 @@ const en: Dict = {
       description: "Bulk, drums, IBC and packed bottles for sunflower oil and olive oil, and what is confirmed only in the offer.",
       kicker: "Packing",
       h1: "What packing can be quoted?",
-      lede: "Buyers usually ask for bulk, drums, IBC or packed bottles. Nilasya can discuss those formats. The format in the contract is the one that was confirmed in the offer.",
+      lede: "Buyers usually ask for bulk, drums, IBC or packed bottles. Asia Oil can discuss those formats. The format in the contract is the one that was confirmed in the offer.",
       sections: [
         { h: "Say the format in your own words", p: ["If you need flexitank, say flexitank. If you need 5 litre or 1 litre bottles, say the volume. Do not copy a packing line from this website into a tender as if it were already agreed."] },
         { h: "Labels", p: ["Packed goods need artwork. Artwork is not shown here until it is approved. Private label starts from the inquiry, not from a mock label."] },
@@ -295,7 +295,7 @@ const en: Dict = {
       description: "Specification, lot analysis, origin paperwork and packing list — prepared per shipment, not as website badges.",
       kicker: "Documents",
       h1: "What documents are required for edible oil imports?",
-      lede: "The exact set depends on the destination and the broker. Buyers often ask for a specification, a lot analysis, a certificate of origin, a packing list and a commercial invoice. Ask Nilasya for the set that belongs to your shipment.",
+      lede: "The exact set depends on the destination and the broker. Buyers often ask for a specification, a lot analysis, a certificate of origin, a packing list and a commercial invoice. Ask Asia Oil for the set that belongs to your shipment.",
       sections: [
         { h: "Why they are not all published", p: ["An analysis describes one lot. Publishing a single certificate as if it covered every future cargo would be inaccurate. The file is shared when that cargo is the one being sold."] },
         { h: "How to ask", p: ["List the documents your customs broker named. The desk will say which of them can be supplied with the offer and which follow the shipment."] },
@@ -316,7 +316,7 @@ const en: Dict = {
   },
   faq: {
     title: "Questions from buyers",
-    description: "Answers for companies requesting sunflower oil or olive oil from Nilasya.",
+    description: "Answers for companies requesting sunflower oil or olive oil from Asia Oil.",
     kicker: "FAQ",
     h1: "Questions buyers ask before the first offer",
     lede: "Short answers. Where a topic needs a full page, the insight is linked from the home page.",
@@ -326,13 +326,13 @@ const en: Dict = {
       { q: "Can I buy a single bottle here?", a: "No. The website is for wholesale and export enquiries. It does not take payment." },
       { q: "Which products can I ask about?", a: "Sunflower oil, olive oil, or both. Private label can be added inside the same inquiry." },
       { q: "Which countries do you supply?", a: "Name the destination in the form. The desk confirms whether that destination can be offered. A form that accepts every country is not a promise of coverage." },
-      { q: "Will you email me?", a: "The commercial reply goes to the email address you entered. A notification is also prepared for the authorised Nilasya address." },
+      { q: "Will you email me?", a: "The commercial reply goes to the email address you entered. A notification is also prepared for the authorised Asia Oil address." },
       { q: "How is my data used?", a: "It is used to answer the inquiry and to keep the commercial record. The privacy page explains retention and deletion." },
     ],
   },
   privacy: {
     title: "Privacy",
-    description: "How Nilasya uses inquiry data under KVKK and GDPR principles.",
+    description: "How Asia Oil uses inquiry data under KVKK and GDPR principles.",
     kicker: "Privacy",
     h1: "Privacy notice",
     lede: "The form collects the details needed to answer a wholesale inquiry. The record is stored on the server. It is not written to localStorage, sessionStorage or a browser database.",
@@ -361,7 +361,7 @@ const en: Dict = {
     quantity: "Quantity",
     packaging: "Packing to quote",
     message: "Message",
-    consent: "I understand Nilasya will use these details to answer this inquiry. I can ask for the record to be deleted.",
+    consent: "I understand Asia Oil will use these details to answer this inquiry. I can ask for the record to be deleted.",
     submit: "Send inquiry",
     success: "The inquiry is recorded. The desk will reply to the email you entered. This page does not take payment.",
     invalid: "Check the marked fields and send the form again.",
@@ -379,7 +379,7 @@ const en: Dict = {
   },
   footer: {
     note: "Quotations are issued per inquiry. This website does not sell online.",
-    rights: "Nilasya Sofralık Yağ",
+    rights: "Asia Oil",
   },
   consent: {
     text: "A visit is counted only if you allow it. The choice is stored in a cookie. The site does not use localStorage.",

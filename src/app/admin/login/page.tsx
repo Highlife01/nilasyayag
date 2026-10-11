@@ -9,7 +9,7 @@ export default async function LoginPage() {
   return (
     <main className="grid min-h-screen md:grid-cols-2">
       <section className="hidden bg-[#1a2416] p-12 text-[#f6f1e6] md:flex md:flex-col md:justify-between">
-        <p className="font-display text-4xl">Nilasya</p>
+        <p className="font-display text-4xl">Asia Oil</p>
         <div>
           <p className="kicker text-[#e4c98a]">Global Control Center</p>
           <h1 className="font-display mt-3 text-5xl">Talepler, sayfalar, diller.</h1>

@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect, useState, useSyncExternalStore } from "react"
+import { useEffect, useRef, useState, useSyncExternalStore, type PointerEvent } from "react"
 import { ArrowUpRight, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react"
 
 type Slide = { src: string; alt: string; kicker: string; title: string; lede: string; href: string; cta: string }
@@ -24,7 +24,22 @@ export function Showcase({ slides, labels }: { slides: Slide[]; labels: Labels }
   const [index, setIndex] = useState(0)
   const [playing, setPlaying] = useState(true)
   const reduced = useSyncExternalStore(subscribeMotion, prefersReducedMotion, () => false)
+  const frame = useRef<HTMLDivElement>(null)
   const count = slides.length
+
+  const tilt = (event: PointerEvent<HTMLDivElement>) => {
+    const element = frame.current
+    if (!element || reduced) return
+    const box = element.getBoundingClientRect()
+    const x = (event.clientX - box.left) / box.width - 0.5
+    const y = (event.clientY - box.top) / box.height - 0.5
+    element.style.setProperty("--rx", `${(-y * 7).toFixed(2)}deg`)
+    element.style.setProperty("--ry", `${(x * 9).toFixed(2)}deg`)
+  }
+  const untilt = () => {
+    frame.current?.style.setProperty("--rx", "0deg")
+    frame.current?.style.setProperty("--ry", "0deg")
+  }
 
   useEffect(() => {
     if (reduced || !playing || count < 2) return
@@ -51,7 +66,7 @@ export function Showcase({ slides, labels }: { slides: Slide[]; labels: Labels }
         </p>
         <a
           href={active.href}
-          className="group mt-9 inline-flex h-12 items-center gap-3 border border-gold-light/60 px-6 text-sm tracking-wide text-gold-light transition hover:bg-gold-light hover:text-ink"
+          className="group btn-shine mt-9 inline-flex h-12 items-center gap-3 border border-gold-light/60 px-6 text-sm tracking-wide text-gold-light transition hover:bg-gold-light hover:text-ink"
         >
           {active.cta}
           <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
@@ -80,13 +95,14 @@ export function Showcase({ slides, labels }: { slides: Slide[]; labels: Labels }
       </div>
 
       <div className="order-1 lg:order-2">
-        <div className="relative">
+        <div ref={frame} onPointerMove={tilt} onPointerLeave={untilt} className="tilt reveal-scale relative">
           <div className="absolute -inset-3 border border-gold-light/25 md:-inset-5" aria-hidden="true" />
+          <div className="absolute -inset-3 border border-gold-light/10 md:-inset-8" aria-hidden="true" />
           <div className="relative aspect-[3/2] overflow-hidden bg-black shadow-[0_40px_120px_-30px_rgba(0,0,0,0.8)]">
             {slides.map((slide, slideIndex) => (
               <div
                 key={slide.src}
-                className={`absolute inset-0 transition-opacity duration-1000 ${slideIndex === index ? "opacity-100" : "opacity-0"}`}
+                className={`absolute inset-0 ${slideIndex === index ? "slide-in" : "opacity-0 transition-opacity duration-700"}`}
                 aria-hidden={slideIndex !== index}
               >
                 <Image

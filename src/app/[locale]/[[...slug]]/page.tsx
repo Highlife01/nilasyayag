@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title,
     description,
     alternates: { canonical, languages },
-    openGraph: { title, description, url: canonical, siteName: "Nilasya Sofralık Yağ", locale },
+    openGraph: { title, description, url: canonical, siteName: "Asia Oil", locale },
     robots: { index: true, follow: true },
   }
 }
@@ -85,7 +85,7 @@ export default async function LocalePage({
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            name: "Nilasya Sofralık Yağ",
+            name: "Asia Oil",
             url: siteUrl(),
             email: settings.publicEmail || undefined,
             areaServed: "Worldwide",

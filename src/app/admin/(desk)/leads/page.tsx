@@ -13,7 +13,7 @@ import {
 } from "lucide-react"
 
 export const metadata = {
-  title: "Talepler & CRM · Nilasya Global Control Center",
+  title: "Talepler & CRM · Asia Oil Control Center",
   robots: { index: false, follow: false },
 }
 

@@ -11,7 +11,7 @@ import {
 } from "lucide-react"
 
 export const metadata = {
-  title: "SEO & GEO Merkezi · Nilasya Global Control Center",
+  title: "SEO & GEO Merkezi · Asia Oil Control Center",
   robots: { index: false, follow: false },
 }
 

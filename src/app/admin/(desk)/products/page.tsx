@@ -4,7 +4,7 @@ import { redirect } from "next/navigation"
 import { Package, CheckCircle2, Sparkles, Layers } from "lucide-react"
 
 export const metadata = {
-  title: "Ürünler & Ambalaj Kataloğu · Nilasya Global Control Center",
+  title: "Ürünler & Ambalaj Kataloğu · Asia Oil Control Center",
   robots: { index: false, follow: false },
 }
 

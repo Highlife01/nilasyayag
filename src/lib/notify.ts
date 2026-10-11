@@ -36,7 +36,7 @@ export async function notifyInquiry(inquiry: Inquiry): Promise<Inquiry["notifica
         from,
         to: [to],
         reply_to: inquiry.email,
-        subject: `Nilasya inquiry · ${inquiry.company}`,
+        subject: `Asia Oil inquiry · ${inquiry.company}`,
         text,
       }),
     })

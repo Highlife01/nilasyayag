@@ -4,4 +4,4 @@ export function siteUrl() {
 }
 
 export const SUPERADMIN_EMAIL = "cebrailkara@gmail.com"
-export const BRAND = "Nilasya Sofralık Yağ"
+export const BRAND = "Asia Oil"

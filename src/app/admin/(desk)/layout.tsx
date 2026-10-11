@@ -48,11 +48,11 @@ export default async function DeskLayout({ children }: { children: React.ReactNo
           <div className="border-b border-slate-800/80 px-6 py-6">
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#d4af37] to-[#8a6820] text-slate-950 font-black shadow-md">
-                NY
+                AO
               </span>
               <div>
                 <p className="font-display text-xl font-bold tracking-tight text-white leading-none">
-                  NILASYA
+                  ASIA OIL
                 </p>
                 <p className="text-[11px] font-medium tracking-[0.16em] text-[#e4c98a] uppercase mt-1">
                   Global Control Center
@@ -133,7 +133,7 @@ export default async function DeskLayout({ children }: { children: React.ReactNo
           <div className="flex items-center gap-3">
             <Building2 className="h-5 w-5 text-slate-500" />
             <span className="text-sm font-semibold text-slate-800">
-              Nilasya Sofralık Yağ • B2B İhracat Yönetimi
+              Asia Oil • B2B İhracat Yönetimi
             </span>
           </div>
 

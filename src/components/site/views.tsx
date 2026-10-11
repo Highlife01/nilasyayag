@@ -1,4 +1,5 @@
 import Image from "next/image"
+import type { CSSProperties } from "react"
 import { ArrowRight, ArrowUpRight, Plus } from "lucide-react"
 import { ARTICLE_IDS } from "@/content/index"
 import type { Dict, PageCopy } from "@/content/types"
@@ -6,9 +7,31 @@ import { pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
 import { still, type Frame } from "@/lib/media"
 import { InquiryForm } from "@/components/site/inquiry-form"
 import { Showcase } from "@/components/site/hero"
+import { Spotlight } from "@/components/site/motion"
+import { BRAND_NAME, Mark, Wordmark } from "@/components/site/chrome"
 import type { Settings } from "@/lib/model"
 
 const container = "mx-auto max-w-7xl px-5 md:px-10"
+const goldButton = "btn-shine group inline-flex h-14 items-center gap-3 bg-gold-light text-sm font-medium tracking-wide text-ink transition hover:bg-[#f0dba6]"
+const vars = (values: Record<string, string>) => values as CSSProperties
+
+/** Headline split into words; each word slides up from a mask with a stagger. */
+function Words({ text, start = 0, step = 0.055 }: { text: string; start?: number; step?: number }) {
+  return text.split(" ").map((word, index) => (
+    <span key={`${word}-${index}`} className="mask-word">
+      <span style={vars({ "--i": `${start + index * step}s` })}>{word}</span>{" "}
+    </span>
+  ))
+}
+
+function Blobs() {
+  return (
+    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+      <span className="float absolute -left-[10%] top-[10%] size-[44vw] rounded-full bg-[radial-gradient(circle,rgba(226,173,58,0.18),transparent_65%)] blur-3xl" />
+      <span className="float-slow absolute -right-[12%] bottom-[-10%] size-[50vw] rounded-full bg-[radial-gradient(circle,rgba(143,166,91,0.16),transparent_65%)] blur-3xl" />
+    </div>
+  )
+}
 
 function splitTitle(title: string) {
   const at = title.indexOf(",")
@@ -36,7 +59,7 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
     return {
       src: frame.src,
       alt: dict.hero[index]?.alt ?? `${dict.ui.photo} ${frame.index}`,
-      kicker: copy?.kicker ?? "Nilasya",
+      kicker: copy?.kicker ?? BRAND_NAME,
       title: copy?.title ?? dict.nav.home,
       lede: copy?.lede ?? dict.metaDescription,
       href: pathFor(locale, posterLinks[index] ?? "quote"),
@@ -45,37 +68,52 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
   })
   const ribbon = dict.home.bar.split("·").map((part) => part.trim()).filter(Boolean)
 
+  const titleWords = titleStart.split(" ").length
   return (
     <>
-      <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-olive-deep text-[#f7f1e3]">
-        {cover ? (
-          <Image src={cover.src} alt={dict.hero[3]?.alt ?? ""} fill priority sizes="100vw" className="hero-zoom -z-20 object-cover object-[78%_center] lg:object-[70%_center]" />
-        ) : null}
+      <div className="curtain" aria-hidden="true">
+        <div className="flex items-center gap-4 text-gold-light">
+          <Mark className="size-12" />
+          <Wordmark size="lg" />
+        </div>
+      </div>
+
+      <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-olive-deep text-[#f7f1e3]" style={vars({ "--base": "0.9s" })}>
+        <div className="hero-parallax absolute inset-0 -z-20">
+          {cover ? (
+            <Image src={cover.src} alt={dict.hero[3]?.alt ?? ""} fill priority sizes="100vw" className="hero-zoom object-cover object-[78%_center] lg:object-[70%_center]" />
+          ) : null}
+        </div>
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(12,16,8,0.95)_0%,rgba(12,16,8,0.8)_34%,rgba(12,16,8,0.3)_60%,rgba(12,16,8,0)_85%)] max-md:bg-[linear-gradient(0deg,rgba(12,16,8,0.95)_0%,rgba(12,16,8,0.7)_50%,rgba(12,16,8,0.3)_100%)] rtl:md:bg-[linear-gradient(270deg,rgba(12,16,8,0.95)_0%,rgba(12,16,8,0.8)_34%,rgba(12,16,8,0.3)_60%,rgba(12,16,8,0)_85%)]" />
         <div className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-[#0c1008] to-transparent" />
         <div className="absolute inset-x-0 top-0 -z-10 h-36 bg-gradient-to-b from-[#0c1008]/75 to-transparent" />
+        <span className="float pointer-events-none absolute left-[-10%] top-[20%] -z-10 size-[40vw] rounded-full bg-[radial-gradient(circle,rgba(226,173,58,0.16),transparent_65%)] blur-3xl" aria-hidden="true" />
 
-        <div className={`${container} flex w-full flex-1 flex-col justify-center pb-16 pt-32`}>
+        <div className={`${container} hero-copy flex w-full flex-1 flex-col justify-center pb-16 pt-32`}>
           <div className="max-w-[min(46rem,52vw)] max-md:max-w-none">
             <div className="rise">
-              <Kicker tone="light">{lead?.kicker ?? "Nilasya"}</Kicker>
+              <Kicker tone="light">{lead?.kicker ?? BRAND_NAME}</Kicker>
             </div>
-            <h1 className="font-display rise rise-1 mt-7 text-[clamp(2.8rem,5.4vw,6rem)] leading-[0.95] tracking-[-0.03em] drop-shadow-[0_4px_30px_rgba(0,0,0,0.45)]">
-              {titleStart}
-              {titleEnd ? <span className="text-gold-gradient block italic">{titleEnd}</span> : null}
+            <h1 className="font-display mt-7 text-[clamp(2.8rem,5.4vw,6rem)] leading-[0.95] tracking-[-0.03em] drop-shadow-[0_4px_30px_rgba(0,0,0,0.45)]">
+              <Words text={titleStart} start={0.1} />
+              {titleEnd ? (
+                <span className="text-gold-gradient block italic">
+                  <Words text={titleEnd} start={0.1 + titleWords * 0.055} />
+                </span>
+              ) : null}
             </h1>
-            <p className="rise rise-2 mt-8 max-w-xl text-lg leading-relaxed text-[#f7f1e3]/80 md:text-xl">{lead?.lede ?? dict.metaDescription}</p>
-            <div className="rise rise-3 mt-11 flex flex-wrap gap-3">
-              <a href={pathFor(locale, "quote")} className="group inline-flex h-14 items-center gap-3 bg-gold-light px-7 text-sm font-medium tracking-wide text-ink transition hover:bg-[#f0dba6]">
+            <p className="rise rise-3 mt-8 max-w-xl text-lg leading-relaxed text-[#f7f1e3]/80 md:text-xl">{lead?.lede ?? dict.metaDescription}</p>
+            <div className="rise rise-4 mt-11 flex flex-wrap gap-3">
+              <a href={pathFor(locale, "quote")} className={`${goldButton} px-7`}>
                 {dict.ui.quote}
                 <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
               </a>
-              <a href={pathFor(locale, "sunflower")} className="inline-flex h-14 items-center gap-3 border border-white/25 px-6 text-sm tracking-wide backdrop-blur-sm transition hover:border-sun hover:text-sun">
-                <span className="size-2 rounded-full bg-sun" aria-hidden="true" />
+              <a href={pathFor(locale, "sunflower")} className="group inline-flex h-14 items-center gap-3 border border-white/25 px-6 text-sm tracking-wide backdrop-blur-sm transition duration-500 hover:border-sun hover:bg-sun/10 hover:text-sun">
+                <span className="size-2 rounded-full bg-sun transition duration-500 group-hover:scale-150 group-hover:shadow-[0_0_16px_#e2ad3a]" aria-hidden="true" />
                 {dict.nav.sunflower}
               </a>
-              <a href={pathFor(locale, "olive")} className="inline-flex h-14 items-center gap-3 border border-white/25 px-6 text-sm tracking-wide backdrop-blur-sm transition hover:border-[#a9bd7c] hover:text-[#c9d9a0]">
-                <span className="size-2 rounded-full bg-[#8fa65b]" aria-hidden="true" />
+              <a href={pathFor(locale, "olive")} className="group inline-flex h-14 items-center gap-3 border border-white/25 px-6 text-sm tracking-wide backdrop-blur-sm transition duration-500 hover:border-[#a9bd7c] hover:bg-[#8fa65b]/10 hover:text-[#c9d9a0]">
+                <span className="size-2 rounded-full bg-[#8fa65b] transition duration-500 group-hover:scale-150 group-hover:shadow-[0_0_16px_#8fa65b]" aria-hidden="true" />
                 {dict.nav.olive}
               </a>
             </div>
@@ -86,11 +124,11 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
           <span className="relative block h-14 w-px overflow-hidden bg-white/15">
             <span className="scroll-cue absolute inset-0 bg-gold-light" />
           </span>
-          NILASYA
+          ASIA OIL
         </div>
       </section>
 
-      <div className="overflow-hidden border-y border-gold/20 bg-paper py-5" aria-hidden="true">
+      <div className="marquee-mask overflow-hidden border-y border-gold/20 bg-paper py-5" aria-hidden="true">
         <div className="marquee flex w-max gap-12 whitespace-nowrap">
           {[0, 1].map((copy) => (
             <div key={copy} className="flex gap-12">
@@ -140,12 +178,12 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
       </section>
 
       {slides.length ? (
-        <section className="grain overflow-hidden bg-olive-deep py-24 md:py-32">
-          <div className="glow-gold pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+        <Spotlight className="grain overflow-hidden bg-olive-deep py-24 md:py-32">
+          <Blobs />
           <div className={container}>
             <Showcase slides={slides} labels={dict.ui} />
           </div>
-        </section>
+        </Spotlight>
       ) : null}
 
       <section className="bg-ivory py-24 md:py-32">
@@ -156,10 +194,16 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
           </div>
           <div className="grid gap-px bg-gold/25 sm:grid-cols-2">
             {dict.home.principles.map((item, index) => (
-              <article key={item.t} className="reveal group bg-ivory p-8 transition-colors duration-500 hover:bg-paper md:p-10">
-                <p className="font-display text-6xl text-gold/40 transition-colors duration-500 group-hover:text-gold">{String(index + 1).padStart(2, "0")}</p>
+              <article
+                key={item.t}
+                className="reveal group relative overflow-hidden bg-ivory p-8 transition-colors duration-500 hover:bg-paper md:p-10"
+                style={vars({ "--d": `${(index % 2) * 6}%` })}
+              >
+                <span className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-gold/10 opacity-0 blur-2xl transition duration-700 group-hover:opacity-100" aria-hidden="true" />
+                <p className="font-display text-6xl text-gold/40 transition duration-500 group-hover:-translate-y-1 group-hover:text-gold">{String(index + 1).padStart(2, "0")}</p>
                 <h3 className="font-display mt-8 text-3xl">{item.t}</h3>
                 <p className="mt-3 leading-relaxed text-[#5c574e]">{item.d}</p>
+                <span className="mt-8 block h-px w-10 bg-gold/40 transition-[width] duration-700 group-hover:w-full" aria-hidden="true" />
               </article>
             ))}
           </div>
@@ -173,10 +217,11 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
             <h2 className="font-display mt-6 text-5xl leading-[0.98] md:text-6xl">{dict.home.processTitle}</h2>
           </div>
           <ol className="relative mt-20 grid gap-12 md:grid-cols-4 md:gap-8">
-            <span className="absolute inset-x-0 top-7 hidden h-px bg-gradient-to-r from-gold-light/0 via-gold-light/50 to-gold-light/0 md:block" aria-hidden="true" />
+            <span className="draw absolute inset-x-0 top-7 hidden h-px bg-gradient-to-r from-gold-light/0 via-gold-light/60 to-gold-light/0 md:block" aria-hidden="true" />
             {dict.home.steps.map((step, index) => (
-              <li key={step.t} className="reveal relative">
-                <span className="font-display relative grid size-14 place-items-center border border-gold-light/50 bg-olive text-xl text-gold-light">
+              <li key={step.t} className="reveal group relative" style={vars({ "--d": `${index * 5}%` })}>
+                <span className="font-display relative grid size-14 place-items-center border border-gold-light/50 bg-olive text-xl text-gold-light transition duration-500 group-hover:bg-gold-light group-hover:text-ink">
+                  <span className="absolute inset-0 scale-125 border border-gold-light/0 transition duration-700 group-hover:scale-150 group-hover:border-gold-light/30" aria-hidden="true" />
                   {index + 1}
                 </span>
                 <h3 className="font-display mt-8 text-3xl">{step.t}</h3>
@@ -188,14 +233,16 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
       </section>
 
       <section className="relative isolate overflow-hidden">
-        <Image src={still("warehouse")} alt="" fill className="-z-10 object-cover" sizes="100vw" />
+        <div className="absolute inset-0 -z-10">
+          <Image src={still("warehouse")} alt="" fill className="object-cover" sizes="100vw" />
+        </div>
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0c1008]/70 to-[#0c1008]/10 rtl:bg-gradient-to-l" />
         <div className={`${container} flex min-h-[80vh] items-center py-24`}>
-          <div className="reveal max-w-xl border border-white/15 bg-olive-deep/75 p-10 text-[#f7f1e3] backdrop-blur-md md:p-14">
+          <div className="reveal-scale max-w-xl border border-white/15 bg-olive-deep/75 p-10 text-[#f7f1e3] backdrop-blur-md md:p-14">
             <Kicker tone="light">{dict.home.bandKicker}</Kicker>
             <h2 className="font-display mt-6 text-4xl leading-tight md:text-5xl">{dict.home.bandTitle}</h2>
             <p className="mt-5 leading-relaxed text-[#f7f1e3]/75">{dict.home.bandText}</p>
-            <a href={pathFor(locale, "wholesale")} className="group mt-9 inline-flex h-12 items-center gap-3 border border-gold-light/60 px-6 text-sm text-gold-light transition hover:bg-gold-light hover:text-ink">
+            <a href={pathFor(locale, "wholesale")} className="btn-shine group mt-9 inline-flex h-12 items-center gap-3 border border-gold-light/60 px-6 text-sm text-gold-light transition hover:bg-gold-light hover:text-ink">
               {dict.nav.wholesale}
               <ArrowRight className="size-4 transition group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1" aria-hidden="true" />
             </a>
@@ -210,7 +257,7 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
               <Kicker>{dict.home.answersKicker}</Kicker>
               <h2 className="font-display mt-6 text-5xl leading-[0.98] md:text-6xl">{dict.home.answersTitle}</h2>
             </div>
-            <a href={pathFor(locale, "insights")} className="group inline-flex items-center gap-2 text-sm text-olive">
+            <a href={pathFor(locale, "insights")} className="group link-draw inline-flex items-center gap-2 text-sm text-olive">
               {dict.ui.allInsights}
               <ArrowRight className="size-4 transition group-hover:translate-x-1 rtl:-scale-x-100" aria-hidden="true" />
             </a>
@@ -248,18 +295,19 @@ function Collection({
   accent: string
 }) {
   return (
-    <a href={href} className="reveal group relative isolate flex min-h-[30rem] flex-1 overflow-hidden text-[#f7f1e3] transition-[flex-grow] duration-700 ease-out md:hover:flex-[1.35]">
-      <Image src={image} alt="" fill className="-z-20 object-cover transition duration-[1400ms] ease-out group-hover:scale-105" sizes="(min-width: 768px) 60vw, 100vw" />
-      <div className={`absolute inset-0 -z-10 bg-gradient-to-t ${tint} to-transparent`} />
+    <a href={href} className="reveal-clip group relative isolate flex min-h-[30rem] flex-1 overflow-hidden text-[#f7f1e3] transition-[flex-grow] duration-700 ease-out md:hover:flex-[1.35]">
+      <Image src={image} alt="" fill className="-z-20 object-cover transition duration-[1600ms] ease-out group-hover:scale-110" sizes="(min-width: 768px) 60vw, 100vw" />
+      <div className={`absolute inset-0 -z-10 bg-gradient-to-t ${tint} to-transparent transition-opacity duration-700 group-hover:opacity-90`} />
       <div className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-black/45 to-transparent" />
+      <div className="absolute inset-4 border border-white/0 transition duration-700 group-hover:border-white/20 md:inset-6" aria-hidden="true" />
       <div className="flex w-full flex-col justify-between p-8 md:p-12">
-        <span className={`font-display text-7xl ${accent} opacity-80`}>{index}</span>
+        <span className={`font-display text-7xl ${accent} opacity-80 transition duration-700 group-hover:translate-x-2 rtl:group-hover:-translate-x-2`}>{index}</span>
         <div>
-          <h3 className="font-display text-5xl leading-none md:text-6xl">{title}</h3>
-          <p className="mt-4 max-w-sm leading-relaxed text-[#f7f1e3]/80">{text}</p>
+          <h3 className="font-display text-5xl leading-none transition duration-700 group-hover:-translate-y-2 md:text-6xl">{title}</h3>
+          <p className="mt-4 max-w-sm leading-relaxed text-[#f7f1e3]/80 transition duration-700 group-hover:-translate-y-1">{text}</p>
           <span className={`mt-8 inline-flex items-center gap-3 text-sm tracking-wide ${accent}`}>
             {cta}
-            <span className="grid size-10 place-items-center border border-current transition group-hover:bg-[#f7f1e3] group-hover:text-ink">
+            <span className="grid size-10 place-items-center border border-current transition duration-500 group-hover:bg-[#f7f1e3] group-hover:text-ink">
               <ArrowUpRight className="size-4 rtl:-scale-x-100" aria-hidden="true" />
             </span>
           </span>
@@ -271,7 +319,12 @@ function Collection({
 
 function ArticleCard({ href, index, kicker, title, text }: { href: string; index: number; kicker: string; title: string; text: string }) {
   return (
-    <a href={href} className="reveal group relative flex flex-col justify-between border border-[#e6dcc6] bg-white/60 p-8 transition duration-500 hover:-translate-y-1 hover:border-gold hover:bg-white hover:shadow-[0_30px_70px_-40px_rgba(18,26,13,0.45)] md:p-10">
+    <a
+      href={href}
+      className="reveal group relative flex flex-col justify-between overflow-hidden border border-[#e6dcc6] bg-white/60 p-8 transition duration-500 hover:-translate-y-1.5 hover:border-gold hover:bg-white hover:shadow-[0_30px_70px_-40px_rgba(18,26,13,0.45)] md:p-10"
+      style={vars({ "--d": `${(index % 2) * 6}%` })}
+    >
+      <span className="pointer-events-none absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-gold transition-transform duration-700 group-hover:scale-x-100 rtl:origin-right" aria-hidden="true" />
       <div className="flex items-start justify-between gap-6">
         <p className="kicker text-gold">{kicker}</p>
         <span className="font-display text-2xl text-gold/40">{String(index + 1).padStart(2, "0")}</span>
@@ -279,8 +332,8 @@ function ArticleCard({ href, index, kicker, title, text }: { href: string; index
       <div>
         <h3 className="font-display mt-10 text-3xl leading-tight md:text-4xl">{title}</h3>
         <p className="mt-4 leading-relaxed text-[#5c574e]">{text}</p>
-        <span className="mt-8 inline-flex size-11 items-center justify-center border border-olive/30 text-olive transition group-hover:border-olive group-hover:bg-olive group-hover:text-[#f7f1e3]">
-          <ArrowUpRight className="size-4 rtl:-scale-x-100" aria-hidden="true" />
+        <span className="mt-8 inline-flex size-11 items-center justify-center border border-olive/30 text-olive transition duration-500 group-hover:border-olive group-hover:bg-olive group-hover:text-[#f7f1e3]">
+          <ArrowUpRight className="size-4 transition duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
         </span>
       </div>
     </a>
@@ -289,18 +342,18 @@ function ArticleCard({ href, index, kicker, title, text }: { href: string; index
 
 function Closing({ locale, dict }: { locale: Locale; dict: Dict }) {
   return (
-    <section className="grain relative overflow-hidden bg-olive-deep px-5 py-28 text-center text-[#f7f1e3] md:py-40">
-      <div className="glow-gold pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+    <Spotlight className="grain relative overflow-hidden bg-olive-deep px-5 py-28 text-center text-[#f7f1e3] md:py-40">
+      <Blobs />
       <div className="reveal mx-auto max-w-4xl">
         <span className="mx-auto block h-16 w-px bg-gradient-to-b from-transparent to-gold-light" aria-hidden="true" />
         <h2 className="font-display text-gold-gradient mt-10 text-5xl leading-[0.98] md:text-8xl">{dict.home.closingTitle}</h2>
         <p className="mx-auto mt-8 max-w-xl text-lg text-[#f7f1e3]/70">{dict.home.closingText}</p>
-        <a href={pathFor(locale, "quote")} className="group mt-12 inline-flex h-14 items-center gap-3 bg-gold-light px-8 text-sm font-medium tracking-wide text-ink transition hover:bg-[#f0dba6]">
+        <a href={pathFor(locale, "quote")} className={`${goldButton} mt-12 px-8`}>
           {dict.ui.quote}
           <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
         </a>
       </div>
-    </section>
+    </Spotlight>
   )
 }
 
@@ -405,14 +458,16 @@ export function StandardPage({
         <section className="bg-paper pb-24">
           <div className="mx-auto max-w-4xl px-5 md:px-10">
             {dict.faq.items.map((item) => (
-              <details key={item.q} className="group border-b border-[#e6dcc6] [&_summary::-webkit-details-marker]:hidden">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-7">
+              <details key={item.q} className="group reveal border-b border-[#e6dcc6] [&_summary::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-7 transition-colors hover:text-olive">
                   <span className="font-display text-2xl leading-snug md:text-3xl">{item.q}</span>
-                  <span className="grid size-10 shrink-0 place-items-center border border-gold/50 text-gold transition group-open:rotate-45 group-open:bg-gold group-open:text-white">
+                  <span className="grid size-10 shrink-0 place-items-center border border-gold/50 text-gold transition duration-500 group-open:rotate-45 group-open:bg-gold group-open:text-white">
                     <Plus className="size-4" aria-hidden="true" />
                   </span>
                 </summary>
-                <p className="max-w-3xl pb-8 leading-relaxed text-[#4a453c]">{item.a}</p>
+                <div className="acc">
+                  <p className="max-w-3xl pb-8 leading-relaxed text-[#4a453c]">{item.a}</p>
+                </div>
               </details>
             ))}
           </div>
@@ -426,20 +481,20 @@ export function StandardPage({
 
 function QuoteBand({ locale, dict, product }: { locale: Locale; dict: Dict; product: string }) {
   return (
-    <section className="grain relative overflow-hidden bg-olive-deep text-[#f7f1e3]">
-      <div className="glow-gold pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+    <Spotlight className="grain relative overflow-hidden bg-olive-deep text-[#f7f1e3]">
+      <Blobs />
       <div className={`${container} flex flex-col gap-10 py-20 md:flex-row md:items-center md:justify-between md:py-24`}>
-        <div className="max-w-2xl">
+        <div className="reveal max-w-2xl">
           <Kicker tone="light">{dict.nav.quote}</Kicker>
           <h2 className="font-display mt-6 text-4xl leading-tight md:text-6xl">{dict.home.closingTitle}</h2>
           <p className="mt-5 text-[#f7f1e3]/70">{dict.home.closingText}</p>
         </div>
-        <a href={`${pathFor(locale, "quote")}?product=${product}`} className="group inline-flex h-14 w-fit shrink-0 items-center gap-3 bg-gold-light px-8 text-sm font-medium tracking-wide text-ink transition hover:bg-[#f0dba6]">
+        <a href={`${pathFor(locale, "quote")}?product=${product}`} className={`${goldButton} reveal w-fit shrink-0 px-8`}>
           {dict.ui.quote}
           <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
         </a>
       </div>
-    </section>
+    </Spotlight>
   )
 }
 
@@ -453,12 +508,12 @@ function Spec({ dict, family }: { dict: Dict; family: string }) {
   return (
     <section className="bg-paper pb-24">
       <div className="mx-auto max-w-5xl px-5 md:px-10">
-        <div className="border border-[#e6dcc6] bg-ivory p-8 md:p-12">
+        <div className="reveal-scale border border-[#e6dcc6] bg-ivory p-8 md:p-12">
           <Kicker>{family}</Kicker>
           <h2 className="font-display mt-5 text-4xl">{dict.ui.specifications}</h2>
           <dl className="mt-8 divide-y divide-[#e0d5bd] border-y border-[#e0d5bd]">
             {rows.map(([term, value]) => (
-              <div key={term} className="grid gap-2 py-5 md:grid-cols-[14rem_1fr] md:gap-8">
+              <div key={term} className="reveal grid gap-2 py-5 md:grid-cols-[14rem_1fr] md:gap-8">
                 <dt className="kicker pt-1 text-stone">{term}</dt>
                 <dd className="text-lg leading-relaxed">{value}</dd>
               </div>
@@ -479,7 +534,7 @@ function CopyBody({ copy }: { copy: PageCopy }) {
           <ol className="mt-6 grid gap-3 border-s border-[#e6dcc6] ps-5 text-sm">
             {copy.sections.map((section, index) => (
               <li key={section.h}>
-                <a href={`#s-${index + 1}`} className="text-[#5c574e] transition hover:text-olive">
+                <a href={`#s-${index + 1}`} className="link-draw text-[#5c574e] transition hover:text-olive">
                   {section.h}
                 </a>
               </li>
@@ -517,9 +572,11 @@ function CopyBody({ copy }: { copy: PageCopy }) {
 function PageIntro({ copy, image, crumbs }: { copy: PageCopy; image: string; crumbs: { href: string; label: string }[] }) {
   return (
     <section className="relative isolate flex min-h-[72vh] overflow-hidden bg-olive-deep text-[#f7f1e3]">
-      <Image src={image} alt="" fill priority className="hero-zoom -z-20 object-cover" sizes="100vw" />
+      <div className="hero-parallax absolute inset-0 -z-20">
+        <Image src={image} alt="" fill priority className="hero-zoom object-cover" sizes="100vw" />
+      </div>
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#0c1008] via-[#0c1008]/55 to-[#0c1008]/35" />
-      <div className={`${container} flex w-full flex-col justify-end pb-16 pt-36 md:pb-20`}>
+      <div className={`${container} hero-copy flex w-full flex-col justify-end pb-16 pt-36 md:pb-20`}>
         <nav className="rise mb-8 flex flex-wrap items-center gap-2 text-xs tracking-wide text-[#f7f1e3]/60" aria-label="Breadcrumb">
           {crumbs.map((crumb, index) => (
             <span key={crumb.href} className="flex items-center gap-2">
@@ -533,7 +590,9 @@ function PageIntro({ copy, image, crumbs }: { copy: PageCopy; image: string; cru
         <div className="rise rise-1">
           <Kicker tone="light">{copy.kicker}</Kicker>
         </div>
-        <h1 className="font-display rise rise-2 mt-6 max-w-5xl text-[clamp(2.75rem,6vw,5.75rem)] leading-[0.96] tracking-[-0.025em]">{copy.h1}</h1>
+        <h1 className="font-display mt-6 max-w-5xl text-[clamp(2.75rem,6vw,5.75rem)] leading-[0.96] tracking-[-0.025em]">
+          <Words text={copy.h1} start={0.2} />
+        </h1>
         <p className="rise rise-3 mt-7 max-w-2xl text-lg leading-relaxed text-[#f7f1e3]/80">{copy.lede}</p>
       </div>
     </section>

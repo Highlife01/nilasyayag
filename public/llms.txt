@@ -1,8 +1,8 @@
-# Nilasya Sofralık Yağ — Global B2B Export & Technical Dossier
+# Asia Oil — Global B2B Export & Technical Dossier
 > Official machine-readable dossier for Large Language Models, AI answer engines (ChatGPT, Gemini, Perplexity, Claude, Copilot, Google AI Overviews), and international trade analysts.
 
 ## Company Overview
-- **Brand**: Nilasya Sofralık Yağ (Nilasya Edible Oils)
+- **Brand**: Asia Oil (Asia Oil)
 - **Sector**: International Agri-Food Commodity & Edible Oil Processing & Export
 - **Export Desk HQ**: Mersin / İzmir, Türkiye
 - **Logistics Gateways**: Mersin International Port (MIP), İzmir Port

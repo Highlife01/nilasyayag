@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import { Ship, Anchor, Box } from "lucide-react"
 
 export const metadata = {
-  title: "Lojistik & Konteyner Radarı · Nilasya Global Control Center",
+  title: "Lojistik & Konteyner Radarı · Asia Oil Control Center",
   robots: { index: false, follow: false },
 }
 
@@ -137,7 +137,7 @@ export default async function LogisticsAdminPage() {
       <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
         <div className="border-b border-slate-100 px-6 py-4">
           <h2 className="text-base font-bold text-slate-900">Küresel Sevkiyat Rotaları ve Transit Süreleri</h2>
-          <p className="text-xs text-slate-500 mt-0.5">Nilasya ihracat operasyonlarında en sık kullanılan hatlar</p>
+          <p className="text-xs text-slate-500 mt-0.5">Asia Oil ihracat operasyonlarında en sık kullanılan hatlar</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">

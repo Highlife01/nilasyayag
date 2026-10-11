@@ -2,7 +2,7 @@ import type { Dict } from "@/content/types"
 
 const tr: Dict = {
   metaDescription:
-    "Nilasya Sofralık Yağ, ayçiçek yağı ve zeytinyağını profesyonel alıcılara teklif üzerinden sunar. Türkiye’den toptan talep oluşturun.",
+    "Asia Oil, ayçiçek yağı ve zeytinyağını profesyonel alıcılara teklif üzerinden sunar. Türkiye’den toptan talep oluşturun.",
   nav: {
     home: "Ana sayfa",
     sunflower: "Ayçiçek yağı",
@@ -43,28 +43,28 @@ const tr: Dict = {
   },
   hero: [
     {
-      kicker: "Nilasya",
+      kicker: "Asia Oil",
       title: "Ayçiçek yağı ve zeytinyağı, profesyonel alıcılar için",
       lede: "Türkiye’de bir teklif masası. İki koleksiyon ayrı durur. Sıradaki adım sepet değil, yazılı tekliftir.",
-      alt: "Nilasya görseli 1",
+      alt: "Asia Oil görseli 1",
     },
     {
       kicker: "Ayçiçek yağı",
       title: "Miktarla birlikte spesifikasyonu sorun",
       lede: "Ürünü, ambalajı ve varış yerini yazın. Masa, o sevkiyat için teklif hazırlar.",
-      alt: "Nilasya görseli 2",
+      alt: "Asia Oil görseli 2",
     },
     {
       kicker: "Zeytinyağı",
       title: "Zeytinyağı kendi konuşmasında",
       lede: "Sınıf ve belgeler, satın aldığınız parti için kesinleşir. Kalıcı iddia olarak burada basılmaz.",
-      alt: "Nilasya görseli 3",
+      alt: "Asia Oil görseli 3",
     },
     {
       kicker: "Uluslararası ticaret",
       title: "Talepten, yazdığınız limana",
       lede: "Firma, yetkili, miktar ve varış dosyayı açmak için yeter. Tekliften önce yaptırım ve ürün kuralları kontrol edilir.",
-      alt: "Nilasya görseli 4",
+      alt: "Asia Oil görseli 4",
     },
   ],
   home: {
@@ -100,7 +100,7 @@ const tr: Dict = {
   pages: {
     sunflower: {
       title: "Ayçiçek yağı tedarikçisi",
-      description: "Nilasya Sofralık Yağ’dan toptan ayçiçek yağı. Türkiye’den konteyner, dökme veya dağıtım için teklif isteyin.",
+      description: "Asia Oil’den toptan ayçiçek yağı. Türkiye’den konteyner, dökme veya dağıtım için teklif isteyin.",
       kicker: "Ayçiçek yağı",
       h1: "Toptan alıcılar için ayçiçek yağı",
       lede: "Bu koleksiyon, profesyonel alıcılar için yemeklik ayçiçek yağıdır. Spesifikasyon, ambalaj ve sevkiyat siz yazdıktan sonra kesinleşir. Bu sayfada kamu fiyatı yoktur.",
@@ -116,7 +116,7 @@ const tr: Dict = {
           h: "Sonra kesinleşenler",
           p: [
             "Spesifikasyon föyü pazarlama sayfasına değil, teklife aittir. Laboratuvar değeri, sezon ve ambalaj görseli, fiyatlanan malı anlattığında paylaşılır.",
-            "O dosya onaylanana kadar Nilasya buraya sertifika numarası veya şişe iddiası basmaz.",
+            "O dosya onaylanana kadar Asia Oil buraya sertifika numarası veya şişe iddiası basmaz.",
           ],
           b: ["Koridor uygunsa dökme", "Varil ve IBC", "Spesifikasyon konuşulduktan sonra ambalajlı şişe"],
         },
@@ -124,7 +124,7 @@ const tr: Dict = {
     },
     olive: {
       title: "Zeytinyağı ihracatı",
-      description: "Nilasya Sofralık Yağ’dan toptan zeytinyağı. Sınıf ve belgeler parti bazında kesinleşir. Teklif isteyin.",
+      description: "Asia Oil’den toptan zeytinyağı. Sınıf ve belgeler parti bazında kesinleşir. Teklif isteyin.",
       kicker: "Zeytinyağı",
       h1: "Zeytinyağı, parti parti teklif",
       lede: "Zeytinyağı ayçiçek teklifinin içine katılmaz. İstediğiniz sınıfı ve varışı yazın. Masa, o miktar için ne sunulabileceğini ve hangi belgelerin o partiye ait olduğunu söyler.",
@@ -150,7 +150,7 @@ const tr: Dict = {
       description: "Distribütör ve ithalatçılar için toptan ayçiçek yağı ve zeytinyağı. Konteyner, dökme ve dağıtım talepleri.",
       kicker: "Toptan",
       h1: "Kamuya açık fiyat listesi olmadan toptan",
-      lede: "Nilasya şirketlere satar. Konteyner alıcısı, dökme alıcısı ve distribütör aynı soruyu almaz. Form hangisi olduğunuzu sorar.",
+      lede: "Asia Oil şirketlere satar. Konteyner alıcısı, dökme alıcısı ve distribütör aynı soruyu almaz. Form hangisi olduğunuzu sorar.",
       sections: [
         {
           h: "Dosyayı açmanın üç yolu",
@@ -182,7 +182,7 @@ const tr: Dict = {
       description: "Ayçiçek yağı ve zeytinyağında özel marka, sözleşme bazında konuşulur. Etiket onaylanmadan yayımlanmaz.",
       kicker: "Özel marka",
       h1: "Markanız, spesifikasyon konuşulduktan sonra",
-      lede: "Özel marka, ayçiçek yağı ve zeytinyağı için konuşulabilir. Şişe, hacim, görsel ve sınıf üretimden önce kesinleşir. Bu sayfa bitmiş bir Nilasya etiketi göstermez.",
+      lede: "Özel marka, ayçiçek yağı ve zeytinyağı için konuşulabilir. Şişe, hacim, görsel ve sınıf üretimden önce kesinleşir. Bu sayfa bitmiş bir Asia Oil etiketi göstermez.",
       sections: [
         { h: "Taleple birlikte ne gönderilmeli", p: ["Hangi pazarlar için doldurduğunuz, şişe veya teneke hacmi ve görselin hazır olup olmadığı. Görsel hazır değilse söyleyin. Teklif yine de yağı konuşabilir."] },
         { h: "Yayımlanmayanlar", p: ["Onaysız etiket metni, uydurma barkod ve sertifika işareti fotoğraflara konmaz. Ambalaj dosyası onaylanınca masadan kütüphaneye eklenebilir."] },
@@ -190,10 +190,10 @@ const tr: Dict = {
     },
     quality: {
       title: "Kalite ve belgeler",
-      description: "Nilasya’nın sevkiyat bazında hazırladığı belgeler ve dosya onaylanmadan bilinçli olarak yazılmayan iddialar.",
+      description: "Asia Oil’in sevkiyat bazında hazırladığı belgeler ve dosya onaylanmadan bilinçli olarak yazılmayan iddialar.",
       kicker: "Kalite",
       h1: "Bir sevkiyata ait belgeler",
-      lede: "Alıcılar spesifikasyon, parti analizi, menşe evrakı ve çeki listesi ister. Nilasya bu seti satılan mal için hazırlar. Site, yayımlanması onaylanmamış bir sertifikayı göstermez.",
+      lede: "Alıcılar spesifikasyon, parti analizi, menşe evrakı ve çeki listesi ister. Asia Oil bu seti satılan mal için hazırlar. Site, yayımlanması onaylanmamış bir sertifikayı göstermez.",
       sections: [
         {
           h: "Sık istenenler",
@@ -204,11 +204,11 @@ const tr: Dict = {
       ],
     },
     about: {
-      title: "Nilasya hakkında",
-      description: "Nilasya Sofralık Yağ, Türkiye’den ayçiçek yağı ve zeytinyağı sunan bir toptan masadır.",
+      title: "Asia Oil hakkında",
+      description: "Asia Oil, Türkiye’den ayçiçek yağı ve zeytinyağı sunan bir toptan masadır.",
       kicker: "Şirket",
-      h1: "Nilasya Sofralık Yağ",
-      lede: "Nilasya, profesyonel alıcılara satılan ayçiçek yağı ve zeytinyağının ticari masasıdır. Talepler Türkiye’den yürütülür. Yasal adres, vergi numarası ve banka bilgisi, kimliği belli alıcılarla sözleşme sırasında paylaşılır.",
+      h1: "Asia Oil",
+      lede: "Asia Oil, profesyonel alıcılara satılan ayçiçek yağı ve zeytinyağının ticari masasıdır. Talepler Türkiye’den yürütülür. Yasal adres, vergi numarası ve banka bilgisi, kimliği belli alıcılarla sözleşme sırasında paylaşılır.",
       sections: [
         { h: "Bu site nedir", p: ["İki koleksiyonu okumak, teklifin nasıl işlediğini görmek ve masaya ulaşan bir talep göndermek içindir. Dükkân değildir ve kamuya açık stok listesi tutmaz."] },
         { h: "Çevrimdışı kesinleşenler", p: ["Fabrika adresi ve banka, alt bilgiyi doldurmak için uydurulmaz. Bu bilgiler kesinleşince kontrol merkezinden yayımlanabilir. O güne kadar yol, form ve yayımlanan e-postadır."] },
@@ -216,7 +216,7 @@ const tr: Dict = {
     },
     contact: {
       title: "İletişim",
-      description: "Nilasya yemeklik yağ masasına yazın. Talepler ticari ekip için saklanır.",
+      description: "Asia Oil yemeklik yağ masasına yazın. Talepler ticari ekip için saklanır.",
       kicker: "İletişim",
       h1: "Masaya yazın",
       lede: "Genel bir mesaj veya teklif için formu kullanın. Kayıt ticari ekip için saklanır ve yetkili adrese bildirim hazırlanır.",
@@ -243,7 +243,7 @@ const tr: Dict = {
     quotation: {
       slug: "toplu-aycicek-yagi-teklifi",
       title: "Toplu ayçiçek yağı teklifi nasıl istenir",
-      description: "Ayçiçek yağı için dökme veya konteyner teklifi isterken Nilasya’ya ne gönderilir.",
+      description: "Ayçiçek yağı için dökme veya konteyner teklifi isterken Asia Oil’e ne gönderilir.",
       kicker: "Teklif",
       h1: "Toplu ayçiçek yağı teklifini nasıl isterim?",
       lede: "Firma adını, yetkiliyi, e-postayı, telefonu, varışı, miktarı ve fiyatlanmasını istediğiniz ambalajı gönderin. Masanın dosya açması için bu yeter.",
@@ -258,7 +258,7 @@ const tr: Dict = {
       description: "Ayçiçek yağı ve zeytinyağında dökme, varil, IBC ve şişe. Format teklifte kesinleşir.",
       kicker: "Ambalaj",
       h1: "Hangi ambalaj fiyatlanabilir?",
-      lede: "Alıcılar çoğu zaman dökme, varil, IBC veya şişe ister. Nilasya bu formatları konuşabilir. Sözleşmedeki format, teklifte kesinleşen formattır.",
+      lede: "Alıcılar çoğu zaman dökme, varil, IBC veya şişe ister. Asia Oil bu formatları konuşabilir. Sözleşmedeki format, teklifte kesinleşen formattır.",
       sections: [
         { h: "Formatı kendi cümlenizle yazın", p: ["Fleksitank gerekiyorsa fleksitank deyin. 5 litre veya 1 litre şişe gerekiyorsa hacmi yazın. Bu sitedeki bir ambalaj satırını, kararlaştırılmış gibi ihaleye kopyalamayın."] },
         { h: "Etiketler", p: ["Ambalajlı mal görsel ister. Görsel onaylanmadan burada gösterilmez. Özel marka, sahte bir etiketten değil talepten başlar."] },
@@ -270,7 +270,7 @@ const tr: Dict = {
       description: "Spesifikasyon, parti analizi, menşe evrakı ve çeki listesi sevkiyat bazında hazırlanır.",
       kicker: "Belgeler",
       h1: "Yemeklik yağ ithalatı için hangi belgeler gerekir?",
-      lede: "Tam liste varışa ve komisyoncuya bağlıdır. Alıcılar çoğu zaman spesifikasyon, parti analizi, menşe şahadetnamesi, çeki listesi ve ticari fatura ister. Nilasya’dan kendi sevkiyatınıza ait seti isteyin.",
+      lede: "Tam liste varışa ve komisyoncuya bağlıdır. Alıcılar çoğu zaman spesifikasyon, parti analizi, menşe şahadetnamesi, çeki listesi ve ticari fatura ister. Asia Oil’den kendi sevkiyatınıza ait seti isteyin.",
       sections: [
         { h: "Neden hepsi yayımlanmıyor", p: ["Bir analiz tek partiyi anlatır. Tek bir sertifikayı gelecek bütün yükleri kapsıyormuş gibi yayımlamak yanlış olur. Dosya, satılan yük o olduğunda paylaşılır."] },
         { h: "Nasıl istenir", p: ["Gümrükçünüzün saydığı belgeleri yazın. Masa, hangilerinin teklifle, hangilerinin sevkiyatla geleceğini söyler."] },
@@ -291,7 +291,7 @@ const tr: Dict = {
   },
   faq: {
     title: "Alıcı soruları",
-    description: "Nilasya’dan ayçiçek yağı veya zeytinyağı isteyen şirketler için yanıtlar.",
+    description: "Asia Oil’den ayçiçek yağı veya zeytinyağı isteyen şirketler için yanıtlar.",
     kicker: "SSS",
     h1: "İlk tekliften önce sorulanlar",
     lede: "Kısa yanıtlar. Bir konu tam sayfa istiyorsa rehberde karşılığı vardır.",
@@ -301,13 +301,13 @@ const tr: Dict = {
       { q: "Buradan tek şişe alınır mı?", a: "Hayır. Site toptan ve ihracat talepleri içindir. Ödeme almaz." },
       { q: "Hangi ürünleri sorabilirim?", a: "Ayçiçek yağı, zeytinyağı veya ikisi. Özel marka aynı talebin içine eklenebilir." },
       { q: "Hangi ülkelere sevkiyat var?", a: "Varışı forma yazın. Masa o varışın sunulup sunulamayacağını söyler. Her ülkeyi kabul eden bir form, kapsama sözü değildir." },
-      { q: "Bana e-posta gelir mi?", a: "Ticari yanıt, yazdığınız adrese gider. Yetkili Nilasya adresine de bildirim hazırlanır." },
+      { q: "Bana e-posta gelir mi?", a: "Ticari yanıt, yazdığınız adrese gider. Yetkili Asia Oil adresine de bildirim hazırlanır." },
       { q: "Verilerim nasıl kullanılır?", a: "Talebi yanıtlamak ve ticari kaydı tutmak için. Saklama ve silme gizlilik sayfasında anlatılır." },
     ],
   },
   privacy: {
     title: "Gizlilik",
-    description: "Nilasya’nın talep verisini KVKK ve GDPR ilkeleriyle nasıl kullandığı.",
+    description: "Asia Oil’in talep verisini KVKK ve GDPR ilkeleriyle nasıl kullandığı.",
     kicker: "Gizlilik",
     h1: "Gizlilik bildirimi",
     lede: "Form, toptan bir talebi yanıtlamak için gereken bilgileri alır. Kayıt sunucuda durur. localStorage, sessionStorage veya tarayıcı veritabanına yazılmaz.",
@@ -336,7 +336,7 @@ const tr: Dict = {
     quantity: "Miktar",
     packaging: "Fiyatlanacak ambalaj",
     message: "Mesaj",
-    consent: "Nilasya’nın bu bilgileri talebi yanıtlamak için kullanacağını anlıyorum. Kaydın silinmesini isteyebilirim.",
+    consent: "Asia Oil’in bu bilgileri talebi yanıtlamak için kullanacağını anlıyorum. Kaydın silinmesini isteyebilirim.",
     submit: "Talebi gönder",
     success: "Talep kaydedildi. Masa, yazdığınız e-postaya yanıt verecek. Bu sayfa ödeme almaz.",
     invalid: "İşaretli alanları kontrol edip formu yeniden gönderin.",
@@ -354,7 +354,7 @@ const tr: Dict = {
   },
   footer: {
     note: "Teklifler talep bazında yazılır. Bu site çevrimiçi satış yapmaz.",
-    rights: "Nilasya Sofralık Yağ",
+    rights: "Asia Oil",
   },
   consent: {
     text: "Ziyaret, yalnızca izin verirseniz sayılır. Seçim bir çerezde durur. Site localStorage kullanmaz.",

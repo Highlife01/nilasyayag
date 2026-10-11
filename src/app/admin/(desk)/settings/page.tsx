@@ -12,7 +12,7 @@ import {
 } from "lucide-react"
 
 export const metadata = {
-  title: "Ayarlar & Güvenlik · Nilasya Global Control Center",
+  title: "Ayarlar & Güvenlik · Asia Oil Control Center",
   robots: { index: false, follow: false },
 }
 
@@ -145,7 +145,7 @@ export default async function SettingsAdminPage() {
         <div className="grid gap-4 sm:grid-cols-2 text-xs">
           <div>
             <span className="text-slate-500 block">Resmî Marka / Unvan:</span>
-            <span className="font-bold text-slate-900 block mt-0.5">{settings.legalName || "Nilasya Sofralık Yağ"}</span>
+            <span className="font-bold text-slate-900 block mt-0.5">{settings.legalName || "Asia Oil"}</span>
           </div>
 
           <div>

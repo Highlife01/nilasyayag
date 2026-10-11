@@ -67,7 +67,7 @@ export type Overview = {
 export function emptyControl(now = new Date().toISOString()): Control {
   return {
     settings: {
-      legalName: "Nilasya Sofralık Yağ",
+      legalName: "Asia Oil",
       publicEmail: SUPERADMIN_EMAIL,
       notifyEmail: SUPERADMIN_EMAIL,
       phone: "",

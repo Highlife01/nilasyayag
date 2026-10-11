@@ -162,37 +162,221 @@ html[lang="ar"] .font-display {
   background: #a67c3d;
 }
 
-@keyframes hero-zoom {
-  from { transform: scale(1.08); }
-  to { transform: scale(1); }
+/* ---------- Motion system ---------- */
+
+:root {
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-expo: cubic-bezier(0.76, 0, 0.24, 1);
+  interpolate-size: allow-keywords;
 }
 
-.hero-zoom {
-  animation: hero-zoom 14s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+/* Cross-document page transitions (plain <a> navigation). */
+@view-transition {
+  navigation: auto;
 }
 
+::view-transition-old(root) {
+  animation: 0.35s var(--ease-out) both page-out;
+}
+
+::view-transition-new(root) {
+  animation: 0.55s var(--ease-out) both page-in;
+}
+
+@keyframes page-out {
+  to { opacity: 0; transform: translateY(-12px); }
+}
+
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(16px); }
+}
+
+.site-header {
+  view-transition-name: site-header;
+}
+
+/* Intro curtain: shows only on the home page, lifts to reveal the hero. */
+.curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  background: #121a0d;
+  color: #e4c98a;
+  pointer-events: none;
+  animation: curtain 1s var(--ease-expo) 0.7s forwards;
+}
+
+.curtain > * {
+  animation: curtain-mark 0.8s var(--ease-out) both;
+}
+
+@keyframes curtain {
+  to { transform: translateY(-101%); visibility: hidden; }
+}
+
+@keyframes curtain-mark {
+  from { opacity: 0; transform: translateY(18px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Time-based entrance. --base shifts a whole block (used after the curtain). */
 @keyframes rise {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(26px); }
   to { opacity: 1; transform: none; }
 }
 
 .rise {
-  animation: rise 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: rise 1.1s var(--ease-out) both;
+  animation-delay: calc(var(--base, 0s) + var(--step, 0s));
 }
 
-.rise-1 { animation-delay: 0.15s; }
-.rise-2 { animation-delay: 0.3s; }
-.rise-3 { animation-delay: 0.45s; }
-.rise-4 { animation-delay: 0.6s; }
+.rise-1 { --step: 0.15s; }
+.rise-2 { --step: 0.3s; }
+.rise-3 { --step: 0.45s; }
+.rise-4 { --step: 0.6s; }
 
+/* Word-by-word masked headline. */
+.mask-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.mask-word > span {
+  display: inline-block;
+  transform: translateY(112%);
+  animation: mask-up 1s var(--ease-expo) both;
+  animation-delay: calc(var(--base, 0s) + var(--i, 0s));
+}
+
+@keyframes mask-up {
+  to { transform: none; }
+}
+
+/* Slow Ken Burns on hero media. */
+@keyframes hero-zoom {
+  from { transform: scale(1.1); }
+  to { transform: scale(1); }
+}
+
+.hero-zoom {
+  animation: hero-zoom 16s var(--ease-out) forwards;
+}
+
+/* Scroll-driven motion. Browsers without support just show the content. */
 @supports (animation-timeline: view()) {
   .reveal {
     animation: rise linear both;
     animation-timeline: view();
-    animation-range: entry 0% cover 28%;
+    animation-range: entry var(--d, 0%) cover calc(30% + var(--d, 0%));
+  }
+
+  .reveal-clip {
+    animation: clip-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
+  }
+
+  .reveal-scale {
+    animation: scale-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 45%;
+  }
+
+  .draw {
+    transform-origin: left;
+    animation: draw linear both;
+    animation-timeline: view();
+    animation-range: entry 30% cover 60%;
+  }
+
+  html[dir="rtl"] .draw {
+    transform-origin: right;
+  }
+
+  .slide-word {
+    animation: slide-word linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+
+  html[dir="rtl"] .slide-word {
+    animation-name: slide-word-rtl;
+  }
+
+  .hero-parallax {
+    animation: hero-parallax linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 100vh;
+  }
+
+  .hero-copy {
+    animation: hero-fade linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 60vh;
+  }
+
+  .scroll-progress {
+    animation: progress linear both;
+    animation-timeline: scroll(root);
   }
 }
 
+@keyframes clip-up {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes slide-word {
+  from { opacity: 0.2; transform: translateX(-6%); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes slide-word-rtl {
+  from { opacity: 0.2; transform: translateX(6%); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes hero-parallax {
+  to { transform: translateY(22%); }
+}
+
+@keyframes hero-fade {
+  to { opacity: 0; transform: translateY(-48px); }
+}
+
+.scroll-progress {
+  position: fixed;
+  inset-inline-start: 0;
+  top: 0;
+  z-index: 60;
+  height: 2px;
+  width: 100%;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, #a67c3d, #e4c98a);
+  pointer-events: none;
+}
+
+html[dir="rtl"] .scroll-progress {
+  transform-origin: right;
+}
+
+/* Marquee with soft edges. */
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -200,6 +384,10 @@ html[lang="ar"] .font-display {
 
 .marquee {
   animation: marquee 38s linear infinite;
+}
+
+.marquee-mask {
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
 }
 
 html[dir="rtl"] .marquee {
@@ -231,16 +419,128 @@ html[dir="rtl"] .progress {
   transform-origin: right;
 }
 
+/* Gold gradient text with a slow shimmer. */
 .text-gold-gradient {
-  background: linear-gradient(100deg, #f6e4ad 0%, #d3ad5c 38%, #f8e9bd 55%, #b1873f 100%);
+  background: linear-gradient(100deg, #f6e4ad 0%, #d3ad5c 30%, #f8e9bd 50%, #b1873f 70%, #f6e4ad 100%);
+  background-size: 220% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: shimmer 9s linear infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: 220% center; }
 }
 
 .text-outline {
   color: transparent;
   -webkit-text-stroke: 1px rgba(228, 201, 138, 0.28);
+}
+
+/* Light sweep on primary buttons. */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.5) 50%, transparent 65%);
+  transform: translateX(-130%);
+  transition: transform 0.9s var(--ease-out);
+  pointer-events: none;
+}
+
+.btn-shine:hover::after {
+  transform: translateX(130%);
+}
+
+/* Pointer-following glow for dark sections (coordinates set by the Spotlight component). */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s;
+  background: radial-gradient(640px circle at var(--mx, 50%) var(--my, 30%), rgba(228, 201, 138, 0.16), transparent 60%);
+}
+
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* 3D tilt frame (angles set by the Showcase component). */
+.tilt {
+  transform: perspective(1400px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.6s var(--ease-out);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Slide change inside the showcase. */
+@keyframes slide-in {
+  from { opacity: 0; transform: scale(1.04) translateX(2%); }
+  to { opacity: 1; transform: none; }
+}
+
+.slide-in {
+  animation: slide-in 1.2s var(--ease-out) both;
+}
+
+/* Floating glow blobs. */
+@keyframes float {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(4%, -6%, 0) scale(1.08); }
+}
+
+.float {
+  animation: float 14s ease-in-out infinite;
+}
+
+.float-slow {
+  animation: float 22s ease-in-out infinite reverse;
+}
+
+/* Underline that draws from the start on hover. */
+.link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  transition: background-size 0.5s var(--ease-out);
+}
+
+.link-draw:hover {
+  background-size: 100% 1px;
+}
+
+html[dir="rtl"] .link-draw {
+  background-position: 100% 100%;
+}
+
+/* Smooth accordion content. */
+details .acc {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s var(--ease-out);
+}
+
+details[open] .acc {
+  grid-template-rows: 1fr;
+}
+
+details .acc > * {
+  overflow: hidden;
 }
 
 .grain {
@@ -263,15 +563,44 @@ html[dir="rtl"] .progress {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .curtain {
+    display: none;
+  }
+
   .hero-zoom,
   .rise,
+  .mask-word > span,
   .reveal,
+  .reveal-clip,
+  .reveal-scale,
+  .draw,
+  .slide-word,
+  .hero-parallax,
+  .hero-copy,
   .marquee,
   .scroll-cue,
-  .progress {
+  .progress,
+  .text-gold-gradient,
+  .slide-in,
+  .float,
+  .float-slow {
     animation: none !important;
   }
+
+  .mask-word > span {
+    transform: none;
+  }
+
+  .tilt {
+    transform: none !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }
+
 
 .hp {
   position: absolute;

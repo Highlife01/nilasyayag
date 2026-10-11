@@ -1,6 +1,6 @@
 import Image from "next/image"
 import type { CSSProperties } from "react"
-import { ArrowRight, ArrowUpRight, Plus } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Plus, Phone, Ship, CheckCircle2, ShieldCheck, Sparkles } from "lucide-react"
 import { ARTICLE_IDS } from "@/content/index"
 import type { Dict, PageCopy } from "@/content/types"
 import { pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
@@ -8,6 +8,7 @@ import { still, type Frame } from "@/lib/media"
 import { InquiryForm } from "@/components/site/inquiry-form"
 import { Showcase } from "@/components/site/hero"
 import { Spotlight } from "@/components/site/motion"
+import { QuoteCalculator } from "@/components/site/quote-calculator"
 import { BRAND_NAME, Mark, Wordmark } from "@/components/site/chrome"
 import type { Settings } from "@/lib/model"
 
@@ -78,53 +79,116 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
         </div>
       </div>
 
-      <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-olive-deep text-[#f7f1e3]" style={vars({ "--base": "0.9s" })}>
-        <div className="hero-parallax absolute inset-0 -z-20">
-          {cover ? (
-            <Image src={cover.src} alt={dict.hero[3]?.alt ?? ""} fill priority sizes="100vw" className="hero-zoom object-cover object-[78%_center] lg:object-[70%_center]" />
-          ) : null}
-        </div>
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(12,16,8,0.95)_0%,rgba(12,16,8,0.8)_34%,rgba(12,16,8,0.3)_60%,rgba(12,16,8,0)_85%)] max-md:bg-[linear-gradient(0deg,rgba(12,16,8,0.95)_0%,rgba(12,16,8,0.7)_50%,rgba(12,16,8,0.3)_100%)] rtl:md:bg-[linear-gradient(270deg,rgba(12,16,8,0.95)_0%,rgba(12,16,8,0.8)_34%,rgba(12,16,8,0.3)_60%,rgba(12,16,8,0)_85%)]" />
-        <div className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-[#0c1008] to-transparent" />
-        <div className="absolute inset-x-0 top-0 -z-10 h-36 bg-gradient-to-b from-[#0c1008]/75 to-transparent" />
-        <span className="float pointer-events-none absolute left-[-10%] top-[20%] -z-10 size-[40vw] rounded-full bg-[radial-gradient(circle,rgba(226,173,58,0.16),transparent_65%)] blur-3xl" aria-hidden="true" />
+      <section className="relative isolate flex min-h-[100svh] flex-col justify-between overflow-hidden bg-[#0c1209] text-[#f7f1e3] pt-28 pb-16" style={vars({ "--base": "0.9s" })}>
+        {/* Ambient atmospheric background glows */}
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(212,175,55,0.18),transparent_75%)]" />
+        <div className="pointer-events-none absolute -left-40 top-40 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(143,166,91,0.18),transparent_70%)] blur-3xl" />
+        <div className="pointer-events-none absolute -right-40 bottom-20 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(212,175,55,0.12),transparent_70%)] blur-3xl" />
 
-        <div className={`${container} hero-copy flex w-full flex-1 flex-col justify-center pb-16 pt-32`}>
-          <div className="max-w-[min(46rem,52vw)] max-md:max-w-none">
-            <div className="rise">
-              <Kicker tone="light">{lead?.kicker ?? BRAND_NAME}</Kicker>
+        <div className={`${container} flex flex-col items-center text-center`}>
+          {/* Live Port / Export Desk Status Pill */}
+          <div className="rise inline-flex items-center gap-2.5 rounded-full border border-gold-light/30 bg-black/40 px-4 py-1.5 text-xs text-gold-light backdrop-blur-md shadow-lg">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="font-semibold tracking-wide uppercase">
+              {locale === "tr"
+                ? "Canlı İhracat Masası • Mersin Port (MIP) & İzmir Limanı"
+                : "Live Export Desk • Mersin Port (MIP) & İzmir Seaport"}
+            </span>
+          </div>
+
+          {/* Headline */}
+          <h1 className="font-display mt-6 max-w-4xl text-[clamp(2.5rem,5.2vw,5.2rem)] font-bold leading-[1.02] tracking-tight drop-shadow-md text-white">
+            <Words text={titleStart} start={0.1} />
+            {titleEnd ? (
+              <span className="text-gold-gradient block italic font-normal mt-1">
+                <Words text={titleEnd} start={0.1 + titleWords * 0.055} />
+              </span>
+            ) : null}
+          </h1>
+
+          <p className="rise rise-3 mt-6 max-w-2xl text-base leading-relaxed text-[#f7f1e3]/80 md:text-lg">
+            {lead?.lede ?? dict.metaDescription}
+          </p>
+
+          {/* Dual CTAs & Quality Badges */}
+          <div className="rise rise-4 mt-8 flex flex-wrap items-center justify-center gap-4">
+            <a href={pathFor(locale, "quote")} className={`${goldButton} px-8 rounded-full shadow-lg shadow-gold/20`}>
+              <span>{dict.ui.quote}</span>
+              <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
+            </a>
+            <a
+              href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20a%20B2B%20quotation"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-14 items-center gap-2.5 rounded-full border border-white/25 bg-white/5 px-7 text-sm font-medium text-white backdrop-blur-sm transition duration-300 hover:border-emerald-400 hover:bg-emerald-950/30 hover:text-emerald-300"
+            >
+              <Phone className="size-4 text-emerald-400" />
+              <span>WhatsApp B2B Desk</span>
+            </a>
+            <a
+              href={pathFor(locale, "sunflower")}
+              className="inline-flex h-14 items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 text-sm text-[#f7f1e3]/90 transition hover:border-sun hover:bg-sun/10 hover:text-sun"
+            >
+              <span className="size-2 rounded-full bg-sun" />
+              <span>{dict.nav.sunflower}</span>
+            </a>
+            <a
+              href={pathFor(locale, "olive")}
+              className="inline-flex h-14 items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 text-sm text-[#f7f1e3]/90 transition hover:border-[#8fa65b] hover:bg-[#8fa65b]/10 hover:text-[#c9d9a0]"
+            >
+              <span className="size-2 rounded-full bg-[#8fa65b]" />
+              <span>{dict.nav.olive}</span>
+            </a>
+          </div>
+
+          {/* Master Visual Hero Centerpiece (User's Official Masterpiece!) */}
+          <div className="rise rise-4 relative mt-12 w-full overflow-hidden rounded-2xl md:rounded-3xl border border-gold/30 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.8)] group">
+            <div className="relative aspect-[16/9] w-full">
+              <Image
+                src="/media/hero/master-banner.webp"
+                alt="Asia Oil - Natural Goodness from Anatolia to the World"
+                fill
+                priority
+                sizes="(max-width: 1280px) 100vw, 1280px"
+                className="object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
+              />
             </div>
-            <h1 className="font-display mt-7 text-[clamp(2.8rem,5.4vw,6rem)] leading-[0.95] tracking-[-0.03em] drop-shadow-[0_4px_30px_rgba(0,0,0,0.45)]">
-              <Words text={titleStart} start={0.1} />
-              {titleEnd ? (
-                <span className="text-gold-gradient block italic">
-                  <Words text={titleEnd} start={0.1 + titleWords * 0.055} />
-                </span>
-              ) : null}
-            </h1>
-            <p className="rise rise-3 mt-8 max-w-xl text-lg leading-relaxed text-[#f7f1e3]/80 md:text-xl">{lead?.lede ?? dict.metaDescription}</p>
-            <div className="rise rise-4 mt-11 flex flex-wrap gap-3">
-              <a href={pathFor(locale, "quote")} className={`${goldButton} px-7`}>
-                {dict.ui.quote}
-                <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
-              </a>
-              <a href={pathFor(locale, "sunflower")} className="group inline-flex h-14 items-center gap-3 border border-white/25 px-6 text-sm tracking-wide backdrop-blur-sm transition duration-500 hover:border-sun hover:bg-sun/10 hover:text-sun">
-                <span className="size-2 rounded-full bg-sun transition duration-500 group-hover:scale-150 group-hover:shadow-[0_0_16px_#e2ad3a]" aria-hidden="true" />
-                {dict.nav.sunflower}
-              </a>
-              <a href={pathFor(locale, "olive")} className="group inline-flex h-14 items-center gap-3 border border-white/25 px-6 text-sm tracking-wide backdrop-blur-sm transition duration-500 hover:border-[#a9bd7c] hover:bg-[#8fa65b]/10 hover:text-[#c9d9a0]">
-                <span className="size-2 rounded-full bg-[#8fa65b] transition duration-500 group-hover:scale-150 group-hover:shadow-[0_0_16px_#8fa65b]" aria-hidden="true" />
-                {dict.nav.olive}
-              </a>
+
+            {/* Subtle corner vignettes */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+
+            {/* Interactive floating badges inside hero banner */}
+            <div className="absolute top-4 left-4 md:top-6 md:left-6 rounded-full border border-white/20 bg-black/50 backdrop-blur-md px-4 py-1.5 text-xs text-gold-light font-medium flex items-center gap-2 shadow-md">
+              <span className="text-gold">✦</span>
+              <span>ASIA OIL • Natural Goodness from Anatolia</span>
+            </div>
+
+            <div className="absolute top-4 right-4 md:top-6 md:right-6 rounded-full border border-emerald-400/30 bg-black/50 backdrop-blur-md px-4 py-1.5 text-xs text-emerald-300 font-medium hidden sm:flex items-center gap-1.5 shadow-md">
+              <Ship className="size-3.5" />
+              <span>FOB Mersin & CIF Global Seaports</span>
+            </div>
+
+            <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 rounded-2xl border border-white/20 bg-black/65 backdrop-blur-md p-3.5 text-xs text-white max-w-xs hidden sm:block text-left shadow-lg">
+              <span className="font-bold text-sun flex items-center gap-1.5">
+                <span>🌻</span> Rafine Ayçiçek Yağı
+              </span>
+              <span className="text-[11px] text-[#f7f1e3]/80 block mt-1 leading-snug">
+                500ml, 1L, 2L, 5L PET & Teneke • Max 0.10% FFA
+              </span>
+            </div>
+
+            <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 rounded-2xl border border-white/20 bg-black/65 backdrop-blur-md p-3.5 text-xs text-white max-w-xs hidden sm:block text-right shadow-lg">
+              <span className="font-bold text-emerald-400 flex items-center justify-end gap-1.5">
+                <span>🫒</span> Natürel Sızma Zeytinyağı
+              </span>
+              <span className="text-[11px] text-[#f7f1e3]/80 block mt-1 leading-snug">
+                Soğuk Sıkım (≤ 27°C) • 500ml, 1L Cam & 5L Teneke
+              </span>
             </div>
           </div>
-        </div>
-
-        <div className="rise rise-4 hidden items-center gap-4 pb-10 ps-10 text-[0.65rem] tracking-[0.35em] text-[#f7f1e3]/50 md:flex">
-          <span className="relative block h-14 w-px overflow-hidden bg-white/15">
-            <span className="scroll-cue absolute inset-0 bg-gold-light" />
-          </span>
-          ASIA OIL
         </div>
       </section>
 
@@ -174,6 +238,26 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
               accent="text-[#b8cc87]"
             />
           </div>
+        </div>
+      </section>
+
+      {/* Modern B2B Volume & Export Estimator Section */}
+      <section className="bg-paper py-20 border-t border-gold/15">
+        <div className={container}>
+          <div className="reveal mb-10 max-w-2xl">
+            <Kicker>{locale === "tr" ? "İhracat Planlama" : "Export Planning"}</Kicker>
+            <h2 className="font-display mt-4 text-4xl leading-tight md:text-5xl">
+              {locale === "tr"
+                ? "Konteyner ve Sevkiyatınızı Şimdi Yapılandırın"
+                : "Configure Your Container & Shipment Now"}
+            </h2>
+            <p className="mt-3 text-base text-[#5c574e]">
+              {locale === "tr"
+                ? "Dilediğiniz ambalaj ve konteyner hacmini belirleyin; Mersin Limanı çıkışlı FOB veya CIF teslimat için tek tıkla resmi teklif isteyin."
+                : "Select your desired packaging and container volume; request an official FOB or CIF quotation dispatched from Mersin Port in one click."}
+            </p>
+          </div>
+          <QuoteCalculator locale={locale} />
         </div>
       </section>
 

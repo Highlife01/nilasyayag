@@ -9,6 +9,7 @@ import { InquiryForm } from "@/components/site/inquiry-form"
 import { Showcase } from "@/components/site/hero"
 import { Spotlight } from "@/components/site/motion"
 import { QuoteCalculator } from "@/components/site/quote-calculator"
+import { HeroBanner } from "@/components/site/hero-banner"
 import { BRAND_NAME, Mark, Wordmark } from "@/components/site/chrome"
 import type { Settings } from "@/lib/model"
 
@@ -144,51 +145,17 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
             </a>
           </div>
 
-          {/* Master Visual Hero Centerpiece (User's Official Masterpiece!) */}
-          <div className="rise rise-4 relative mt-12 w-full overflow-hidden rounded-2xl md:rounded-3xl border border-gold/30 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.8)] group">
-            <div className="relative aspect-[16/9] w-full">
-              <Image
-                src="/media/hero/master-banner.webp"
-                alt="Asia Oil - Natural Goodness from Anatolia to the World"
-                fill
-                priority
-                sizes="(max-width: 1280px) 100vw, 1280px"
-                className="object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
-              />
-            </div>
-
-            {/* Subtle corner vignettes */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
-
-            {/* Interactive floating badges inside hero banner */}
-            <div className="absolute top-4 left-4 md:top-6 md:left-6 rounded-full border border-white/20 bg-black/50 backdrop-blur-md px-4 py-1.5 text-xs text-gold-light font-medium flex items-center gap-2 shadow-md">
-              <span className="text-gold">✦</span>
-              <span>ASIA OIL • Natural Goodness from Anatolia</span>
-            </div>
-
-            <div className="absolute top-4 right-4 md:top-6 md:right-6 rounded-full border border-emerald-400/30 bg-black/50 backdrop-blur-md px-4 py-1.5 text-xs text-emerald-300 font-medium hidden sm:flex items-center gap-1.5 shadow-md">
-              <Ship className="size-3.5" />
-              <span>FOB Mersin & CIF Global Seaports</span>
-            </div>
-
-            <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 rounded-2xl border border-white/20 bg-black/65 backdrop-blur-md p-3.5 text-xs text-white max-w-xs hidden sm:block text-left shadow-lg">
-              <span className="font-bold text-sun flex items-center gap-1.5">
-                <span>🌻</span> Rafine Ayçiçek Yağı
-              </span>
-              <span className="text-[11px] text-[#f7f1e3]/80 block mt-1 leading-snug">
-                500ml, 1L, 2L, 5L PET & Teneke • Max 0.10% FFA
-              </span>
-            </div>
-
-            <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 rounded-2xl border border-white/20 bg-black/65 backdrop-blur-md p-3.5 text-xs text-white max-w-xs hidden sm:block text-right shadow-lg">
-              <span className="font-bold text-emerald-400 flex items-center justify-end gap-1.5">
-                <span>🫒</span> Natürel Sızma Zeytinyağı
-              </span>
-              <span className="text-[11px] text-[#f7f1e3]/80 block mt-1 leading-snug">
-                Soğuk Sıkım (≤ 27°C) • 500ml, 1L Cam & 5L Teneke
-              </span>
-            </div>
-          </div>
+          {/* Master Visual Hero Centerpiece Showcase */}
+          <HeroBanner
+            locale={locale}
+            labels={{
+              previous: dict.ui.previous,
+              next: dict.ui.next,
+              pause: dict.ui.pause,
+              play: dict.ui.play,
+              slide: dict.ui.slide,
+            }}
+          />
         </div>
       </section>
 

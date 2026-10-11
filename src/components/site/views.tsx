@@ -10,6 +10,10 @@ import { Showcase } from "@/components/site/hero"
 import { Spotlight } from "@/components/site/motion"
 import { QuoteCalculator } from "@/components/site/quote-calculator"
 import { HeroBanner } from "@/components/site/hero-banner"
+import { StatsStrip } from "@/components/site/stats-strip"
+import { ProductionPipeline } from "@/components/site/production-pipeline"
+import { PackagingMatrix } from "@/components/site/packaging-matrix"
+import { CertificationsStrip } from "@/components/site/certifications-strip"
 import { BRAND_NAME, Mark, Wordmark } from "@/components/site/chrome"
 import type { Settings } from "@/lib/model"
 
@@ -159,6 +163,9 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
         </div>
       </section>
 
+      {/* Key Figures & Authority Stats Strip */}
+      <StatsStrip locale={locale} />
+
       <div className="marquee-mask overflow-hidden border-y border-gold/20 bg-paper py-5" aria-hidden="true">
         <div className="marquee flex w-max gap-12 whitespace-nowrap">
           {[0, 1].map((copy) => (
@@ -208,6 +215,12 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
         </div>
       </section>
 
+      {/* 5-Stage Integrated Seed-to-Port Production Pipeline */}
+      <ProductionPipeline locale={locale} />
+
+      {/* Comprehensive Packaging Solutions Matrix */}
+      <PackagingMatrix locale={locale} />
+
       {/* Modern B2B Volume & Export Estimator Section */}
       <section className="bg-paper py-20 border-t border-gold/15">
         <div className={container}>
@@ -236,6 +249,9 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
           </div>
         </Spotlight>
       ) : null}
+
+      {/* International Accreditations & Quality Certifications */}
+      <CertificationsStrip locale={locale} />
 
       <section className="bg-ivory py-24 md:py-32">
         <div className={`${container} grid gap-16 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]`}>

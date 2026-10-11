@@ -181,7 +181,6 @@ export function SiteFrame({
           </div>
         </div>
       </footer>
-      {consent ? null : <Consent locale={locale} dict={dict} />}
     </div>
   )
 }
@@ -200,30 +199,5 @@ function FooterLink({ locale, page, label }: { locale: Locale; page: StaticPage;
     <a className="link-draw block w-fit text-sm text-[#f7f1e3]/70 transition hover:text-gold-light" href={pathFor(locale, page)}>
       {label}
     </a>
-  )
-}
-
-function Consent({ locale, dict }: { locale: Locale; dict: Dict }) {
-  const next = pathFor(locale, "home")
-  return (
-    <div className="rise fixed bottom-4 start-4 end-4 z-40 border border-[#e6dcc6] bg-paper/95 p-5 text-sm text-ink shadow-[0_30px_80px_-30px_rgba(18,26,13,0.5)] backdrop-blur-xl sm:end-auto sm:max-w-sm" style={{ "--base": "2s" } as CSSProperties}>
-      <p className="leading-relaxed text-[#4a453c]">{dict.consent.text}</p>
-      <div className="mt-4 flex flex-wrap gap-2">
-        <form action="/api/consent" method="post">
-          <input type="hidden" name="choice" value="all" />
-          <input type="hidden" name="next" value={next} />
-          <button className="h-10 bg-olive px-4 text-[#f7f1e3] transition hover:bg-leaf" type="submit">
-            {dict.consent.accept}
-          </button>
-        </form>
-        <form action="/api/consent" method="post">
-          <input type="hidden" name="choice" value="necessary" />
-          <input type="hidden" name="next" value={next} />
-          <button className="h-10 border border-olive/40 px-4 transition hover:border-olive" type="submit">
-            {dict.consent.reject}
-          </button>
-        </form>
-      </div>
-    </div>
   )
 }

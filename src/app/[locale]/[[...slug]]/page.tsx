@@ -72,7 +72,7 @@ export default async function LocalePage({
   const issuedAt = formIssuedAt()
   return (
     <SiteFrame locale={locale} dict={dict} page={page} articleSlug={articleSlug} settings={settings} consent={consent}>
-      {consent === "all" ? <VisitBeacon /> : null}
+      <VisitBeacon />
       {page === "home" ? <HomeView locale={locale} dict={dict} frames={heroFrames()} /> : null}
       {page === "insights" && !article ? <ArticleIndex locale={locale} dict={dict} /> : null}
       {article ? <ArticleView locale={locale} dict={dict} id={article} /> : null}

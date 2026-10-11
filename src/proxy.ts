@@ -32,7 +32,7 @@ export function proxy(request: NextRequest) {
 
   headers.set("x-locale", first)
   const response = NextResponse.next({ request: { headers } })
-  if (request.cookies.get("nilasya_consent")?.value === "all" && !request.cookies.get("nilasya_vid")) {
+  if (!request.cookies.get("nilasya_vid")) {
     response.cookies.set("nilasya_vid", crypto.randomUUID(), {
       httpOnly: true,
       sameSite: "lax",

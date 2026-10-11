@@ -16,7 +16,7 @@ function knownPath(path: string) {
 
 export async function POST(request: Request) {
   const jar = await cookies()
-  if (jar.get("nilasya_consent")?.value !== "all") return new NextResponse(null, { status: 204 })
+  if (jar.get("nilasya_consent")?.value === "necessary") return new NextResponse(null, { status: 204 })
   const body = (await request.json().catch(() => null)) as { path?: unknown } | null
   const path = typeof body?.path === "string" ? body.path.slice(0, 180) : ""
   const locale = knownPath(path)

@@ -11,6 +11,7 @@ import { Spotlight } from "@/components/site/motion"
 import { QuoteCalculator } from "@/components/site/quote-calculator"
 import { HeroBanner } from "@/components/site/hero-banner"
 import { StatsStrip } from "@/components/site/stats-strip"
+import { ProductShowcase } from "@/components/site/product-showcase"
 import { ProductionPipeline } from "@/components/site/production-pipeline"
 import { PackagingMatrix } from "@/components/site/packaging-matrix"
 import { CertificationsStrip } from "@/components/site/certifications-strip"
@@ -84,20 +85,20 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
         </div>
       </div>
 
-      <section className="relative isolate flex min-h-[100svh] flex-col justify-between overflow-hidden bg-[#0c1209] text-[#f7f1e3] pt-28 pb-16" style={vars({ "--base": "0.9s" })}>
-        {/* Ambient atmospheric background glows */}
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(212,175,55,0.18),transparent_75%)]" />
-        <div className="pointer-events-none absolute -left-40 top-40 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(143,166,91,0.18),transparent_70%)] blur-3xl" />
-        <div className="pointer-events-none absolute -right-40 bottom-20 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(212,175,55,0.12),transparent_70%)] blur-3xl" />
+      <section className="relative isolate flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#f5f8f5] via-white to-white text-slate-900 pt-14 pb-14 border-b border-slate-200/80" style={vars({ "--base": "0.9s" })}>
+        {/* Soft sunlit background glows */}
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(245,158,11,0.08),transparent_75%)]" />
+        <div className="pointer-events-none absolute -left-40 top-40 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(34,197,94,0.08),transparent_70%)] blur-3xl" />
+        <div className="pointer-events-none absolute -right-40 bottom-20 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(245,158,11,0.08),transparent_70%)] blur-3xl" />
 
         <div className={`${container} flex flex-col items-center text-center`}>
           {/* Live Port / Export Desk Status Pill */}
-          <div className="rise inline-flex items-center gap-2.5 rounded-full border border-gold-light/30 bg-black/40 px-4 py-1.5 text-xs text-gold-light backdrop-blur-md shadow-lg">
-            <span className="relative flex h-2 w-2">
+          <div className="rise inline-flex items-center gap-2.5 rounded-full border border-emerald-300 bg-white/95 px-5 py-2 text-xs text-emerald-900 shadow-sm backdrop-blur-md">
+            <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
             </span>
-            <span className="font-semibold tracking-wide uppercase">
+            <span className="font-bold tracking-wide uppercase">
               {locale === "tr"
                 ? "Canlı İhracat Masası • Mersin Port (MIP) & İzmir Limanı"
                 : "Live Export Desk • Mersin Port (MIP) & İzmir Seaport"}
@@ -105,22 +106,22 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
           </div>
 
           {/* Headline */}
-          <h1 className="font-display mt-6 max-w-4xl text-[clamp(2.5rem,5.2vw,5.2rem)] font-bold leading-[1.02] tracking-tight drop-shadow-md text-white">
+          <h1 className="font-display mt-6 max-w-4xl text-[clamp(2.5rem,5.2vw,4.8rem)] font-extrabold leading-[1.05] tracking-tight text-slate-900">
             <Words text={titleStart} start={0.1} />
             {titleEnd ? (
-              <span className="text-gold-gradient block italic font-normal mt-1">
+              <span className="text-emerald-gradient block font-extrabold mt-1">
                 <Words text={titleEnd} start={0.1 + titleWords * 0.055} />
               </span>
             ) : null}
           </h1>
 
-          <p className="rise rise-3 mt-6 max-w-2xl text-base leading-relaxed text-[#f7f1e3]/80 md:text-lg">
+          <p className="rise rise-3 mt-5 max-w-2xl text-base leading-relaxed text-slate-600 md:text-lg">
             {lead?.lede ?? dict.metaDescription}
           </p>
 
           {/* Dual CTAs & Quality Badges */}
           <div className="rise rise-4 mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a href={pathFor(locale, "quote")} className={`${goldButton} px-8 rounded-full shadow-lg shadow-gold/20`}>
+            <a href={pathFor(locale, "quote")} className="btn-shine inline-flex h-13 items-center gap-2.5 rounded-2xl bg-gradient-to-r from-emerald-800 to-emerald-950 px-8 text-sm font-bold text-white shadow-lg shadow-emerald-950/20 transition hover:from-emerald-900 hover:to-black">
               <span>{dict.ui.quote}</span>
               <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
             </a>
@@ -128,24 +129,16 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
               href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20a%20B2B%20quotation"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-14 items-center gap-2.5 rounded-full border border-white/25 bg-white/5 px-7 text-sm font-medium text-white backdrop-blur-sm transition duration-300 hover:border-emerald-400 hover:bg-emerald-950/30 hover:text-emerald-300"
+              className="inline-flex h-13 items-center gap-2.5 rounded-2xl border border-emerald-300 bg-white px-7 text-sm font-bold text-emerald-900 shadow-sm transition hover:bg-emerald-50"
             >
-              <Phone className="size-4 text-emerald-400" />
+              <Phone className="size-4 text-emerald-600" />
               <span>WhatsApp B2B Desk</span>
             </a>
             <a
-              href={pathFor(locale, "sunflower")}
-              className="inline-flex h-14 items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 text-sm text-[#f7f1e3]/90 transition hover:border-sun hover:bg-sun/10 hover:text-sun"
+              href="#products-catalog"
+              className="inline-flex h-13 items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-6 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white"
             >
-              <span className="size-2 rounded-full bg-sun" />
-              <span>{dict.nav.sunflower}</span>
-            </a>
-            <a
-              href={pathFor(locale, "olive")}
-              className="inline-flex h-14 items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 text-sm text-[#f7f1e3]/90 transition hover:border-[#8fa65b] hover:bg-[#8fa65b]/10 hover:text-[#c9d9a0]"
-            >
-              <span className="size-2 rounded-full bg-[#8fa65b]" />
-              <span>{dict.nav.olive}</span>
+              <span>{dict.ui.explore}</span>
             </a>
           </div>
 
@@ -165,6 +158,9 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
 
       {/* Key Figures & Authority Stats Strip */}
       <StatsStrip locale={locale} />
+
+      {/* Flagship Products Showcase with Specifications & Formats */}
+      <ProductShowcase locale={locale} />
 
       <div className="marquee-mask overflow-hidden border-y border-gold/20 bg-paper py-5" aria-hidden="true">
         <div className="marquee flex w-max gap-12 whitespace-nowrap">

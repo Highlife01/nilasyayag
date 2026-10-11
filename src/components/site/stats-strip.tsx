@@ -1,5 +1,5 @@
 import type { Locale } from "@/lib/i18n/config"
-import { Globe2, Anchor, Droplets, Package, ShieldCheck, Award } from "lucide-react"
+import { Globe2, Anchor, Droplets, Package, ShieldCheck } from "lucide-react"
 
 interface StatItem {
   value: string
@@ -7,6 +7,7 @@ interface StatItem {
   label: Record<Locale, string>
   sub: Record<Locale, string>
   icon: typeof Globe2
+  color: string
 }
 
 const STATS: StatItem[] = [
@@ -14,156 +15,163 @@ const STATS: StatItem[] = [
     value: "60",
     suffix: "+",
     label: {
-      tr: "İhracat Yapılan Ülke",
+      tr: "İhracat Ülkesi",
       en: "Export Destinations",
-      ar: "دولة تصدير حول العالم",
-      ru: "Стран экспорта по всему миру",
-      de: "Exportländer weltweit",
+      ar: "دولة تصدير",
+      ru: "Стран экспорта",
+      de: "Exportländer",
       fr: "Pays d'exportation",
       es: "Países de exportación",
       it: "Paesi di esportazione",
     },
     sub: {
-      tr: "6 Kıtada Güçlü B2B Dağıtım",
-      en: "Strong Distribution across 6 Continents",
-      ar: "شبكة توزيع قوية عبر 6 قارات",
+      tr: "6 Kıtada Güçlü Dağıtım Ağı",
+      en: "Global Network on 6 Continents",
+      ar: "شبكة توزيع عبر 6 قارات",
       ru: "Сеть поставок на 6 континентах",
-      de: "B2B-Netzwerk auf 6 Kontinenten",
-      fr: "Réseau solide sur 6 continents",
-      es: "Distribución en 6 continentes",
-      it: "Distribuzione su 6 continenti",
+      de: "Netzwerk auf 6 Kontinenten",
+      fr: "Réseau sur 6 continents",
+      es: "Red en 6 continentes",
+      it: "Rete su 6 continenti",
     },
     icon: Globe2,
+    color: "text-emerald-600 bg-emerald-50",
   },
   {
     value: "2",
-    suffix: " Ports",
+    suffix: " Liman",
     label: {
-      tr: "Stratejik Liman Terminali",
-      en: "Strategic Seaport Terminals",
-      ar: "محطات موانئ استراتيجية",
-      ru: "Морских терминала отгрузки",
-      de: "Strategische Seehafen-Terminals",
-      fr: "Terminaux portuaires stratégiques",
-      es: "Terminales portuarias estratégicas",
-      it: "Terminal portuali strategici",
+      tr: "Derin Deniz Terminali",
+      en: "Deep-Sea Terminals",
+      ar: "محطات بحرية استراتيجية",
+      ru: "Глубоководных терминала",
+      de: "Tiefsee-Terminals",
+      fr: "Terminaux en eau profonde",
+      es: "Terminales de aguas profundas",
+      it: "Terminal in acque profonde",
     },
     sub: {
-      tr: "Mersin MIP & İzmir Liman Çıkışlı",
-      en: "Mersin MIP & Izmir Seaport Dispatches",
-      ar: "شحن مباشر من مينائي مرسين وإزمير",
+      tr: "Mersin (MIP) & İzmir Liman Çıkışlı",
+      en: "Direct from Mersin (MIP) & Izmir",
+      ar: "شحن مباشر من مرسين وإزمير",
       ru: "Прямые рейсы из портов Мерсин и Измир",
-      de: "Direktexport via Mersin MIP & Izmir",
-      fr: "Départs Mersin MIP & Port d'Izmir",
-      es: "Salidas directas Mersin MIP e Izmir",
+      de: "Direktexport via Mersin & Izmir",
+      fr: "Départs Mersin (MIP) & Izmir",
+      es: "Salidas desde Mersin MIP e Izmir",
       it: "Spedizioni Mersin MIP e Smirne",
     },
     icon: Anchor,
+    color: "text-blue-600 bg-blue-50",
   },
   {
     value: "100",
     suffix: "%",
     label: {
-      tr: "Doğal & Entegre Rafinasyon",
-      en: "Pure Natural & Refined Edible Oil",
-      ar: "زيوت نباتية طبيعية ومكررة 100%",
+      tr: "Doğal & Saf Rafinasyon",
+      en: "Pure Natural & Refined",
+      ar: "زيوت طبيعية ومكررة 100%",
       ru: "Натуральные рафинированные масла",
-      de: "100% Natürliche & Raffinierte Speiseöle",
-      fr: "Huiles pures et raffinées",
-      es: "Aceites comestibles 100% puros",
-      it: "Oli vegetali puri e raffinati",
+      de: "100% Natürliche Speiseöle",
+      fr: "Huiles pures et naturelles",
+      es: "Aceites 100% naturales",
+      it: "Oli naturali e raffinati",
     },
     sub: {
-      tr: "Düşük Asitlik, Yüksek Duman Noktası",
-      en: "Low Acidity & High Smoke Point",
-      ar: "حموضة منخفضة ونقطة دخان عالية",
-      ru: "Низкая кислотность, высокая точка дымления",
-      de: "Geringe Säure, hoher Rauchpunkt",
-      fr: "Faible acidité, point de fumée élevé",
-      es: "Baja acidez y alto punto de humo",
-      it: "Bassa acidità, alto punto di fumo",
+      tr: "FFA < %0.10, 232°C Duman Noktası",
+      en: "FFA < 0.10%, 232°C Smoke Point",
+      ar: "حموضة < 0.10% ونقطة احتراق 232°م",
+      ru: "FFA < 0.10%, точка дымления 232°C",
+      de: "FFA < 0,10%, 232°C Rauchpunkt",
+      fr: "FFA < 0,10%, point de fumée 232°C",
+      es: "FFA < 0.10%, punto de humo 232°C",
+      it: "FFA < 0,10%, punto di fumo 232°C",
     },
     icon: Droplets,
+    color: "text-amber-600 bg-amber-50",
   },
   {
     value: "24.000",
     suffix: " L",
     label: {
-      tr: "Flexitank & Dökme Sevkiyat",
+      tr: "Flexitank & Dökme Kapasite",
       en: "Flexitank & Bulk Logistics",
-      ar: "شحن خزانات فليكسيتانك وسائبة",
-      ru: "Флекситанки и наливная логистика",
-      de: "Flexitank & Schüttgut-Logistik",
-      fr: "Logistique Flexitank & Vrac",
+      ar: "شحن فليكسيتانك وسائب",
+      ru: "Флекситанки и наливом",
+      de: "Flexitank & Bulk-Logistik",
+      fr: "Capacité Flexitank & Vrac",
       es: "Logística Flexitank y a granel",
-      it: "Logistica Flexitank e sfuso",
+      it: "Capacità Flexitank e sfuso",
     },
     sub: {
-      tr: "0.5L PET'ten 24.000L'e Tam Yelpaze",
-      en: "Full Matrix: 0.5L PET to 24,000L Bulk",
-      ar: "من عبوات 0.5 لتر حتى 24,000 لتر",
-      ru: "От 0.5 л ПЭТ до 24 000 л наливом",
-      de: "Von 0,5L PET bis 24.000L Tank",
-      fr: "Du format 0.5L PET au vrac 24.000L",
-      es: "Desde 0.5L PET hasta 24.000L",
+      tr: "0.5L PET'ten 24.000L'e Tam Hacim",
+      en: "Full Matrix: 0.5L PET to 24,000L",
+      ar: "من 0.5 لتر حتى 24,000 لتر",
+      ru: "От 0.5л до 24 000л во флекситанках",
+      de: "Von 0,5L PET bis 24.000L",
+      fr: "Du format 0.5L au vrac 24.000L",
+      es: "De 0.5L PET a 24.000L a granel",
       it: "Da 0,5L PET a 24.000L sfuso",
     },
     icon: Package,
+    color: "text-orange-600 bg-orange-50",
   },
   {
     value: "ISO",
-    suffix: " Cert",
+    suffix: " 22000",
     label: {
       tr: "Uluslararası Akreditasyon",
-      en: "Global Quality Accreditations",
-      ar: "شهادات جودة واعتمادات دولية",
-      ru: "Международные сертификаты качества",
-      de: "Internationale Akkreditierungen",
-      fr: "Accréditations internationales",
-      es: "Acreditaciones internacionales",
-      it: "Accreditamenti internazionali",
+      en: "Global Accreditations",
+      ar: "اعتمادات دولية معتمدة",
+      ru: "Международные стандарты",
+      de: "Globale Zertifikate",
+      fr: "Certifications mondiales",
+      es: "Acreditaciones globales",
+      it: "Certificazioni globali",
     },
     sub: {
-      tr: "ISO 22000, 9001, Helal & Kosher",
-      en: "ISO 22000, 9001, Halal & Kosher",
-      ar: "ISO 22000 و 9001 وحلال وكوشير",
-      ru: "ISO 22000, 9001, Халяль и Кошер",
-      de: "ISO 22000, 9001, Halal & Koscher",
-      fr: "ISO 22000, 9001, Halal & Casher",
-      es: "ISO 22000, 9001, Halal y Kosher",
-      it: "ISO 22000, 9001, Halal e Kosher",
+      tr: "Helal, Kosher, EUR.1, SGS Onaylı",
+      en: "Halal, Kosher, EUR.1 & SGS Audited",
+      ar: "حلال، كوشير، EUR.1 وفحص SGS",
+      ru: "Халяль, Кошер, EUR.1, SGS",
+      de: "Halal, Koscher, EUR.1 & SGS",
+      fr: "Halal, Casher, EUR.1 & SGS",
+      es: "Halal, Kosher, EUR.1 y SGS",
+      it: "Halal, Kosher, EUR.1 e SGS",
     },
     icon: ShieldCheck,
+    color: "text-emerald-700 bg-emerald-50",
   },
 ]
 
 export function StatsStrip({ locale }: { locale: Locale }) {
   return (
-    <section className="relative z-10 -mt-8 border-y border-gold/30 bg-[#0e160a]/95 py-8 text-[#f7f1e3] backdrop-blur-xl shadow-2xl">
-      <div className="mx-auto max-w-7xl px-5 md:px-10">
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5 lg:gap-8">
+    <section className="relative z-20 -mt-10 mx-auto max-w-7xl px-5 md:px-10">
+      <div className="rounded-3xl border border-slate-200/90 bg-white p-6 shadow-2xl md:p-8">
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5 lg:gap-6">
           {STATS.map((stat, i) => {
             const Icon = stat.icon
             return (
               <div
                 key={i}
-                className="group relative flex flex-col justify-between border-l border-gold/20 pl-5 transition duration-500 hover:border-gold hover:translate-y-[-2px] rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-5"
+                className="group relative flex flex-col justify-between border-l border-slate-100 pl-4 transition duration-300 hover:translate-y-[-2px] rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-4"
               >
-                <div className="flex items-center justify-between text-gold/70 transition duration-300 group-hover:text-gold">
-                  <Icon className="size-5" />
-                  <span className="text-[10px] font-mono tracking-widest uppercase text-gold/40">
+                <div className="flex items-center justify-between">
+                  <div className={`flex size-10 items-center justify-center rounded-xl ${stat.color} transition duration-300 group-hover:scale-110`}>
+                    <Icon className="size-5" />
+                  </div>
+                  <span className="font-mono text-[11px] font-bold tracking-wider text-slate-300">
                     0{i + 1}
                   </span>
                 </div>
-                <div className="mt-3">
-                  <div className="font-display text-3xl font-bold tracking-tight text-white md:text-4xl">
-                    <span className="text-gold-light">{stat.value}</span>
-                    <span className="text-xl text-gold/90">{stat.suffix}</span>
+                <div className="mt-4">
+                  <div className="font-display text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+                    <span className="text-emerald-950">{stat.value}</span>
+                    <span className="text-lg font-bold text-emerald-600">{stat.suffix}</span>
                   </div>
-                  <h4 className="mt-1 text-sm font-semibold text-[#f7f1e3]">
+                  <h4 className="mt-1 text-sm font-bold text-slate-800 leading-snug">
                     {stat.label[locale] || stat.label.en}
                   </h4>
-                  <p className="mt-0.5 text-xs text-[#f7f1e3]/60 leading-relaxed">
+                  <p className="mt-0.5 text-xs text-slate-500 font-medium leading-relaxed">
                     {stat.sub[locale] || stat.sub.en}
                   </p>
                 </div>

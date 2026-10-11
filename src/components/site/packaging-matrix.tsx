@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import type { Locale } from "@/lib/i18n/config"
-import { Package, ShieldCheck, Box, Layers, ArrowUpRight, Check, Droplet, Sparkles } from "lucide-react"
+import { Package, ShieldCheck, Box, Layers, ArrowUpRight, Check, Sparkles } from "lucide-react"
 
 interface PackagingCategory {
   id: "retail" | "horeca" | "bulk"
@@ -66,7 +66,7 @@ const CATEGORIES: PackagingCategory[] = [
           it: "12 o 15 bottiglie per scatola",
         },
         fcl20: "~1.700 Koli / 20' FCL (~22.950 L)",
-        shelfLife: "24 Ay (Azot Dozajlı)",
+        shelfLife: "24 Ay (Sıvı Azot Dozajlı)",
         features: {
           tr: ["Gıdaya uygun kristal şeffaf PET", "Damlatmaz kilitli emniyet kapağı", "Palet üzerinde maksimum istif gücü"],
           en: ["Food-grade crystal virgin PET", "Drip-free tamper-evident cap", "Optimized pallet stacking strength"],
@@ -111,7 +111,7 @@ const CATEGORIES: PackagingCategory[] = [
           it: "6 bottiglie per scatola",
         },
         fcl20: "~1.800 Koli / 20' FCL (~21.600 L)",
-        shelfLife: "24 Ay (Azot Dozajlı)",
+        shelfLife: "24 Ay (Sıvı Azot Dozajlı)",
         features: {
           tr: ["Konforlu tutuş kanalları", "Düşük gramaj, yüksek mukavemet", "Özel etiket (Private Label) uyumlu"],
           en: ["Comfort grip side ribs", "Lightweight yet high rigidity", "Private label branding ready"],
@@ -146,7 +146,7 @@ const CATEGORIES: PackagingCategory[] = [
           it: "4 taniche per cartone o termoretraibile",
         },
         fcl20: "~1.000 Koli / 20' FCL (~20.000 L)",
-        shelfLife: "24 Ay (Azot Dozajlı)",
+        shelfLife: "24 Ay (Sıvı Azot Dozajlı)",
         features: {
           tr: ["Entegre ergonomik taşıma kulpu", "Konteyner içi %100 hacim optimizasyonu", "Devrilmeye ve çökmeye dayanıklı gövde"],
           en: ["Heavy-duty integrated carry handle", "Optimal container cube utilization", "Reinforced crush-resistant structure"],
@@ -185,12 +185,12 @@ const CATEGORIES: PackagingCategory[] = [
     subtitle: {
       tr: "5L, 10L ve 18L Işık Geçirmez Profesyonel Ambalaj",
       en: "5L, 10L & 18L Lightproof Professional Tins",
-      ar: "صفائح 5 و 10 و 18 لتر معتمة مقاومة للضوء للمطابخ الاحترافية",
-      ru: "5л, 10л и 18л светонепроницаемая жесть для ресторанов и фабрик",
+      ar: "صفائح 5 و 10 و 18 لتر معتمة للمطابخ الاحترافية",
+      ru: "5л, 10л и 18л светонепроницаемая жесть для ресторанов",
       de: "5L, 10L & 18L lichtundurchlässige Profi-Dosen",
       fr: "Boîtes 5L, 10L & 18L opaques pour cuisines professionnelles",
-      es: "Latas de 5L, 10L y 18L resistentes a la luz para hostelería",
-      it: "Lattine da 5L, 10L e 18L a tenuta di luce per ristorazione",
+      es: "Latas de 5L, 10L y 18L para hostelería",
+      it: "Lattine da 5L, 10L e 18L per ristorazione",
     },
     items: [
       {
@@ -422,28 +422,30 @@ export function PackagingMatrix({ locale }: { locale: Locale }) {
   const currentCategory = CATEGORIES.find((c) => c.id === activeTab) ?? CATEGORIES[0]
 
   return (
-    <section className="bg-paper py-24 md:py-32 border-t border-gold/15">
+    <section className="bg-[#f8fafc] py-24 md:py-32 border-t border-slate-200">
       <div className="mx-auto max-w-7xl px-5 md:px-10">
         {/* Header */}
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-3xl">
-            <p className="kicker flex items-center gap-3 text-gold">
-              <span className="rule" aria-hidden="true" />
-              {locale === "tr" ? "Ambalaj ve Hacim Çözümleri" : "Packaging & Volume Matrix"}
-            </p>
-            <h2 className="font-display mt-4 text-4xl font-bold leading-tight text-ink md:text-6xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-800 border border-slate-300">
+              <Box className="size-3.5 text-emerald-700" />
+              <span>
+                {locale === "tr" ? "Esnek Lojistik ve Paketleme" : "Flexible Logistics & Packaging"}
+              </span>
+            </div>
+            <h2 className="font-display mt-4 text-4xl font-extrabold tracking-tight text-slate-900 md:text-6xl">
               {locale === "tr" ? (
                 <>
-                  0.5 Litreden 24.000 Litreye <span className="italic font-normal text-olive">Global Seçenekler</span>
+                  0.5 Litreden 24.000 Litreye <span className="text-emerald-gradient">Global Ambalaj Matrisi</span>
                 </>
               ) : (
                 <>
-                  From 0.5L PET to 24,000L <span className="italic font-normal text-olive">Bulk Global Packaging</span>
+                  From 0.5L PET to 24,000L <span className="text-emerald-gradient">Bulk Packaging Matrix</span>
                 </>
               )}
             </h2>
           </div>
-          <p className="max-w-md text-sm leading-relaxed text-[#5c574e] md:text-base">
+          <p className="max-w-md text-sm leading-relaxed text-slate-600 md:text-base">
             {locale === "tr"
               ? "Her pazarın ve alıcının ihtiyacına özel: Süpermarket rafları için hafif PET şişeler, profesyonel restoranlar için laklı tenekeler veya sanayi için Flexitank çözümleri."
               : "Tailored to every market demand: Lightweight retail PET for supermarkets, foodservice lacquered tins for restaurants, or bulk flexitanks for food factories."}
@@ -451,7 +453,7 @@ export function PackagingMatrix({ locale }: { locale: Locale }) {
         </div>
 
         {/* Category Switcher Tabs */}
-        <div className="mt-12 flex flex-wrap gap-3 border-b border-gold/25 pb-4">
+        <div className="mt-12 flex flex-wrap gap-3">
           {CATEGORIES.map((cat) => {
             const isActive = cat.id === activeTab
             return (
@@ -459,20 +461,20 @@ export function PackagingMatrix({ locale }: { locale: Locale }) {
                 key={cat.id}
                 type="button"
                 onClick={() => setActiveTab(cat.id)}
-                className={`group flex items-center gap-2.5 rounded-full px-6 py-3 text-sm font-semibold transition duration-300 ${
+                className={`group flex items-center gap-2.5 rounded-2xl px-6 py-3.5 text-sm font-bold transition duration-300 ${
                   isActive
-                    ? "bg-olive text-[#f7f1e3] shadow-md shadow-olive/20"
-                    : "bg-white/80 text-ink/80 hover:bg-white hover:text-ink border border-[#e6dcc6]"
+                    ? "bg-emerald-800 text-white shadow-lg shadow-emerald-950/20"
+                    : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
                 }`}
               >
-                <Package className={`size-4 ${isActive ? "text-gold-light" : "text-olive"}`} />
+                <Package className={`size-4 ${isActive ? "text-amber-300" : "text-emerald-700"}`} />
                 <span>{cat.name[locale] || cat.name.en}</span>
               </button>
             )
           })}
         </div>
 
-        <p className="mt-4 text-sm font-medium text-olive">
+        <p className="mt-4 text-sm font-semibold text-emerald-800">
           {currentCategory.subtitle[locale] || currentCategory.subtitle.en}
         </p>
 
@@ -481,56 +483,56 @@ export function PackagingMatrix({ locale }: { locale: Locale }) {
           {currentCategory.items.map((item, idx) => (
             <div
               key={idx}
-              className="group relative flex flex-col justify-between rounded-2xl border border-[#e6dcc6] bg-white p-7 transition duration-500 hover:-translate-y-1.5 hover:border-gold hover:shadow-[0_25px_60px_-25px_rgba(18,26,13,0.3)]"
+              className="group relative flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-8 transition duration-300 hover:-translate-y-1 hover:border-emerald-500 hover:shadow-2xl"
             >
               {/* Badge if present */}
               {item.badge && (
-                <div className="absolute top-5 right-5 rtl:left-5 rtl:right-auto">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/15 px-3 py-1 text-[11px] font-semibold tracking-wider text-olive border border-gold/30">
-                    <Sparkles className="size-3 text-gold" />
+                <div className="absolute top-6 right-6 rtl:left-6 rtl:right-auto">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-[11px] font-bold tracking-wider text-amber-900 border border-amber-200">
+                    <Sparkles className="size-3 text-amber-600" />
                     {item.badge[locale] || item.badge.en}
                   </span>
                 </div>
               )}
 
               <div>
-                <span className="font-mono text-xs font-bold tracking-widest text-gold uppercase">
+                <span className="font-mono text-xs font-bold tracking-widest text-emerald-700 uppercase">
                   {item.size}
                 </span>
-                <h3 className="font-display mt-2 text-2xl font-bold text-ink">
+                <h3 className="font-display mt-2 text-2xl font-bold text-slate-900">
                   {item.title[locale] || item.title.en}
                 </h3>
 
                 {/* Key Specs Table */}
-                <div className="mt-5 space-y-2 rounded-xl bg-paper/60 p-4 border border-[#e6dcc6]/60 text-xs">
+                <div className="mt-5 space-y-2.5 rounded-2xl bg-slate-50 p-4 border border-slate-100 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-[#5c574e]">
+                    <span className="text-slate-500 font-medium">
                       {locale === "tr" ? "Koli İçi Adet:" : "Packaging Unit:"}
                     </span>
-                    <span className="font-semibold text-ink">
+                    <span className="font-bold text-slate-900">
                       {item.packing[locale] || item.packing.en}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between border-t border-[#e6dcc6]/60 pt-2">
-                    <span className="text-[#5c574e]">
+                  <div className="flex items-center justify-between border-t border-slate-200/60 pt-2">
+                    <span className="text-slate-500 font-medium">
                       {locale === "tr" ? "20' FCL Kapasite:" : "20' FCL Capacity:"}
                     </span>
-                    <span className="font-semibold text-olive">
+                    <span className="font-bold text-emerald-800">
                       {item.fcl20}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between border-t border-[#e6dcc6]/60 pt-2">
-                    <span className="text-[#5c574e]">
+                  <div className="flex items-center justify-between border-t border-slate-200/60 pt-2">
+                    <span className="text-slate-500 font-medium">
                       {locale === "tr" ? "Raf Ömrü:" : "Shelf Life:"}
                     </span>
-                    <span className="font-semibold text-ink">
+                    <span className="font-bold text-slate-900">
                       {item.shelfLife}
                     </span>
                   </div>
                 </div>
 
                 {/* Feature Checkpoints */}
-                <ul className="mt-5 space-y-2 text-xs text-[#5c574e]">
+                <ul className="mt-5 space-y-2 text-xs text-slate-600">
                   {(item.features[locale] || item.features.en).map((f, fIdx) => (
                     <li key={fIdx} className="flex items-start gap-2">
                       <Check className="size-3.5 shrink-0 text-emerald-600 mt-0.5" />
@@ -541,12 +543,12 @@ export function PackagingMatrix({ locale }: { locale: Locale }) {
               </div>
 
               {/* Action Button */}
-              <div className="mt-7 pt-4 border-t border-[#e6dcc6]">
+              <div className="mt-8 pt-4 border-t border-slate-100">
                 <a
                   href={`mailto:export@asiaoil.com.tr?subject=${encodeURIComponent(
                     `Inquiry for ${item.size} ${item.title.en} Packaging`
                   )}`}
-                  className="group/btn inline-flex w-full items-center justify-center gap-2 rounded-lg border border-olive/30 bg-olive/5 py-2.5 text-xs font-semibold text-olive transition duration-300 hover:border-olive hover:bg-olive hover:text-[#f7f1e3]"
+                  className="group/btn inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-100 py-3 text-xs font-bold text-slate-800 transition duration-300 hover:bg-emerald-800 hover:text-white"
                 >
                   <span>{locale === "tr" ? "Teklif & Numune İste" : "Request Quote & Sample"}</span>
                   <ArrowUpRight className="size-3.5 transition group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 rtl:-scale-x-100" />

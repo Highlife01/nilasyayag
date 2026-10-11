@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react"
-import { ArrowUpRight, Globe, Menu } from "lucide-react"
+import { ArrowUpRight, Globe, Menu, Phone, Mail, Ship, ShieldCheck, CheckCircle2 } from "lucide-react"
 import { ARTICLE_IDS, articleIdBySlug, getDict } from "@/content/index"
 import type { Dict } from "@/content/types"
 import { LOCALE_META, PUBLISHED_LOCALES, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
@@ -9,29 +9,44 @@ import { HeaderShell } from "@/components/site/header-shell"
 const NAV: StaticPage[] = ["sunflower", "olive", "wholesale", "trade", "insights", "about"]
 const MORE: StaticPage[] = ["privateLabel", "quality", "faq", "contact", "privacy"]
 
-const navLink =
-  "relative py-2 transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-gold-light after:transition-transform after:duration-500 hover:after:scale-x-100 group-data-[solid=true]:after:bg-gold"
-
 export const BRAND_NAME = "Asia Oil"
 const BRAND_TAGLINE = "EDIBLE OILS · TÜRKİYE"
 
-/** Drop inside a sunrise arc: oil, origin, east. */
+/** Modern golden oil drop inside clean circular seal */
 export function Mark({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
-      <path d="M4 25.5a12 12 0 0 1 24 0" fill="none" stroke="currentColor" strokeWidth="1.4" opacity="0.55" />
-      <path d="M16 4c4.1 5.4 7 9.4 7 13.4A7 7 0 0 1 9 17.4C9 13.4 11.9 9.4 16 4Z" fill="currentColor" opacity="0.95" />
-      <path d="M16 12.6c2 2.7 3.3 4.6 3.3 6.4a3.3 3.3 0 0 1-6.6 0c0-1.8 1.3-3.7 3.3-6.4Z" fill="#121a0d" opacity="0.35" />
+    <svg viewBox="0 0 36 36" fill="none" className={className} aria-hidden="true">
+      <circle cx="18" cy="18" r="17" className="stroke-amber-500/40 fill-emerald-950/10" strokeWidth="1.5" />
+      <path
+        d="M18 6C18 6 10 16.5 10 22C10 26.4 13.6 30 18 30C22.4 30 26 26.4 26 22C26 16.5 18 6 18 6Z"
+        className="fill-gradient-to-b from-amber-400 to-amber-600"
+        fill="url(#goldDrop)"
+      />
+      <path
+        d="M18 12C18 12 13 19 13 22.5C13 25.3 15.2 27.5 18 27.5C20.8 27.5 23 25.3 23 22.5C23 19 18 12 18 12Z"
+        fill="#ffffff"
+        opacity="0.25"
+      />
+      <defs>
+        <linearGradient id="goldDrop" x1="18" y1="6" x2="18" y2="30" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#f59e0b" />
+          <stop offset="1" stopColor="#d97706" />
+        </linearGradient>
+      </defs>
     </svg>
   )
 }
 
 export function Wordmark({ size = "md" }: { size?: "md" | "lg" }) {
-  const title = size === "lg" ? "text-3xl" : "text-[1.55rem]"
+  const title = size === "lg" ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
   return (
-    <span className="leading-none">
-      <span className={`font-display block ${title} tracking-[0.2em]`}>ASIA OIL</span>
-      {size === "md" ? <span className="mt-1 block text-[0.55rem] tracking-[0.38em] opacity-70">{BRAND_TAGLINE}</span> : null}
+    <span className="leading-tight flex flex-col">
+      <span className={`font-display font-extrabold tracking-tight text-slate-900 ${title}`}>
+        ASIA OIL
+      </span>
+      <span className="text-[0.62rem] font-bold tracking-[0.22em] text-emerald-800 uppercase">
+        {BRAND_TAGLINE}
+      </span>
     </span>
   )
 }
@@ -55,72 +70,142 @@ export function SiteFrame({
 }) {
   const home = pathFor(locale, "home")
   const articleId = articleSlug ? articleIdBySlug(locale, articleSlug) : null
+
   return (
-    <div className="min-h-full bg-paper text-ink">
-      <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[60] focus:bg-white focus:px-4 focus:py-2">
+    <div className="min-h-full bg-white text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900">
+      <a
+        href="#content"
+        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[60] focus:bg-emerald-800 focus:text-white focus:px-4 focus:py-2 focus:rounded-md"
+      >
         {dict.ui.skip}
       </a>
-      <span className="scroll-progress" aria-hidden="true" />
-      <HeaderShell className="site-header group fixed inset-x-0 top-0 z-50 text-[#f7f1e3] transition-[background-color,color,box-shadow] duration-500 data-[solid=true]:bg-paper/85 data-[solid=true]:text-ink data-[solid=true]:shadow-[0_1px_0_rgba(166,124,61,0.25)] data-[solid=true]:backdrop-blur-xl">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-5 md:px-10">
-          <a href={home} className="group/brand flex items-center gap-3" aria-label={BRAND_NAME}>
-            <Mark className="size-9 text-gold-light transition duration-700 group-hover/brand:rotate-[8deg] group-data-[solid=true]:text-gold" />
-            <Wordmark />
-          </a>
-          <nav className="hidden items-center gap-7 text-[0.82rem] tracking-wide xl:flex" aria-label="Primary">
-            {NAV.map((item) => (
-              <a key={item} href={pathFor(locale, item)} className={`${navLink} ${page === item ? "after:scale-x-100" : ""}`} aria-current={page === item ? "page" : undefined}>
-                {dict.nav[item]}
-              </a>
-            ))}
-          </nav>
-          <div className="flex items-center gap-2 md:gap-4">
+
+      {/* Top Global Logistics & Quick Contact Utility Bar */}
+      <div className="border-b border-emerald-950/10 bg-[#092217] text-[#f7f1e3] text-xs py-2 px-5 md:px-10">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+          {/* Left: Port Dispatch Status */}
+          <div className="flex items-center gap-2 text-[#f7f1e3]/85 truncate">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
+            <span className="font-semibold text-emerald-300">
+              {locale === "tr" ? "Liman İhracat Çıkışları:" : "Seaport Terminals:"}
+            </span>
+            <span className="truncate">
+              Mersin Port (MIP) & İzmir Limanı • FOB / CIF Global
+            </span>
+          </div>
+
+          {/* Right: Direct Desk Info & WhatsApp & Language */}
+          <div className="hidden sm:flex items-center gap-5 text-xs">
+            <a
+              href="mailto:export@asiaoil.com.tr"
+              className="flex items-center gap-1.5 hover:text-amber-300 transition"
+            >
+              <Mail className="size-3.5 text-amber-400" />
+              <span>export@asiaoil.com.tr</span>
+            </a>
+
+            <a
+              href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20information"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-emerald-300 hover:text-emerald-200 font-semibold transition"
+            >
+              <span className="size-1.5 rounded-full bg-emerald-400" />
+              <span>WhatsApp Desk</span>
+            </a>
+
+            {/* Language Dropdown */}
             <details className="relative [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex h-10 cursor-pointer list-none items-center gap-2 px-2 text-[0.82rem]">
-                <Globe className="size-4 opacity-80" aria-hidden="true" />
-                <span className="hidden sm:inline">{LOCALE_META[locale].name}</span>
-                <span className="sm:hidden">{locale.toUpperCase()}</span>
+              <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded bg-white/10 px-2 py-0.5 text-xs font-semibold hover:bg-white/20">
+                <Globe className="size-3 text-amber-300" />
+                <span>{locale.toUpperCase()}</span>
               </summary>
-              <div className="absolute end-0 z-50 mt-3 min-w-48 border border-[#e6dcc6] bg-paper p-2 text-ink shadow-[0_24px_60px_-20px_rgba(18,26,13,0.35)]">
+              <div className="absolute end-0 z-50 mt-2 min-w-44 rounded-xl border border-slate-200 bg-white p-2 text-slate-800 shadow-2xl">
                 {PUBLISHED_LOCALES.map((code) => (
                   <a
                     key={code}
                     href={pathFor(code, page, articleId ? getDict(code).articles[articleId].slug : undefined)}
                     hrefLang={code}
                     lang={code}
-                    className={`flex items-center justify-between px-3 py-2 text-sm transition hover:bg-[#f1e9d6] ${code === locale ? "text-gold" : ""}`}
+                    className={`flex items-center justify-between rounded-lg px-3 py-1.5 text-xs font-medium transition hover:bg-slate-100 ${
+                      code === locale ? "text-emerald-700 font-bold bg-emerald-50" : ""
+                    }`}
                   >
-                    {LOCALE_META[code].name}
-                    <span className="text-[0.65rem] tracking-widest opacity-50">{code.toUpperCase()}</span>
+                    <span>{LOCALE_META[code].name}</span>
+                    <span className="text-[10px] font-mono uppercase text-slate-400">{code}</span>
                   </a>
                 ))}
               </div>
             </details>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Persistent Clean Sticky Header */}
+      <HeaderShell className="site-header group sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200/80 transition-all duration-300">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-5 md:px-10">
+          {/* Logo */}
+          <a href={home} className="group/brand flex items-center gap-3.5" aria-label={BRAND_NAME}>
+            <Mark className="size-10 transition duration-300 group-hover/brand:scale-105" />
+            <Wordmark />
+          </a>
+
+          {/* Desktop Navigation Links */}
+          <nav className="hidden items-center gap-8 text-[0.88rem] font-bold tracking-tight text-slate-700 xl:flex" aria-label="Primary">
+            {NAV.map((item) => {
+              const active = page === item
+              return (
+                <a
+                  key={item}
+                  href={pathFor(locale, item)}
+                  className={`transition duration-200 hover:text-emerald-700 relative py-2 ${
+                    active ? "text-emerald-800 font-extrabold" : ""
+                  }`}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {dict.nav[item]}
+                  {active && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-700 rounded-full" />
+                  )}
+                </a>
+              )
+            })}
+          </nav>
+
+          {/* Right Action Button & Mobile Menu Trigger */}
+          <div className="flex items-center gap-3">
             <a
               href={pathFor(locale, "quote")}
-              className="btn-shine hidden h-11 items-center gap-2 bg-gold-light px-5 text-[0.82rem] font-medium tracking-wide text-ink transition hover:bg-[#f0dba6] sm:inline-flex group-data-[solid=true]:bg-olive group-data-[solid=true]:text-[#f7f1e3] group-data-[solid=true]:hover:bg-leaf"
+              className="btn-shine hidden sm:inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-800 to-emerald-900 px-6 text-xs font-bold text-white shadow-md shadow-emerald-950/20 transition hover:from-emerald-900 hover:to-slate-950"
             >
-              {dict.ui.quote}
-              <ArrowUpRight className="size-4 rtl:-scale-x-100" aria-hidden="true" />
+              <span>{dict.ui.quote}</span>
+              <ArrowUpRight className="size-4 rtl:-scale-x-100" />
             </a>
+
+            {/* Mobile Menu */}
             <details className="xl:hidden [&_summary::-webkit-details-marker]:hidden">
-              <summary className="grid size-11 cursor-pointer list-none place-items-center" aria-label={dict.ui.menu}>
-                <Menu className="size-5" aria-hidden="true" />
+              <summary className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border border-slate-200 text-slate-800 hover:bg-slate-100" aria-label={dict.ui.menu}>
+                <Menu className="size-5" />
               </summary>
-              <div className="fixed inset-x-0 bottom-0 top-20 z-40 overflow-y-auto bg-olive-deep px-6 py-10 text-[#f7f1e3]">
-                <nav className="mx-auto grid max-w-xl gap-1" aria-label={dict.ui.menu}>
+              <div className="fixed inset-x-0 bottom-0 top-[114px] z-50 overflow-y-auto bg-white px-6 py-8 shadow-2xl border-t border-slate-200">
+                <nav className="mx-auto grid max-w-lg gap-2" aria-label={dict.ui.menu}>
                   {[...NAV, ...MORE].map((item, index) => (
                     <a
                       key={item}
                       href={pathFor(locale, item)}
-                      className="font-display rise flex items-baseline justify-between border-b border-white/10 py-3 text-3xl transition hover:text-gold-light"
-                      style={{ "--step": `${index * 0.05}s` } as CSSProperties}
+                      className="flex items-center justify-between border-b border-slate-100 py-3.5 text-lg font-bold text-slate-800 hover:text-emerald-800"
                     >
-                      {dict.nav[item]}
-                      <span className="text-xs tracking-widest text-gold-light/50">{String(index + 1).padStart(2, "0")}</span>
+                      <span>{dict.nav[item]}</span>
+                      <span className="text-xs font-mono text-slate-400">0{index + 1}</span>
                     </a>
                   ))}
-                  <a href={pathFor(locale, "quote")} className="btn-shine mt-8 inline-flex h-12 items-center justify-center bg-gold-light text-ink">
+                  <a
+                    href={pathFor(locale, "quote")}
+                    className="mt-6 flex h-13 items-center justify-center rounded-xl bg-emerald-800 text-sm font-bold text-white shadow-lg"
+                  >
                     {dict.ui.quote}
                   </a>
                 </nav>
@@ -130,72 +215,128 @@ export function SiteFrame({
         </div>
       </HeaderShell>
 
+      {/* Main Page Content */}
       <main id="content">{children}</main>
 
-      <footer className="grain overflow-hidden bg-olive-deep text-[#f7f1e3]">
-        <div className="mx-auto grid max-w-7xl gap-12 px-5 pb-12 pt-20 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:px-10">
-          <div>
-            <a href={home} className="flex items-center gap-3">
-              <Mark className="size-10 text-gold-light" />
-              <Wordmark size="lg" />
-            </a>
-            <p className="mt-6 max-w-xs text-sm leading-relaxed text-[#f7f1e3]/65">{dict.footer.note}</p>
-            <a className="mt-6 inline-flex items-center gap-2 text-sm text-gold-light hover:underline" href={`mailto:${settings.publicEmail || "export@asiaoil.com.tr"}`}>
-              {settings.publicEmail || "export@asiaoil.com.tr"}
-            </a>
-            {settings.phone ? <p className="mt-2 text-sm text-[#f7f1e3]/80">{settings.phone}</p> : null}
-            <p className="mt-2 text-sm text-[#f7f1e3]/50">{settings.country}</p>
-          </div>
-          <FooterColumn title={dict.nav.sunflower}>
-            <FooterLink locale={locale} page="sunflower" label={dict.nav.sunflower} />
-            <FooterLink locale={locale} page="olive" label={dict.nav.olive} />
-            <FooterLink locale={locale} page="wholesale" label={dict.nav.wholesale} />
-            <FooterLink locale={locale} page="privateLabel" label={dict.nav.privateLabel} />
-          </FooterColumn>
-          <FooterColumn title={dict.nav.trade}>
-            <FooterLink locale={locale} page="trade" label={dict.nav.trade} />
-            <FooterLink locale={locale} page="quality" label={dict.nav.quality} />
-            <FooterLink locale={locale} page="about" label={dict.nav.about} />
-            <FooterLink locale={locale} page="contact" label={dict.nav.contact} />
-            <FooterLink locale={locale} page="quote" label={dict.nav.quote} />
-          </FooterColumn>
-          <FooterColumn title={dict.nav.insights}>
-            {ARTICLE_IDS.map((id) => (
-              <a key={id} className="link-draw block w-fit text-sm leading-snug text-[#f7f1e3]/70 transition hover:text-gold-light" href={pathFor(locale, "insights", getDict(locale).articles[id].slug)}>
-                {dict.articles[id].title}
+      {/* Modern High-Prestige Corporate Footer */}
+      <footer className="bg-[#0b1c14] text-[#f7f1e3] border-t border-emerald-950/30">
+        <div className="mx-auto max-w-7xl px-5 pt-20 pb-12 md:px-10">
+          <div className="grid gap-12 lg:grid-cols-12">
+            {/* Column 1: Brand & Ports */}
+            <div className="lg:col-span-4">
+              <a href={home} className="flex items-center gap-3">
+                <Mark className="size-11" />
+                <span className="leading-tight">
+                  <span className="font-display block text-2xl font-extrabold tracking-tight text-white">
+                    ASIA OIL
+                  </span>
+                  <span className="text-[0.65rem] font-bold tracking-[0.2em] text-emerald-400 uppercase">
+                    {BRAND_TAGLINE}
+                  </span>
+                </span>
               </a>
-            ))}
-            <FooterLink locale={locale} page="faq" label={dict.nav.faq} />
-            <FooterLink locale={locale} page="privacy" label={dict.nav.privacy} />
-          </FooterColumn>
-        </div>
-        <p className="font-display text-outline slide-word pointer-events-none select-none whitespace-nowrap px-5 text-center text-[19vw] leading-[0.8] tracking-[0.04em] md:px-10" aria-hidden="true">
-          ASIA OIL
-        </p>
-        <div className="border-t border-white/10">
-          <div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 py-6 text-xs text-[#f7f1e3]/50 md:flex-row md:items-center md:justify-between md:px-10">
-            <span>{dict.footer.rights}</span>
-            <span>{dict.home.bar}</span>
+
+              <p className="mt-6 text-sm leading-relaxed text-[#f7f1e3]/75">
+                {dict.footer.note}
+              </p>
+
+              <div className="mt-6 space-y-2 text-xs text-[#f7f1e3]/80">
+                <div className="flex items-center gap-2">
+                  <Ship className="size-4 text-emerald-400" />
+                  <span>Mersin International Port (MIP) & İzmir Seaport</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Mail className="size-4 text-amber-400" />
+                  <a href={`mailto:${settings.publicEmail || "export@asiaoil.com.tr"}`} className="text-amber-300 hover:underline">
+                    {settings.publicEmail || "export@asiaoil.com.tr"}
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Column 2: Products */}
+            <div className="lg:col-span-3">
+              <h4 className="text-xs font-bold tracking-widest uppercase text-emerald-400">
+                {dict.nav.sunflower}
+              </h4>
+              <div className="mt-5 space-y-2.5 text-xs text-[#f7f1e3]/75">
+                <a href={pathFor(locale, "sunflower")} className="block hover:text-white transition">
+                  {dict.nav.sunflower} (HS 1512.19)
+                </a>
+                <a href={pathFor(locale, "olive")} className="block hover:text-white transition">
+                  {dict.nav.olive} (HS 1509.20)
+                </a>
+                <a href={pathFor(locale, "wholesale")} className="block hover:text-white transition">
+                  {dict.nav.wholesale} & Flexitank
+                </a>
+                <a href={pathFor(locale, "privateLabel")} className="block hover:text-white transition">
+                  {dict.nav.privateLabel}
+                </a>
+              </div>
+            </div>
+
+            {/* Column 3: Logistics & Corporate */}
+            <div className="lg:col-span-3">
+              <h4 className="text-xs font-bold tracking-widest uppercase text-emerald-400">
+                {dict.nav.trade}
+              </h4>
+              <div className="mt-5 space-y-2.5 text-xs text-[#f7f1e3]/75">
+                <a href={pathFor(locale, "trade")} className="block hover:text-white transition">
+                  {dict.nav.trade} (FOB / CIF)
+                </a>
+                <a href={pathFor(locale, "quality")} className="block hover:text-white transition">
+                  {dict.nav.quality} & Sertifikalar
+                </a>
+                <a href={pathFor(locale, "about")} className="block hover:text-white transition">
+                  {dict.nav.about}
+                </a>
+                <a href={pathFor(locale, "contact")} className="block hover:text-white transition">
+                  {dict.nav.contact}
+                </a>
+                <a href={pathFor(locale, "quote")} className="block hover:text-white transition">
+                  {dict.nav.quote}
+                </a>
+              </div>
+            </div>
+
+            {/* Column 4: Insights & Legal */}
+            <div className="lg:col-span-2">
+              <h4 className="text-xs font-bold tracking-widest uppercase text-emerald-400">
+                {dict.nav.insights}
+              </h4>
+              <div className="mt-5 space-y-2.5 text-xs text-[#f7f1e3]/75">
+                {ARTICLE_IDS.map((id) => (
+                  <a
+                    key={id}
+                    className="block hover:text-white transition truncate"
+                    href={pathFor(locale, "insights", getDict(locale).articles[id].slug)}
+                  >
+                    {dict.articles[id].title}
+                  </a>
+                ))}
+                <a href={pathFor(locale, "faq")} className="block hover:text-white transition">
+                  {dict.nav.faq}
+                </a>
+                <a href={pathFor(locale, "privacy")} className="block hover:text-white transition">
+                  {dict.nav.privacy}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Sub Footer Rights & Badges */}
+          <div className="mt-16 pt-8 border-t border-white/10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-xs text-[#f7f1e3]/50">
+            <p>© {new Date().getFullYear()} Asia Oil Türkiye. {dict.footer.rights}</p>
+            <div className="flex items-center gap-4 text-emerald-400 font-medium">
+              <span>ISO 22000:2018</span>
+              <span>•</span>
+              <span>Helal & Kosher</span>
+              <span>•</span>
+              <span>EUR.1 Dolaşım Belgesi</span>
+            </div>
           </div>
         </div>
       </footer>
     </div>
-  )
-}
-
-function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div>
-      <p className="kicker text-gold-light">{title}</p>
-      <div className="mt-6 grid gap-3">{children}</div>
-    </div>
-  )
-}
-
-function FooterLink({ locale, page, label }: { locale: Locale; page: StaticPage; label: string }) {
-  return (
-    <a className="link-draw block w-fit text-sm text-[#f7f1e3]/70 transition hover:text-gold-light" href={pathFor(locale, page)}>
-      {label}
-    </a>
   )
 }

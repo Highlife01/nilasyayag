@@ -85,14 +85,14 @@ const STAGES: Stage[] = [
       it: "Frangitura ed estrazione olio grezzo",
     },
     tagline: {
-      tr: "Mekanik Presleme & Soğuk Sıkım",
-      en: "Mechanical Pressing & Cold Extraction",
-      ar: "عصر ميكانيكي واستخلاص بارد",
-      ru: "Механический отжим и холодное прессование",
-      de: "Mechanische Pressung & Kaltextraktion",
-      fr: "Pression mécanique & Extraction à froid",
-      es: "Prensado mecánico y extracción en frío",
-      it: "Spremitura meccanica ed estrazione a freddo",
+      tr: "Mekanik Presleme & Düşük Sıcaklık Koruması",
+      en: "Mechanical Pressing & Low Heat Extraction",
+      ar: "عصر ميكانيكي وحماية درجات الحرارة",
+      ru: "Механический отжим при низких температурах",
+      de: "Mechanische Pressung & Kaltverfahren",
+      fr: "Pression mécanique à basse température",
+      es: "Prensado mecánico a baja temperatura",
+      it: "Spremitura meccanica a bassa temperatura",
     },
     description: {
       tr: "Tohumlar modern kırıcılarda besin değerini, doğal E vitaminini ve antioksidan yapısını kaybetmeden düşük sıcaklık kontrollü presleme ünitelerinden geçirilir.",
@@ -152,24 +152,24 @@ const STAGES: Stage[] = [
       it: "Deacidificazione, sbiancamento, winterizzazione e deodorizzazione",
     },
     description: {
-      tr: "Avrupa gıda normlarına uygun paslanmaz çelik kolonlarda vakum altında serbest yağ asitleri (FFA < %0.10) ayrıştırılır, soğukta kristalleşen mumlar (waxes) süzülür ve 230°C yüksek duman noktasına ulaşılır.",
-      en: "Free fatty acids (FFA < 0.10%) and waxes are removed under high vacuum in stainless steel columns, yielding crystal-clear golden oil with a high smoke point exceeding 230°C.",
-      ar: "تتم إزالة الأحماض الدهنية الحرة (FFA < 0.10%) والشموع تحت تفريغ هوائي دقيق في أعمدة استانلس ستيل، مما ينتج عنه زيت نقي ذهبي بنقطة احتراق تفوق 230°C.",
-      ru: "Под глубоким вакуумом удаляются свободные жирные кислоты (FFA < 0.10%) и воски, обеспечивая идеальную прозрачность и высокую температуру дымления 230°C.",
-      de: "Unter Vakuum werden freie Fettsäuren (FFA < 0,10%) und Wachse entfernt, was zu kristallklarem Speiseöl mit einem Rauchpunkt von über 230°C führt.",
-      fr: "Les acides gras libres (FFA < 0,10%) et les cires sont éliminés sous vide poussé, garantissant une huile limpide et un point de fumée supérieur à 230°C.",
-      es: "Los ácidos grasos libres (FFA < 0.10%) y las ceras se eliminan al vacío, logrando un aceite dorado y brillante con un punto de humo superior a 230°C.",
-      it: "Gli acidi grassi liberi (FFA < 0,10%) e le cere vengono rimossi sotto vuoto, ottenendo un olio cristallino con punto di fumo superiore a 230°C.",
+      tr: "Avrupa gıda normlarına uygun paslanmaz çelik kolonlarda vakum altında serbest yağ asitleri (FFA < %0.10) ayrıştırılır, soğukta kristalleşen mumlar (waxes) süzülür ve 232°C yüksek duman noktasına ulaşılır.",
+      en: "Free fatty acids (FFA < 0.10%) and waxes are removed under high vacuum in stainless steel columns, yielding crystal-clear golden oil with a high smoke point exceeding 232°C.",
+      ar: "تتم إزالة الأحماض الدهنية الحرة (FFA < 0.10%) والشموع تحت تفريغ هوائي دقيق في أعمدة استانلس ستيل، مما ينتج عنه زيت نقي ذهبي بنقطة احتراق تفوق 232°م.",
+      ru: "Под глубоким вакуумом удаляются свободные жирные кислоты (FFA < 0.10%) и воски, обеспечивая идеальную прозрачность и высокую температуру дымления 232°C.",
+      de: "Unter Vakuum werden freie Fettsäuren (FFA < 0,10%) und Wachse entfernt, was zu kristallklarem Speiseöl mit einem Rauchpunkt von über 232°C führt.",
+      fr: "Les acides gras libres (FFA < 0,10%) et les cires sont éliminés sous vide poussé, garantissant une huile limpide et un point de fumée supérieur à 232°C.",
+      es: "Los ácidos grasos libres (FFA < 0.10%) y las ceras se eliminan al vacío, logrando un aceite dorado y brillante con un punto de humo superior a 232°C.",
+      it: "Gli acidi grassi liberi (FFA < 0,10%) e le cere vengono rimossi sotto vuoto, ottenendo un olio cristallino con punto di fumo superiore a 232°C.",
     },
     points: {
-      tr: ["FFA < %0.10 (Minimum Asitlik)", "230°C Yüksek Duman Noktası", "Vinterize Edilmiş Kristal Berraklık"],
-      en: ["FFA < 0.10% Ultra-Low Acidity", "230°C High Smoke Point", "Winterized Crystal Clarity"],
-      ar: ["حموضة منخفضة جداً FFA < 0.10%", "نقطة دخان مرتفعة 230°م", "شفافية بلورية مشتّاة"],
-      ru: ["Кислотность FFA < 0.10%", "Точка дымления 230°C", "Кристальная прозрачность"],
-      de: ["FFA < 0,10% Ultra-niedrige Säure", "230°C Hoher Rauchpunkt", "Winterisierte Reinheit"],
-      fr: ["FFA < 0,10% très faible acidité", "Point de fumée élevé 230°C", "Clarté cristalline"],
-      es: ["FFA < 0.10% muy baja acidez", "Punto de humo alto 230°C", "Transparencia winterizada"],
-      it: ["FFA < 0,10% bassissima acidità", "Punto di fumo 230°C", "Brillantezza cristallina"],
+      tr: ["FFA < %0.10 (Minimum Asitlik)", "232°C Yüksek Duman Noktası", "Vinterize Edilmiş Kristal Berraklık"],
+      en: ["FFA < 0.10% Ultra-Low Acidity", "232°C High Smoke Point", "Winterized Crystal Clarity"],
+      ar: ["حموضة منخفضة جداً FFA < 0.10%", "نقطة دخان مرتفعة 232°م", "شفافية بلورية مشتّاة"],
+      ru: ["Кислотность FFA < 0.10%", "Точка дымления 232°C", "Кристальная прозрачность"],
+      de: ["FFA < 0,10% Ultra-niedrige Säure", "232°C Hoher Rauchpunkt", "Winterisierte Reinheit"],
+      fr: ["FFA < 0,10% très faible acidité", "Point de fumée élevé 232°C", "Clarté cristalline"],
+      es: ["FFA < 0.10% muy baja acidez", "Punto de humo alto 232°C", "Transparencia winterizada"],
+      it: ["FFA < 0,10% bassissima acidità", "Punto di fumo 232°C", "Brillantezza cristallina"],
     },
     metric: {
       value: "<0.10%",
@@ -199,7 +199,7 @@ const STAGES: Stage[] = [
       it: "Imbottigliamento e confezionamento sterile",
     },
     tagline: {
-      tr: "PET, Laklı İhracat Tenekesi & Azot Dozajlama",
+      tr: "PET, Laklı İhracat Tenekesi & Sıvı Azot Dozajlama",
       en: "PET, Food-Grade Tins & Liquid Nitrogen Dosing",
       ar: "عبوات PET وصفائح تصدير مع حقن النيتروجين",
       ru: "ПЭТ, экспортная жесть и азотная подушка",
@@ -308,42 +308,38 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
   const Icon = current.icon
 
   return (
-    <section className="relative overflow-hidden bg-[#0d140a] py-24 text-[#f7f1e3] md:py-32">
-      {/* Decorative radial lighting */}
-      <div className="pointer-events-none absolute -top-40 right-1/4 h-[600px] w-[600px] rounded-full bg-[radial-gradient(circle,rgba(212,175,55,0.12),transparent_70%)] blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 left-10 h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle,rgba(143,166,91,0.14),transparent_70%)] blur-3xl" />
-
+    <section className="bg-white py-24 md:py-32 border-t border-slate-200">
       <div className="mx-auto max-w-7xl px-5 md:px-10">
         {/* Section Heading */}
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-3xl">
-            <p className="kicker flex items-center gap-3 text-gold-light">
-              <span className="rule" aria-hidden="true" />
-              {locale === "tr"
-                ? "Tohumdan Sofraya Entegre Güç"
-                : "Integrated Seed-to-Table Infrastructure"}
-            </p>
-            <h2 className="font-display mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-white md:text-6xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 text-xs font-semibold text-emerald-800 border border-emerald-200">
+              <Factory className="size-3.5 text-emerald-600" />
+              <span>
+                {locale === "tr" ? "Tohumdan Sofraya Entegre Rafinasyon" : "Integrated Seed-to-Table Refining"}
+              </span>
+            </div>
+            <h2 className="font-display mt-4 text-4xl font-extrabold tracking-tight text-slate-900 md:text-6xl">
               {locale === "tr" ? (
                 <>
-                  5 Aşamalı Rafinasyon & <span className="text-gold-gradient italic font-normal">Global İhracat Döngüsü</span>
+                  5 Aşamalı Üretim & <span className="text-emerald-gradient">Global İhracat Döngüsü</span>
                 </>
               ) : (
                 <>
-                  5-Stage Refining & <span className="text-gold-gradient italic font-normal">Global Maritime Delivery</span>
+                  5-Stage Refining & <span className="text-emerald-gradient">Global Maritime Delivery</span>
                 </>
               )}
             </h2>
           </div>
-          <p className="max-w-md text-sm leading-relaxed text-[#f7f1e3]/70 md:text-base">
+          <p className="max-w-md text-sm leading-relaxed text-slate-600 md:text-base">
             {locale === "tr"
-              ? "Tohum seçiminden liman sevkiyatına kadar her adım tam entegre, laboratuvar onaylı ve uluslararası akreditasyon standartlarına tam uyumlu yürütülür."
+              ? "Tohum seçiminden liman sevkiyatına kadar her adım tam entegre, akredite laboratuvar onaylı ve uluslararası gıda güvenliği standartlarına tam uyumlu yürütülür."
               : "From seed selection to deep-sea maritime dispatch, every stage operates under strict laboratory surveillance and international food safety accreditations."}
           </p>
         </div>
 
         {/* Stage Selector Tabs */}
-        <div className="mt-14 grid grid-cols-2 gap-2 sm:grid-cols-5 md:gap-3">
+        <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-5">
           {STAGES.map((s, idx) => {
             const SIcon = s.icon
             const isSelected = activeStage === idx
@@ -352,23 +348,23 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
                 key={s.number}
                 type="button"
                 onClick={() => setActiveStage(idx)}
-                className={`group relative flex flex-col justify-between rounded-xl border p-4 text-left transition duration-300 md:p-5 ${
+                className={`group relative flex flex-col justify-between rounded-2xl border p-4 text-left transition duration-300 md:p-5 ${
                   isSelected
-                    ? "border-gold bg-gold/15 text-white shadow-lg shadow-gold/10"
-                    : "border-white/10 bg-white/5 text-[#f7f1e3]/70 hover:border-gold/40 hover:bg-white/10 hover:text-white"
+                    ? "border-emerald-600 bg-emerald-50/70 shadow-lg shadow-emerald-950/5 ring-2 ring-emerald-600/20"
+                    : "border-slate-200 bg-slate-50/50 hover:border-slate-300 hover:bg-white"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`font-mono text-xs tracking-wider ${isSelected ? "text-gold-light font-bold" : "text-white/40"}`}>
+                  <span className={`font-mono text-xs font-bold tracking-wider ${isSelected ? "text-emerald-800" : "text-slate-400"}`}>
                     STAGE {s.number}
                   </span>
-                  <SIcon className={`size-4 transition duration-300 ${isSelected ? "text-gold" : "text-white/40 group-hover:text-gold/80"}`} />
+                  <SIcon className={`size-4 transition duration-300 ${isSelected ? "text-emerald-600" : "text-slate-400 group-hover:text-emerald-600"}`} />
                 </div>
-                <h4 className="mt-4 text-sm font-semibold leading-snug">
+                <h4 className="mt-4 text-sm font-bold text-slate-900 leading-snug">
                   {s.title[locale] || s.title.en}
                 </h4>
                 {isSelected && (
-                  <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-gradient-to-r from-gold-light via-gold to-gold-light" />
+                  <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-emerald-600 rounded-full" />
                 )}
               </button>
             )
@@ -376,24 +372,24 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
         </div>
 
         {/* Active Stage Detailed Display Panel */}
-        <div className="mt-8 rounded-2xl border border-gold/30 bg-gradient-to-br from-[#121c0e]/90 via-[#0e170b]/90 to-[#070c06]/95 p-6 backdrop-blur-xl md:p-12 shadow-2xl">
+        <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50/60 p-6 md:p-12 shadow-xl">
           <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
             {/* Left: Stage Overview & Points */}
             <div className="lg:col-span-8">
               <div className="flex items-center gap-3">
-                <span className="inline-flex items-center gap-2 rounded-full border border-gold-light/40 bg-gold/15 px-3 py-1 text-xs font-mono font-bold tracking-widest text-gold-light">
+                <span className="inline-flex items-center gap-2 rounded-full bg-emerald-800 px-3.5 py-1 text-xs font-mono font-bold tracking-widest text-white">
                   AŞAMA {current.number} / 05
                 </span>
-                <span className="text-xs text-gold/80 tracking-wide font-medium">
+                <span className="text-xs font-semibold text-emerald-800 tracking-wide">
                   {current.tagline[locale] || current.tagline.en}
                 </span>
               </div>
 
-              <h3 className="font-display mt-4 text-3xl font-bold text-white md:text-5xl">
+              <h3 className="font-display mt-4 text-3xl font-extrabold text-slate-900 md:text-5xl">
                 {current.title[locale] || current.title.en}
               </h3>
 
-              <p className="mt-4 text-base leading-relaxed text-[#f7f1e3]/85 md:text-lg">
+              <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">
                 {current.description[locale] || current.description.en}
               </p>
 
@@ -402,10 +398,10 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
                 {(current.points[locale] || current.points.en).map((pt, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-2.5 rounded-lg border border-white/10 bg-black/30 p-3.5"
+                    className="flex items-start gap-2.5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
                   >
-                    <CheckCircle2 className="size-4 shrink-0 text-emerald-400 mt-0.5" />
-                    <span className="text-xs font-medium text-[#f7f1e3]/90 leading-tight">
+                    <CheckCircle2 className="size-4 shrink-0 text-emerald-600 mt-0.5" />
+                    <span className="text-xs font-bold text-slate-800 leading-tight">
                       {pt}
                     </span>
                   </div>
@@ -414,15 +410,15 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
             </div>
 
             {/* Right: Stage Badge & Quick Metric */}
-            <div className="flex flex-col items-center justify-center rounded-xl border border-gold/30 bg-black/40 p-8 text-center backdrop-blur-md lg:col-span-4">
-              <div className="relative flex size-20 items-center justify-center rounded-2xl border border-gold/40 bg-gold/10 text-gold-light shadow-inner shadow-gold/20">
-                <Icon className="size-10 text-gold-light" />
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-lg lg:col-span-4">
+              <div className="relative flex size-20 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <Icon className="size-10 text-emerald-700" />
               </div>
 
-              <div className="mt-6 font-display text-4xl font-bold tracking-tight text-white md:text-5xl">
-                <span className="text-gold-gradient">{current.metric.value}</span>
+              <div className="mt-6 font-display text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
+                <span className="text-emerald-800">{current.metric.value}</span>
               </div>
-              <p className="mt-1 text-xs font-semibold tracking-wider uppercase text-gold-light/90">
+              <p className="mt-1 text-xs font-bold tracking-wider uppercase text-slate-500">
                 {current.metric.label[locale] || current.metric.label.en}
               </p>
 
@@ -430,7 +426,7 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
                 href={`mailto:export@asiaoil.com.tr?subject=${encodeURIComponent(
                   `Inquiry about Stage ${current.number} Specifications`
                 )}`}
-                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gold/40 bg-gold/10 py-3 text-xs font-semibold text-gold-light transition duration-300 hover:bg-gold hover:text-ink"
+                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-800 py-3 text-xs font-bold text-white transition duration-300 hover:bg-emerald-900 shadow-md shadow-emerald-950/10"
               >
                 <span>{locale === "tr" ? "Teknik Rapor Talep Et" : "Request Spec Sheet"}</span>
                 <ArrowRight className="size-3.5 rtl:-scale-x-100" />

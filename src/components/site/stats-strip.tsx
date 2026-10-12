@@ -155,34 +155,34 @@ const STATS: StatItem[] = [
 export function StatsStrip({ locale }: { locale: Locale }) {
   return (
     <section className="relative z-20 -mt-10 mx-auto max-w-7xl px-5 md:px-10">
-      <div className="rounded-3xl border border-slate-200/90 bg-white p-6 shadow-2xl md:p-8">
+      <div className="rounded-3xl border-2 border-slate-300 bg-white p-6 shadow-2xl md:p-8">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5 lg:gap-6">
           {STATS.map((stat, i) => {
             const Icon = stat.icon
             return (
               <div
                 key={i}
-                className="group relative flex flex-col justify-between border-l border-slate-100 pl-4 transition duration-300 hover:translate-y-[-2px] rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-4"
+                className="group relative flex flex-col justify-between border-l-2 border-slate-200 pl-4 transition duration-300 hover:translate-y-[-2px] rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-4"
               >
                 <div className="flex items-center justify-between">
-                  <div className={`flex size-10 items-center justify-center rounded-xl ${stat.color} transition duration-300 group-hover:scale-110`}>
+                  <div className={`flex size-11 items-center justify-center rounded-xl ${stat.color} transition duration-300 group-hover:scale-110 shadow-xs border border-slate-200`}>
                     <Icon className="size-5" />
                   </div>
-                  <span className="font-mono text-[11px] font-bold tracking-wider text-slate-300">
+                  <span className="font-mono text-xs font-black tracking-wider text-slate-400">
                     0{i + 1}
                   </span>
                 </div>
                 <div className="mt-4">
-                  <div className="font-display text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
-                    <span className="text-emerald-950">{stat.value}</span>
-                    <span className="text-lg font-bold text-emerald-600">
+                  <div className="font-display text-3xl font-black tracking-tight text-slate-950 md:text-4xl">
+                    <span className="text-slate-950">{stat.value}</span>
+                    <span className="text-lg font-black text-emerald-700">
                       {typeof stat.suffix === "object" ? stat.suffix[locale] || stat.suffix.en : stat.suffix}
                     </span>
                   </div>
-                  <h4 className="mt-1 text-sm font-bold text-slate-800 leading-snug">
+                  <h4 className="mt-1 text-sm font-black text-slate-950 leading-snug">
                     {stat.label[locale] || stat.label.en}
                   </h4>
-                  <p className="mt-0.5 text-xs text-slate-500 font-medium leading-relaxed">
+                  <p className="mt-0.5 text-xs text-slate-700 font-semibold leading-relaxed">
                     {stat.sub[locale] || stat.sub.en}
                   </p>
                 </div>

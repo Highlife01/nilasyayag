@@ -134,7 +134,7 @@ export function SiteFrame({
       </div>
 
       {/* Main Persistent Clean Sticky Header */}
-      <HeaderShell className="site-header group sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200/80 transition-all duration-300">
+      <HeaderShell className="site-header group sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md border-b-2 border-slate-300 transition-all duration-300">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-5 md:px-10">
           {/* Logo */}
           <a href={home} className="group/brand flex items-center gap-3.5" aria-label={BRAND_NAME}>
@@ -150,10 +150,10 @@ export function SiteFrame({
                 <a
                   key={item}
                   href={pathFor(locale, item)}
-                  className={`rounded-xl px-3.5 py-2 text-sm font-semibold transition-all duration-150 ${
+                  className={`rounded-xl px-4 py-2 text-sm transition-all duration-150 ${
                     active
-                      ? "bg-emerald-50 text-emerald-800 font-bold shadow-xs"
-                      : "text-slate-600 hover:bg-slate-100/80 hover:text-slate-900"
+                      ? "bg-emerald-950 text-white font-black shadow-md border border-emerald-800"
+                      : "text-slate-900 hover:bg-slate-100 hover:text-black font-extrabold"
                   }`}
                   aria-current={active ? "page" : undefined}
                 >
@@ -167,7 +167,7 @@ export function SiteFrame({
           <div className="flex items-center gap-3">
             <a
               href={pathFor(locale, "quote")}
-              className="btn-shine hidden sm:inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 px-5 text-xs font-extrabold text-white shadow-md shadow-emerald-700/25 transition-all duration-200 hover:scale-105 active:scale-95"
+              className="btn-shine hidden sm:inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-900 hover:from-emerald-600 hover:to-teal-600 px-6 text-xs font-black text-white shadow-lg shadow-emerald-950/30 transition-all duration-200 hover:scale-105 active:scale-95 border border-emerald-400/30"
             >
               <span>📋</span>
               <span>{dict.ui.quote}</span>
@@ -175,7 +175,7 @@ export function SiteFrame({
 
             {/* Mobile Menu */}
             <details className="xl:hidden [&_summary::-webkit-details-marker]:hidden">
-              <summary className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border border-slate-200 text-slate-800 hover:bg-slate-100" aria-label={dict.ui.menu}>
+              <summary className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border-2 border-slate-300 text-slate-950 hover:bg-slate-100 shadow-xs font-bold" aria-label={dict.ui.menu}>
                 <Menu className="size-5" />
               </summary>
               <div className="fixed inset-x-0 bottom-0 top-[114px] group-data-[solid=true]:top-20 z-50 overflow-y-auto bg-white px-6 py-8 shadow-2xl border-t border-slate-200">

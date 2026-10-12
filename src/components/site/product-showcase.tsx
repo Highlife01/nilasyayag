@@ -305,8 +305,8 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
                 key={p.id}
                 type="button"
                 onClick={() => setSelectedProduct(p.id)}
-                className={`group relative rounded-3xl border bg-white p-4 shadow-card hover:shadow-card-hover hover:border-emerald-500/50 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden text-left cursor-pointer ${
-                  isSelected ? "border-emerald-600 ring-2 ring-emerald-600/30 shadow-card-hover" : "border-slate-200/80"
+                className={`group relative rounded-3xl border-2 bg-white p-4 shadow-card hover:shadow-card-hover hover:border-emerald-600 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden text-left cursor-pointer ${
+                  isSelected ? "border-emerald-700 ring-4 ring-emerald-600/25 shadow-card-hover" : "border-slate-300"
                 }`}
               >
                 <div>
@@ -318,35 +318,35 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
                       className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                       sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity" />
-                    <span className="absolute top-3 left-3 text-2xl drop-shadow-sm">{emoji}</span>
-                    <span className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-white/95 backdrop-blur-md text-[10px] font-mono font-bold text-emerald-800 border border-emerald-200/80 shadow-xs">
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-70 group-hover:opacity-40 transition-opacity" />
+                    <span className="absolute top-3 left-3 text-2xl drop-shadow-md">{emoji}</span>
+                    <span className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-slate-950/90 text-white backdrop-blur-md text-[10px] font-mono font-black shadow-md border border-white/20">
                       {specPill}
                     </span>
                   </div>
 
                   <div className="pt-4 px-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      <span className="font-mono text-[10px] font-black text-slate-500 uppercase tracking-wider">
                         {p.hsCode}
                       </span>
                       {isSelected && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300">
                           <span className="size-1.5 rounded-full bg-emerald-600" />
                           SEÇİLİ
                         </span>
                       )}
                     </div>
-                    <h3 className="mt-1.5 font-display text-base font-bold text-slate-900 group-hover:text-emerald-700 transition">
+                    <h3 className="mt-1.5 font-display text-base font-black text-slate-950 group-hover:text-emerald-700 transition">
                       {p.title[locale] || p.title.en}
                     </h3>
-                    <p className="mt-1 text-xs leading-relaxed text-slate-600 line-clamp-2">
+                    <p className="mt-1 text-xs leading-relaxed text-slate-700 font-medium line-clamp-2">
                       {p.description[locale] || p.description.en}
                     </p>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-100 px-1 flex items-center justify-between text-xs font-bold text-emerald-700">
+                <div className="mt-4 pt-3 border-t-2 border-slate-100 px-1 flex items-center justify-between text-xs font-black text-emerald-800">
                   <span>{locale === "tr" ? "Spesifikasyonu Gör" : "Explore Technical Specs"}</span>
                   <span className="transition-transform group-hover:translate-x-1">→</span>
                 </div>
@@ -356,47 +356,47 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
         </div>
 
         {/* Active Product Detailed Card */}
-        <div className="mt-8 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+        <div className="mt-8 overflow-hidden rounded-3xl border-2 border-slate-300 bg-white shadow-2xl">
           <div className="grid lg:grid-cols-12">
             {/* Left Content Column */}
             <div className="p-8 md:p-12 lg:col-span-7 flex flex-col justify-between">
               <div>
                 <div className="flex flex-wrap items-center gap-2.5">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3.5 py-1 text-xs font-semibold text-emerald-800 border border-emerald-200">
-                    <Sparkles className="size-3 text-emerald-600" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-black text-emerald-950 border border-emerald-300">
+                    <Sparkles className="size-3 text-emerald-700" />
                     {current.badge[locale] || current.badge.en}
                   </span>
-                  <span className="font-mono text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+                  <span className="font-mono text-xs font-black text-slate-700 bg-slate-200/80 px-3 py-1 rounded-full">
                     {current.hsCode}
                   </span>
                 </div>
 
-                <h3 className="font-display mt-5 text-3xl font-extrabold text-slate-900 md:text-5xl">
+                <h3 className="font-display mt-5 text-3xl font-black text-slate-950 md:text-5xl">
                   {current.title[locale] || current.title.en}
                 </h3>
-                <p className="mt-2 text-base font-medium text-emerald-800">
+                <p className="mt-2 text-base font-bold text-emerald-900">
                   {current.category[locale] || current.category.en}
                 </p>
 
-                <p className="mt-4 text-sm leading-relaxed text-slate-600 md:text-base">
+                <p className="mt-4 text-sm leading-relaxed text-slate-700 font-medium md:text-base">
                   {current.description[locale] || current.description.en}
                 </p>
 
                 {/* Laboratory Specs Grid */}
                 <div className="mt-8">
-                  <h4 className="text-xs font-bold tracking-wider uppercase text-slate-400">
+                  <h4 className="text-xs font-black tracking-wider uppercase text-slate-600">
                     {locale === "tr" ? "Laboratuvar ve Kalite Spesifikasyonları" : "Laboratory & Technical Specs"}
                   </h4>
                   <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {current.specs.map((s, idx) => (
                       <div
                         key={idx}
-                        className="rounded-xl border border-slate-100 bg-slate-50/80 p-3.5 text-center"
+                        className="rounded-2xl border-2 border-slate-200 bg-slate-50 p-3.5 text-center"
                       >
-                        <span className="block text-[11px] font-medium text-slate-500">
+                        <span className="block text-[11px] font-black text-slate-600">
                           {s.label[locale] || s.label.en}
                         </span>
-                        <span className="mt-1 block font-mono text-sm font-extrabold text-slate-900">
+                        <span className="mt-1 block font-mono text-sm font-black text-slate-950">
                           {typeof s.val === "object" ? s.val[locale] || s.val.en : s.val}
                         </span>
                       </div>
@@ -406,16 +406,16 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
 
                 {/* Packaging Formats Available */}
                 <div className="mt-6">
-                  <h4 className="text-xs font-bold tracking-wider uppercase text-slate-400">
+                  <h4 className="text-xs font-black tracking-wider uppercase text-slate-600">
                     {locale === "tr" ? "Mevcut Ambalaj Formatları" : "Available Packaging Units"}
                   </h4>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {current.packages.map((pkg, pIdx) => (
                       <span
                         key={pIdx}
-                        className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm"
+                        className="inline-flex items-center gap-1.5 rounded-xl border-2 border-slate-300 bg-white px-3.5 py-1.5 text-xs font-black text-slate-950 shadow-xs hover:border-emerald-600"
                       >
-                        <Check className="size-3 text-emerald-600" />
+                        <Check className="size-3.5 text-emerald-700 stroke-[3]" />
                         {formatPackage(pkg, locale)}
                       </span>
                     ))}

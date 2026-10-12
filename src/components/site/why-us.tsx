@@ -35,14 +35,14 @@ export function WhyUsSection({ locale }: { locale: Locale }) {
   ]
 
   return (
-    <section className="section bg-white border-y border-slate-200/80">
+    <section className="section bg-white border-y-2 border-slate-300">
       <div className="container-x">
         <div className="mx-auto max-w-2xl text-center">
           <p className="chip mb-3">B2B Excellence</p>
-          <h2 className="h2-title">
+          <h2 className="h2-title text-slate-950">
             {isTr ? "Neden Küresel Tedarik Ekipleri Asia Oil'i Seçiyor?" : "Why sourcing teams choose ASIA OIL"}
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-slate-600">
+          <p className="mt-4 text-base leading-relaxed text-slate-700 font-medium">
             {isTr
               ? "Tohum kırmadan ve ilk sıkımdan liman mühürleme ve konteyner yüklemesine kadar tek, akredite ve hesap verebilir tedarik ortağınız."
               : "A single, accountable supply partner from seed crushing and cold extraction to container seal loading and maritime port dispatch."}
@@ -53,19 +53,19 @@ export function WhyUsSection({ locale }: { locale: Locale }) {
           {features.map((item) => (
             <div
               key={item.num}
-              className="rounded-3xl border border-slate-200/80 bg-white p-7 shadow-card hover:shadow-card-hover hover:border-emerald-500/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+              className="rounded-3xl border-2 border-slate-300 bg-white p-7 shadow-md hover:shadow-xl hover:border-emerald-600 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 <span
-                  className="grid size-11 place-items-center rounded-xl bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-800 text-sm font-black text-white shadow-md shadow-emerald-700/20"
+                  className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-emerald-700 via-teal-700 to-emerald-900 text-base font-black text-white shadow-md shadow-emerald-800/30"
                   aria-hidden="true"
                 >
                   {item.num}
                 </span>
-                <h3 className="mt-5 font-display text-lg font-bold text-slate-900 leading-snug">
+                <h3 className="mt-5 font-display text-lg font-black text-slate-950 leading-snug">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600 font-normal">
+                <p className="mt-2.5 text-sm leading-relaxed text-slate-700 font-medium">
                   {item.desc}
                 </p>
               </div>

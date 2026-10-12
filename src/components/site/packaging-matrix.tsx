@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import type { Locale } from "@/lib/i18n/config"
+import { pathFor, type Locale } from "@/lib/i18n/config"
 import { Package, ShieldCheck, Box, Layers, ArrowUpRight, Check, Sparkles } from "lucide-react"
 
 interface PackagingCategory {
@@ -545,9 +545,7 @@ export function PackagingMatrix({ locale }: { locale: Locale }) {
               {/* Action Button */}
               <div className="mt-8 pt-4 border-t border-slate-100">
                 <a
-                  href={`mailto:export@asiaoil.com.tr?subject=${encodeURIComponent(
-                    `Inquiry for ${item.size} ${item.title.en} Packaging`
-                  )}`}
+                  href={pathFor(locale, "quote")}
                   className="group/btn inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-100 py-3 text-xs font-bold text-slate-800 transition duration-300 hover:bg-emerald-800 hover:text-white"
                 >
                   <span>{locale === "tr" ? "Teklif & Numune İste" : "Request Quote & Sample"}</span>

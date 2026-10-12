@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import type { Locale } from "@/lib/i18n/config"
+import { pathFor, type Locale } from "@/lib/i18n/config"
 import { Droplet, Award, ArrowUpRight, Check, Sparkles, ShieldCheck, Flame, Scale } from "lucide-react"
 
 interface Product {
@@ -12,12 +12,20 @@ interface Product {
   badge: Record<Locale, string>
   hsCode: string
   description: Record<Locale, string>
-  specs: { label: Record<Locale, string>; val: string }[]
+  specs: { label: Record<Locale, string>; val: Record<Locale, string> | string }[]
   packages: string[]
   accentColor: string
   lightBg: string
   borderColor: string
   image: string
+}
+
+function formatPackage(pkg: string, locale: Locale): string {
+  if (locale === "tr") return pkg
+  return pkg
+    .replace("Teneke", "Tin")
+    .replace("Varil", "Drum")
+    .replace("Cam", "Glass")
 }
 
 const PRODUCTS: Product[] = [
@@ -68,7 +76,7 @@ const PRODUCTS: Product[] = [
       { label: { tr: "Serbest Asitlik (FFA)", en: "Free Fatty Acids (FFA)", ar: "الحموضة الحرة", ru: "Кислотность (FFA)", de: "Freie Fettsäuren", fr: "Acides gras libres", es: "Acidez libre", it: "Acidità libera" }, val: "Max %0.10" },
       { label: { tr: "Peroksit Değeri", en: "Peroxide Value", ar: "رقم البيروكسيد", ru: "Перекисное число", de: "Peroxidzahl", fr: "Indice de peroxyde", es: "Índice de peróxido", it: "Numero di perossidi" }, val: "Max 1.5 meq/kg" },
       { label: { tr: "Duman Noktası", en: "Smoke Point", ar: "نقطة الدخان", ru: "Точка дымления", de: "Rauchpunkt", fr: "Point de fumée", es: "Punto de humo", it: "Punto di fumo" }, val: "232°C" },
-      { label: { tr: "Vinterizasyon", en: "Winterized Cold Test", ar: "اختبار التشتية", ru: "Винтеризация (Cold Test)", de: "Winterisierungstest", fr: "Test au froid", es: "Prueba de frío", it: "Test al freddo" }, val: "5.5h berrak" },
+      { label: { tr: "Vinterizasyon", en: "Winterized Cold Test", ar: "اختبار التشتية", ru: "Винтеризация (Cold Test)", de: "Winterisierungstest", fr: "Test au froid", es: "Prueba de frío", it: "Test al freddo" }, val: { tr: "5.5h berrak", en: "5.5h clear", ar: "5.5 س نقي", ru: "5.5ч прозрачно", de: "5.5h klar", fr: "5.5h limpide", es: "5.5h claro", it: "5.5h limpido" } },
     ],
     packages: ["0.5L PET", "1.0L PET", "2.0L PET", "4.5L PET", "5.0L PET", "5L Teneke", "10L Teneke", "18L Teneke", "24.000L Flexitank"],
     accentColor: "from-amber-500 to-yellow-600",
@@ -122,7 +130,7 @@ const PRODUCTS: Product[] = [
     specs: [
       { label: { tr: "Asitlik (Sızma)", en: "Acidity (Extra Virgin)", ar: "الحموضة (البكر الممتاز)", ru: "Кислотность (EV)", de: "Säure (Natives Extra)", fr: "Acidité (Vierge Extra)", es: "Acidez (Virgen Extra)", it: "Acidità (Extra Vergine)" }, val: "Max %0.80" },
       { label: { tr: "Asitlik (Riviera)", en: "Acidity (Riviera)", ar: "الحموضة (ريفيرّا)", ru: "Кислотность (Riviera)", de: "Säure (Riviera)", fr: "Acidité (Riviera)", es: "Acidez (Riviera)", it: "Acidità (Riviera)" }, val: "Max %1.00" },
-      { label: { tr: "Sıkım Yöntemi", en: "Extraction Method", ar: "طريقة الاستخلاص", ru: "Метод отжима", de: "Herstellungsverfahren", fr: "Méthode d'extraction", es: "Método de extracción", it: "Metodo di estrazione" }, val: "Soğuk Sıkım (<27°C)" },
+      { label: { tr: "Sıkım Yöntemi", en: "Extraction Method", ar: "طريقة الاستخلاص", ru: "Метод отжима", de: "Herstellungsverfahren", fr: "Méthode d'extraction", es: "Método de extracción", it: "Metodo di estrazione" }, val: { tr: "Soğuk Sıkım (<27°C)", en: "Cold Pressed (<27°C)", ar: "عصر بارد (<27°م)", ru: "Холодный отжим (<27°C)", de: "Kaltgepresst (<27°C)", fr: "Pressé à froid (<27°C)", es: "Prensado en frío (<27°C)", it: "Spremitura a freddo (<27°C)" } },
       { label: { tr: "Polifenol Değeri", en: "Polyphenols", ar: "نسبة البوليفينول", ru: "Полифенолы", de: "Polyphenolgehalt", fr: "Polyphénols", es: "Polifenoles", it: "Polifenoli" }, val: "> 250 mg/kg" },
     ],
     packages: ["250ml Marasca Cam", "500ml Marasca Cam", "1.0L Cam & PET", "5L Teneke", "200L Varil", "1.000L IBC"],
@@ -177,7 +185,7 @@ const PRODUCTS: Product[] = [
     specs: [
       { label: { tr: "Serbest Asitlik (FFA)", en: "Free Fatty Acids (FFA)", ar: "الحموضة الحرة", ru: "Кислотность (FFA)", de: "Freie Fettsäuren", fr: "Acides gras libres", es: "Acidez libre", it: "Acidità libera" }, val: "Max %0.10" },
       { label: { tr: "Duman Noktası", en: "Smoke Point", ar: "نقطة الدخان", ru: "Точка дымления", de: "Rauchpunkt", fr: "Point de fumée", es: "Punto de humo", it: "Punto di fumo" }, val: "235°C" },
-      { label: { tr: "Fitosterol Oranı", en: "Phytosterols", ar: "نسبة الفيتوستيرول", ru: "Фитостеролы", de: "Phytosterine", fr: "Phytostérols", es: "Fitoesteroles", it: "Fitosteroli" }, val: "Zengin (>900 mg/100g)" },
+      { label: { tr: "Fitosterol Oranı", en: "Phytosterols", ar: "نسبة الفيتوستيرول", ru: "Фитостеролы", de: "Phytosterine", fr: "Phytostérols", es: "Fitoesteroles", it: "Fitosteroli" }, val: { tr: "Zengin (>900 mg/100g)", en: "Rich (>900 mg/100g)", ar: "غني (>900 ملغ/100غ)", ru: "Высокое (>900 мг/100г)", de: "Reich (>900 mg/100g)", fr: "Riche (>900 mg/100g)", es: "Rico (>900 mg/100g)", it: "Ricco (>900 mg/100g)" } },
       { label: { tr: "Nem & Tortu", en: "Moisture & Impurities", ar: "الرطوبة والشوائب", ru: "Влага и примеси", de: "Feuchtigkeit & Trübung", fr: "Humidité & impuretés", es: "Humedad e impurezas", it: "Umidità e impurità" }, val: "Max %0.05" },
     ],
     packages: ["1.0L PET", "2.0L PET", "5.0L PET", "18L Horeca Teneke", "24.000L Flexitank"],
@@ -231,8 +239,8 @@ const PRODUCTS: Product[] = [
     },
     specs: [
       { label: { tr: "Doymamış Yağ Asidi", en: "Monounsaturated Fats", ar: "الدهون الأحادية غير المشبعة", ru: "Мононенасыщенные жиры", de: "Einfach ungesättigte Fette", fr: "Acides gras mono-insaturés", es: "Grasas monoinsaturadas", it: "Grassi monoinsaturi" }, val: "> %60" },
-      { label: { tr: "Trans Yağ Oranı", en: "Trans-Fat Content", ar: "الدهون المتحولة", ru: "Трансжиры", de: "Transfettsäuren", fr: "Acides gras trans", es: "Grasas trans", it: "Grassi trans" }, val: "%0.00 (Sıfır)" },
-      { label: { tr: "Kızartma Döngüsü", en: "Frying Lifespan", ar: "دورة استخدام القلي", ru: "Ресурс жарки", de: "Frittierzyklen", fr: "Cycles de friture", es: "Ciclos de fritura", it: "Cicli di frittura" }, val: "2X Uzun Ömür" },
+      { label: { tr: "Trans Yağ Oranı", en: "Trans-Fat Content", ar: "الدهون المتحولة", ru: "Трансжиры", de: "Transfettsäuren", fr: "Acides gras trans", es: "Grasas trans", it: "Grassi trans" }, val: { tr: "%0.00 (Sıfır)", en: "0.00% (Zero)", ar: "0.00% (صفر)", ru: "0.00% (Ноль)", de: "0,00% (Null)", fr: "0,00% (Zéro)", es: "0.00% (Cero)", it: "0.00% (Zero)" } },
+      { label: { tr: "Kızartma Döngüsü", en: "Frying Lifespan", ar: "دورة استخدام القلي", ru: "Ресурс жарки", de: "Frittierzyklen", fr: "Cycles de friture", es: "Ciclos de fritura", it: "Cicli di frittura" }, val: { tr: "2X Uzun Ömür", en: "2X Extended Life", ar: "عمر أطول ضعفين", ru: "В 2 раза дольше", de: "2X Längere Standzeit", fr: "Durabilité 2X", es: "2X Mayor vida útil", it: "Durata 2X" } },
       { label: { tr: "Duman Noktası", en: "Smoke Point", ar: "نقطة الدخان", ru: "Точка дымления", de: "Rauchpunkt", fr: "Point de fumée", es: "Punto de humo", it: "Punto di fumo" }, val: "238°C" },
     ],
     packages: ["18L Teneke", "200L Varil", "1.000L IBC Tank", "24.000L Flexitank"],
@@ -358,7 +366,7 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
                           {s.label[locale] || s.label.en}
                         </span>
                         <span className="mt-1 block font-mono text-sm font-extrabold text-slate-900">
-                          {s.val}
+                          {typeof s.val === "object" ? s.val[locale] || s.val.en : s.val}
                         </span>
                       </div>
                     ))}
@@ -377,7 +385,7 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
                         className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm"
                       >
                         <Check className="size-3 text-emerald-600" />
-                        {pkg}
+                        {formatPackage(pkg, locale)}
                       </span>
                     ))}
                   </div>
@@ -387,10 +395,8 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
               {/* Action Buttons */}
               <div className="mt-10 flex flex-wrap items-center gap-4 pt-6 border-t border-slate-100">
                 <a
-                  href={`mailto:export@asiaoil.com.tr?subject=${encodeURIComponent(
-                    `FOB/CIF Quotation Request: ${current.title.en} (${current.hsCode})`
-                  )}`}
-                  className="btn-shine inline-flex h-12 items-center gap-2.5 rounded-xl bg-emerald-800 px-7 text-sm font-semibold text-white transition hover:bg-emerald-900 shadow-md shadow-emerald-950/20"
+                  href={`${pathFor(locale, "quote")}?product=${current.id}`}
+                  className="btn-shine inline-flex h-12 items-center gap-2.5 rounded-xl bg-gradient-to-r from-emerald-800 to-emerald-950 px-7 text-sm font-semibold text-white transition hover:from-emerald-900 hover:to-black shadow-md shadow-emerald-950/20"
                 >
                   <span>{locale === "tr" ? "Resmi Fiyat Teklifi Al" : "Request Official Quote"}</span>
                   <ArrowUpRight className="size-4 rtl:-scale-x-100" />

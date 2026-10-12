@@ -225,22 +225,22 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
       </div>
 
       {/* 6 Key Pillars Bar (Directly representing the badges from the master visual) */}
-      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
         {features.map((f, i) => {
           const Icon = f.icon
           return (
             <div
               key={i}
-              className="group flex items-center gap-2.5 rounded-xl border border-gold/20 bg-black/40 p-2.5 backdrop-blur-sm transition duration-300 hover:border-gold-light/40 hover:bg-black/60"
+              className="group flex items-center gap-3 rounded-2xl border border-slate-200/90 bg-white/95 p-3 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-emerald-500 hover:shadow-md hover:-translate-y-0.5"
             >
-              <div className="grid size-8 shrink-0 place-items-center rounded-lg bg-gold-light/10 text-gold-light transition duration-300 group-hover:bg-gold-light group-hover:text-ink">
-                <Icon className="size-4" />
+              <div className="grid size-9 shrink-0 place-items-center rounded-xl bg-emerald-50 text-emerald-700 transition duration-300 group-hover:bg-emerald-700 group-hover:text-white">
+                <Icon className="size-4.5" />
               </div>
               <div className="min-w-0 text-left">
-                <p className="truncate text-xs font-semibold text-[#f7f1e3] group-hover:text-gold-light">
+                <p className="truncate text-xs font-bold text-slate-800 group-hover:text-emerald-800">
                   {f.label}
                 </p>
-                <p className="truncate text-[10px] text-[#f7f1e3]/60">{f.sub}</p>
+                <p className="truncate text-[11px] text-slate-500 font-medium">{f.sub}</p>
               </div>
             </div>
           )

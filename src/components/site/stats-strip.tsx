@@ -3,7 +3,7 @@ import { Globe2, Anchor, Droplets, Package, ShieldCheck } from "lucide-react"
 
 interface StatItem {
   value: string
-  suffix?: string
+  suffix?: Record<Locale, string> | string
   label: Record<Locale, string>
   sub: Record<Locale, string>
   icon: typeof Globe2
@@ -39,7 +39,16 @@ const STATS: StatItem[] = [
   },
   {
     value: "2",
-    suffix: " Liman",
+    suffix: {
+      tr: " Liman",
+      en: " Ports",
+      ar: " موانئ",
+      ru: " Порта",
+      de: " Häfen",
+      fr: " Ports",
+      es: " Puertos",
+      it: " Porti",
+    },
     label: {
       tr: "Derin Deniz Terminali",
       en: "Deep-Sea Terminals",
@@ -166,7 +175,9 @@ export function StatsStrip({ locale }: { locale: Locale }) {
                 <div className="mt-4">
                   <div className="font-display text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
                     <span className="text-emerald-950">{stat.value}</span>
-                    <span className="text-lg font-bold text-emerald-600">{stat.suffix}</span>
+                    <span className="text-lg font-bold text-emerald-600">
+                      {typeof stat.suffix === "object" ? stat.suffix[locale] || stat.suffix.en : stat.suffix}
+                    </span>
                   </div>
                   <h4 className="mt-1 text-sm font-bold text-slate-800 leading-snug">
                     {stat.label[locale] || stat.label.en}

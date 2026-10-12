@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import type { Locale } from "@/lib/i18n/config"
+import { pathFor, type Locale } from "@/lib/i18n/config"
 import { Sprout, Factory, Flame, Sparkles, Ship, CheckCircle2, ArrowRight } from "lucide-react"
 
 interface Stage {
@@ -378,7 +378,7 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
             <div className="lg:col-span-8">
               <div className="flex items-center gap-3">
                 <span className="inline-flex items-center gap-2 rounded-full bg-emerald-800 px-3.5 py-1 text-xs font-mono font-bold tracking-widest text-white">
-                  AŞAMA {current.number} / 05
+                  {locale === "tr" ? `AŞAMA ${current.number} / 05` : `STAGE ${current.number} / 05`}
                 </span>
                 <span className="text-xs font-semibold text-emerald-800 tracking-wide">
                   {current.tagline[locale] || current.tagline.en}
@@ -423,12 +423,10 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
               </p>
 
               <a
-                href={`mailto:export@asiaoil.com.tr?subject=${encodeURIComponent(
-                  `Inquiry about Stage ${current.number} Specifications`
-                )}`}
+                href={pathFor(locale, "quote")}
                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-800 py-3 text-xs font-bold text-white transition duration-300 hover:bg-emerald-900 shadow-md shadow-emerald-950/10"
               >
-                <span>{locale === "tr" ? "Teknik Rapor Talep Et" : "Request Spec Sheet"}</span>
+                <span>{locale === "tr" ? "Teknik Rapor & Teklif İste" : "Request Spec Sheet & Quote"}</span>
                 <ArrowRight className="size-3.5 rtl:-scale-x-100" />
               </a>
             </div>

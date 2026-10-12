@@ -1,7 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
 import { useFormStatus } from "react-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,14 +14,18 @@ import { submitInquiryAction, type FormState } from "@/server/inquiry-action"
 function Submit({ label }: { label: string }) {
   const { pending } = useFormStatus()
   return (
-    <Button type="submit" disabled={pending} className="h-14! w-full rounded-none bg-olive px-8! text-sm tracking-wide text-[#f7f1e3] hover:bg-leaf sm:w-auto">
+    <Button
+      type="submit"
+      disabled={pending}
+      className="btn-shine h-13 w-full rounded-xl bg-gradient-to-r from-emerald-800 to-emerald-950 px-8 text-sm font-bold text-white shadow-lg shadow-emerald-950/20 transition hover:from-emerald-900 hover:to-black sm:w-auto cursor-pointer"
+    >
       {pending ? "…" : label}
     </Button>
   )
 }
 
-const fieldClass = "h-12! rounded-none border-[#e0d5bd] bg-[#fffdf8] px-4! shadow-none focus-visible:border-gold focus-visible:ring-gold/20"
-const selectClass = "h-12 w-full border border-[#e0d5bd] bg-[#fffdf8] px-4 text-sm outline-none transition focus-visible:border-gold"
+const fieldClass = "h-12! w-full rounded-xl! border border-slate-300! bg-white! px-4! text-sm text-slate-900 shadow-none transition focus-visible:border-emerald-600! focus-visible:ring-2! focus-visible:ring-emerald-600/20!"
+const selectClass = "h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 cursor-pointer"
 
 export function InquiryForm({
   dict,
@@ -37,6 +41,7 @@ export function InquiryForm({
   issuedAt: number
 }) {
   const [state, action] = useActionState(submitInquiryAction, { ok: false } as FormState)
+  const [selectedCountry, setSelectedCountry] = useState("")
   const form = dict.form
   const errorFor = (name: string) => (state.ok ? undefined : state.fields?.[name])
   const banner =
@@ -62,7 +67,7 @@ export function InquiryForm({
         <input id="website" name="website" tabIndex={-1} autoComplete="off" />
       </div>
       {banner ? (
-        <p className={`md:col-span-2 border px-4 py-3 text-sm ${state.ok ? "border-[#4e6234] bg-[#eef3e4]" : "border-[#8c3a2f] bg-[#f8ece8]"}`} role={state.ok ? "status" : "alert"}>
+        <p className={`md:col-span-2 rounded-xl border px-5 py-4 text-sm font-medium ${state.ok ? "border-emerald-300 bg-emerald-50 text-emerald-900" : "border-rose-300 bg-rose-50 text-rose-900"}`} role={state.ok ? "status" : "alert"}>
           {banner}
         </p>
       ) : null}
@@ -79,7 +84,14 @@ export function InquiryForm({
         <Input id="phone" name="phone" required className={fieldClass} autoComplete="tel" />
       </Field>
       <Field label={form.country} name="country" error={errorFor("country")}>
-        <select id="country" name="country" required className={selectClass} defaultValue="">
+        <select
+          id="country"
+          name="country"
+          required
+          className={selectClass}
+          value={selectedCountry}
+          onChange={(e) => setSelectedCountry(e.target.value)}
+        >
           <option value="" disabled>
             {form.selectCountry}
           </option>
@@ -91,9 +103,13 @@ export function InquiryForm({
           <option value="OTHER">{form.other}</option>
         </select>
       </Field>
-      <Field label={form.otherLabel} name="countryOther" error={errorFor("countryOther")}>
-        <Input id="countryOther" name="countryOther" className={fieldClass} />
-      </Field>
+      {selectedCountry === "OTHER" ? (
+        <Field label={form.otherLabel} name="countryOther" error={errorFor("countryOther")}>
+          <Input id="countryOther" name="countryOther" required className={fieldClass} placeholder={form.otherLabel} />
+        </Field>
+      ) : (
+        <input type="hidden" name="countryOther" value="" />
+      )}
       <Field label={form.product} name="product" error={errorFor("product")}>
         <select id="product" name="product" className={selectClass} defaultValue={product === "olive" || product === "both" ? product : "sunflower"}>
           <option value="sunflower">{form.sunflower}</option>
@@ -126,16 +142,16 @@ export function InquiryForm({
       {formType === "contact" ? <input type="hidden" name="packaging" value="" /> : null}
       {formType === "contact" ? <input type="hidden" name="destinationPort" value="" /> : null}
       <Field label={form.message} name="message" error={errorFor("message")} wide>
-        <Textarea id="message" name="message" required minLength={10} className="min-h-40 rounded-none border-[#e0d5bd] bg-[#fffdf8] px-4 py-3 shadow-none focus-visible:border-gold focus-visible:ring-gold/20" placeholder={form.messagePh} />
+        <Textarea id="message" name="message" required minLength={10} className="min-h-36 w-full rounded-xl! border border-slate-300! bg-white! px-4! py-3! text-sm text-slate-900 shadow-none transition focus-visible:border-emerald-600! focus-visible:ring-2! focus-visible:ring-emerald-600/20!" placeholder={form.messagePh} />
       </Field>
-      <div className="md:col-span-2 flex gap-3">
-        <input id="consent" name="consent" type="checkbox" value="yes" required className="mt-1 size-4 shrink-0 accent-[#24301c]" />
-        <Label htmlFor="consent" className="text-sm leading-relaxed font-normal">
+      <div className="md:col-span-2 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+        <input id="consent" name="consent" type="checkbox" value="yes" required className="mt-1 size-4 shrink-0 rounded border-slate-300 text-emerald-800 focus:ring-emerald-600 cursor-pointer" />
+        <Label htmlFor="consent" className="text-xs leading-relaxed text-slate-700 font-medium cursor-pointer">
           {form.consent}
         </Label>
       </div>
-      {errorFor("consent") ? <p className="text-sm text-[#8c3a2f] md:col-span-2">{errorFor("consent")}</p> : null}
-      <div className="md:col-span-2">
+      {errorFor("consent") ? <p className="text-xs font-semibold text-rose-600 md:col-span-2">{errorFor("consent")}</p> : null}
+      <div className="md:col-span-2 pt-2">
         <Submit label={form.submit} />
       </div>
     </form>
@@ -144,11 +160,11 @@ export function InquiryForm({
 
 function Field({ label, name, error, children, wide }: { label: string; name: string; error?: string; children: ReactNode; wide?: boolean }) {
   return (
-    <div className={wide ? "md:col-span-2 grid gap-2" : "grid gap-2"}>
-      <Label htmlFor={name} className="kicker text-stone">{label}</Label>
+    <div className={wide ? "md:col-span-2 grid gap-1.5" : "grid gap-1.5"}>
+      <Label htmlFor={name} className="text-xs font-bold uppercase tracking-wider text-slate-700">{label}</Label>
       {children}
       {error ? (
-        <p id={`${name}-error`} className="text-sm text-[#8c3a2f]" role="alert">
+        <p id={`${name}-error`} className="text-xs font-semibold text-rose-600" role="alert">
           {error}
         </p>
       ) : null}

@@ -85,7 +85,7 @@ export function SiteFrame({
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           {/* Left: Port Dispatch Status */}
           <div className="flex items-center gap-2 text-[#f7f1e3]/85 truncate">
-            <span className="relative flex h-2 w-2">
+            <span className="relative flex h-2 w-2 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
@@ -93,15 +93,17 @@ export function SiteFrame({
               {locale === "tr" ? "Liman İhracat Çıkışları:" : "Seaport Terminals:"}
             </span>
             <span className="truncate">
-              Mersin Port (MIP) & İzmir Limanı • FOB / CIF Global
+              {locale === "tr"
+                ? "Mersin Uluslararası Limanı (MIP) & İzmir Limanı • FOB / CIF Sevkiyat"
+                : "Mersin International Port (MIP) & Izmir Seaport • FOB / CIF Worldwide"}
             </span>
           </div>
 
           {/* Right: Direct Desk Info & WhatsApp & Language */}
-          <div className="hidden sm:flex items-center gap-5 text-xs">
+          <div className="flex items-center gap-4 sm:gap-5 text-xs">
             <a
               href="mailto:export@asiaoil.com.tr"
-              className="flex items-center gap-1.5 hover:text-amber-300 transition"
+              className="hidden md:flex items-center gap-1.5 hover:text-amber-300 transition"
             >
               <Mail className="size-3.5 text-amber-400" />
               <span>export@asiaoil.com.tr</span>
@@ -111,7 +113,7 @@ export function SiteFrame({
               href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20information"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-emerald-300 hover:text-emerald-200 font-semibold transition"
+              className="hidden sm:flex items-center gap-1.5 text-emerald-300 hover:text-emerald-200 font-semibold transition"
             >
               <span className="size-1.5 rounded-full bg-emerald-400" />
               <span>WhatsApp Desk</span>
@@ -119,7 +121,7 @@ export function SiteFrame({
 
             {/* Language Dropdown */}
             <details className="relative [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded bg-white/10 px-2 py-0.5 text-xs font-semibold hover:bg-white/20">
+              <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded bg-white/10 px-2.5 py-1 text-xs font-semibold hover:bg-white/20 transition">
                 <Globe className="size-3 text-amber-300" />
                 <span>{locale.toUpperCase()}</span>
               </summary>
@@ -190,24 +192,54 @@ export function SiteFrame({
               <summary className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border border-slate-200 text-slate-800 hover:bg-slate-100" aria-label={dict.ui.menu}>
                 <Menu className="size-5" />
               </summary>
-              <div className="fixed inset-x-0 bottom-0 top-[114px] z-50 overflow-y-auto bg-white px-6 py-8 shadow-2xl border-t border-slate-200">
+              <div className="fixed inset-x-0 bottom-0 top-[114px] group-data-[solid=true]:top-20 z-50 overflow-y-auto bg-white px-6 py-8 shadow-2xl border-t border-slate-200">
                 <nav className="mx-auto grid max-w-lg gap-2" aria-label={dict.ui.menu}>
                   {[...NAV, ...MORE].map((item, index) => (
                     <a
                       key={item}
                       href={pathFor(locale, item)}
-                      className="flex items-center justify-between border-b border-slate-100 py-3.5 text-lg font-bold text-slate-800 hover:text-emerald-800"
+                      className="flex items-center justify-between border-b border-slate-100 py-3 text-base font-bold text-slate-800 hover:text-emerald-800"
                     >
                       <span>{dict.nav[item]}</span>
                       <span className="text-xs font-mono text-slate-400">0{index + 1}</span>
                     </a>
                   ))}
+
                   <a
                     href={pathFor(locale, "quote")}
-                    className="mt-6 flex h-13 items-center justify-center rounded-xl bg-emerald-800 text-sm font-bold text-white shadow-lg"
+                    className="mt-4 flex h-12 items-center justify-center rounded-xl bg-emerald-800 text-sm font-bold text-white shadow-lg hover:bg-emerald-900 transition"
                   >
                     {dict.ui.quote}
                   </a>
+
+                  {/* Mobile Language Selection */}
+                  <div className="border-t border-slate-200 pt-6 mt-4">
+                    <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      <span className="flex items-center gap-1.5">
+                        <Globe className="size-4 text-emerald-700" />
+                        {dict.ui.language}
+                      </span>
+                      <span className="text-emerald-700 font-mono">{locale.toUpperCase()}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      {PUBLISHED_LOCALES.map((code) => (
+                        <a
+                          key={code}
+                          href={pathFor(code, page, articleId ? getDict(code).articles[articleId].slug : undefined)}
+                          hrefLang={code}
+                          lang={code}
+                          className={`flex items-center justify-between rounded-lg border px-3 py-2 text-xs font-semibold transition ${
+                            code === locale
+                              ? "border-emerald-700 bg-emerald-50 text-emerald-800 font-bold"
+                              : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                          }`}
+                        >
+                          <span>{LOCALE_META[code].name}</span>
+                          <span className="text-[10px] font-mono uppercase text-slate-400">{code}</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
                 </nav>
               </div>
             </details>
@@ -243,7 +275,11 @@ export function SiteFrame({
               <div className="mt-6 space-y-2 text-xs text-[#f7f1e3]/80">
                 <div className="flex items-center gap-2">
                   <Ship className="size-4 text-emerald-400" />
-                  <span>Mersin International Port (MIP) & İzmir Seaport</span>
+                  <span>
+                    {locale === "tr"
+                      ? "Mersin Uluslararası Limanı (MIP) & İzmir Limanı"
+                      : "Mersin International Port (MIP) & Izmir Seaport"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="size-4 text-amber-400" />
@@ -285,7 +321,7 @@ export function SiteFrame({
                   {dict.nav.trade} (FOB / CIF)
                 </a>
                 <a href={pathFor(locale, "quality")} className="block hover:text-white transition">
-                  {dict.nav.quality} & Sertifikalar
+                  {dict.nav.quality}
                 </a>
                 <a href={pathFor(locale, "about")} className="block hover:text-white transition">
                   {dict.nav.about}
@@ -327,12 +363,14 @@ export function SiteFrame({
           {/* Sub Footer Rights & Badges */}
           <div className="mt-16 pt-8 border-t border-white/10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-xs text-[#f7f1e3]/50">
             <p>© {new Date().getFullYear()} Asia Oil Türkiye. {dict.footer.rights}</p>
-            <div className="flex items-center gap-4 text-emerald-400 font-medium">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-emerald-400 font-medium">
               <span>ISO 22000:2018</span>
               <span>•</span>
-              <span>Helal & Kosher</span>
+              <span>{locale === "tr" ? "Helal & Koşer" : "Halal & Kosher"}</span>
               <span>•</span>
-              <span>EUR.1 Dolaşım Belgesi</span>
+              <span>{locale === "tr" ? "EUR.1 Dolaşım Belgesi" : "EUR.1 Movement Certificate"}</span>
+              <span>•</span>
+              <span>IOC Standards</span>
             </div>
           </div>
         </div>

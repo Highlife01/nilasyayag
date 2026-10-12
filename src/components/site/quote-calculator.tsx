@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ArrowUpRight, Calculator, CheckCircle2, Container, Package, Ship, Sparkles } from "lucide-react"
+import { pathFor, type Locale } from "@/lib/i18n/config"
 
 type ProductType = "sunflower" | "olive" | "both"
 type PackagingType = "1L_PET" | "5L_TIN" | "18L_TIN" | "FLEXITANK"
@@ -23,8 +24,10 @@ export function QuoteCalculator({ locale = "tr" }: { locale?: string }) {
 
   const isTr = locale === "tr"
   const packInfo = PACKAGING_LABELS[packaging]
+  const targetLocale = (["tr", "en", "ar", "ru", "de", "fr", "es", "it"].includes(locale) ? locale : "tr") as Locale
+  const quotePath = pathFor(targetLocale, "quote")
 
-  const rfqUrl = `/${locale}/teklif-iste?product=${product}&orderType=container&quantity=${quantity}&packaging=${encodeURIComponent(packaging)}&destinationPort=${encodeURIComponent(destinationPort)}`
+  const rfqUrl = `${quotePath}?product=${product}&orderType=container&quantity=${quantity}&packaging=${encodeURIComponent(packaging)}&destinationPort=${encodeURIComponent(destinationPort)}`
 
   return (
     <div className="relative overflow-hidden rounded-3xl border border-[#d4af37]/30 bg-gradient-to-b from-[#131b11] via-[#0e150d] to-[#080d07] p-6 sm:p-10 text-[#f7f1e3] shadow-[0_30px_90px_-20px_rgba(0,0,0,0.8)] backdrop-blur-xl">
@@ -173,7 +176,7 @@ export function QuoteCalculator({ locale = "tr" }: { locale?: string }) {
                 type="text"
                 value={destinationPort}
                 onChange={(e) => setDestinationPort(e.target.value)}
-                placeholder="Örn: Jebel Ali, Rotterdam, New York, Jeddah..."
+                placeholder={isTr ? "Örn: Jebel Ali, Rotterdam, New York, Jeddah..." : "e.g. Jebel Ali, Rotterdam, New York, Jeddah..."}
                 className="flex-1 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-white/30 focus:border-[#d4af37] focus:outline-none"
               />
             </div>
@@ -229,11 +232,19 @@ export function QuoteCalculator({ locale = "tr" }: { locale?: string }) {
             <div className="mt-6 rounded-xl bg-white/[0.03] p-3 text-[11px] text-[#f7f1e3]/70 space-y-1.5">
               <div className="flex items-center gap-1.5 text-emerald-300">
                 <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
-                <span>SGS / Bureau Veritas Gözetim Raporu</span>
+                <span>
+                  {isTr
+                    ? "SGS / Bureau Veritas Bağımsız Gözetim Raporu"
+                    : "SGS / Bureau Veritas Third-Party Inspection Report"}
+                </span>
               </div>
               <div className="flex items-center gap-1.5 text-emerald-300">
                 <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
-                <span>Helal & ISO 22000 Sertifikalı Üretim</span>
+                <span>
+                  {isTr
+                    ? "Helal & ISO 22000 Sertifikalı Fabrika Üretimi"
+                    : "Halal & ISO 22000 Certified Production Facility"}
+                </span>
               </div>
             </div>
           </div>

@@ -64,7 +64,15 @@ export default async function LocalePage({
   if (!resolved) notFound()
   const { locale, dict, page, article } = resolved
   const query = await searchParams
-  const product = typeof query.product === "string" ? query.product : undefined
+  const initialInquiry = {
+    product: typeof query.product === "string" ? query.product : undefined,
+    orderType: typeof query.orderType === "string" ? query.orderType : undefined,
+    quantity: typeof query.quantity === "string" ? query.quantity : undefined,
+    packaging: typeof query.packaging === "string" ? query.packaging : undefined,
+    destinationPort: typeof query.destinationPort === "string" ? query.destinationPort : undefined,
+    containerType: typeof query.containerType === "string" ? query.containerType : undefined,
+  }
+  const product = initialInquiry.product
   const settings = await (await getRepo()).getSettings()
   const jar = await cookies()
   const consent = jar.get("nilasya_consent")?.value
@@ -77,7 +85,7 @@ export default async function LocalePage({
       {page === "insights" && !article ? <ArticleIndex locale={locale} dict={dict} /> : null}
       {article ? <ArticleView locale={locale} dict={dict} id={article} /> : null}
       {page !== "home" && page !== "insights" ? (
-        <StandardPage locale={locale} dict={dict} page={page} settings={settings} issuedAt={issuedAt} product={product} />
+        <StandardPage locale={locale} dict={dict} page={page} settings={settings} issuedAt={issuedAt} product={product} initialInquiry={initialInquiry} />
       ) : null}
       <script
         type="application/ld+json"

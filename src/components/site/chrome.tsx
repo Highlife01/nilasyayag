@@ -12,28 +12,15 @@ const MORE: StaticPage[] = ["privateLabel", "quality", "faq", "contact", "privac
 export const BRAND_NAME = "Asia Oil"
 const BRAND_TAGLINE = "EDIBLE OILS · TÜRKİYE"
 
-/** Modern golden oil drop inside clean circular seal */
+/** Modern high-tech brand mark */
 export function Mark({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 36 36" fill="none" className={className} aria-hidden="true">
-      <circle cx="18" cy="18" r="17" className="stroke-amber-500/40 fill-emerald-950/10" strokeWidth="1.5" />
-      <path
-        d="M18 6C18 6 10 16.5 10 22C10 26.4 13.6 30 18 30C22.4 30 26 26.4 26 22C26 16.5 18 6 18 6Z"
-        className="fill-gradient-to-b from-amber-400 to-amber-600"
-        fill="url(#goldDrop)"
-      />
-      <path
-        d="M18 12C18 12 13 19 13 22.5C13 25.3 15.2 27.5 18 27.5C20.8 27.5 23 25.3 23 22.5C23 19 18 12 18 12Z"
-        fill="#ffffff"
-        opacity="0.25"
-      />
-      <defs>
-        <linearGradient id="goldDrop" x1="18" y1="6" x2="18" y2="30" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#f59e0b" />
-          <stop offset="1" stopColor="#d97706" />
-        </linearGradient>
-      </defs>
-    </svg>
+    <span
+      className={`grid size-10 place-items-center rounded-xl bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-800 font-display text-lg font-black text-white shadow-md shadow-emerald-700/25 group-hover:scale-105 transition-transform duration-200 ${className}`}
+      aria-hidden="true"
+    >
+      A
+    </span>
   )
 }
 
@@ -41,8 +28,8 @@ export function Wordmark({ size = "md" }: { size?: "md" | "lg" }) {
   const title = size === "lg" ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
   return (
     <span className="leading-tight flex flex-col">
-      <span className={`font-display font-extrabold tracking-tight text-slate-900 ${title}`}>
-        ASIA OIL
+      <span className={`font-display font-black tracking-tight text-slate-900 ${title}`}>
+        ASIA<span className="text-emerald-700">OIL</span>
       </span>
       <span className="text-[0.62rem] font-bold tracking-[0.22em] text-emerald-800 uppercase">
         {BRAND_TAGLINE}
@@ -151,27 +138,26 @@ export function SiteFrame({
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-5 md:px-10">
           {/* Logo */}
           <a href={home} className="group/brand flex items-center gap-3.5" aria-label={BRAND_NAME}>
-            <Mark className="size-10 transition duration-300 group-hover/brand:scale-105" />
+            <Mark className="transition duration-300 group-hover/brand:scale-105" />
             <Wordmark />
           </a>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden items-center gap-8 text-[0.88rem] font-bold tracking-tight text-slate-700 xl:flex" aria-label="Primary">
+          {/* Desktop Navigation Links (Pill Style) */}
+          <nav className="hidden items-center gap-1.5 lg:flex" aria-label="Primary">
             {NAV.map((item) => {
               const active = page === item
               return (
                 <a
                   key={item}
                   href={pathFor(locale, item)}
-                  className={`transition duration-200 hover:text-emerald-700 relative py-2 ${
-                    active ? "text-emerald-800 font-extrabold" : ""
+                  className={`rounded-xl px-3.5 py-2 text-sm font-semibold transition-all duration-150 ${
+                    active
+                      ? "bg-emerald-50 text-emerald-800 font-bold shadow-xs"
+                      : "text-slate-600 hover:bg-slate-100/80 hover:text-slate-900"
                   }`}
                   aria-current={active ? "page" : undefined}
                 >
                   {dict.nav[item]}
-                  {active && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-700 rounded-full" />
-                  )}
                 </a>
               )
             })}
@@ -181,10 +167,10 @@ export function SiteFrame({
           <div className="flex items-center gap-3">
             <a
               href={pathFor(locale, "quote")}
-              className="btn-shine hidden sm:inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-800 to-emerald-900 px-6 text-xs font-bold text-white shadow-md shadow-emerald-950/20 transition hover:from-emerald-900 hover:to-slate-950"
+              className="btn-shine hidden sm:inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 px-5 text-xs font-extrabold text-white shadow-md shadow-emerald-700/25 transition-all duration-200 hover:scale-105 active:scale-95"
             >
+              <span>📋</span>
               <span>{dict.ui.quote}</span>
-              <ArrowUpRight className="size-4 rtl:-scale-x-100" />
             </a>
 
             {/* Mobile Menu */}

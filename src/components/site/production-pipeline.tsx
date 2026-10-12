@@ -348,7 +348,9 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
                 key={s.number}
                 type="button"
                 onClick={() => setActiveStage(idx)}
-                className={`group relative flex flex-col justify-between rounded-2xl border p-4 text-left transition duration-300 md:p-5 ${
+                className={`group relative flex flex-col justify-between rounded-2xl border p-4 text-left transition duration-300 md:p-5 cursor-pointer ${
+                  idx === 4 ? "col-span-2 sm:col-span-1" : ""
+                } ${
                   isSelected
                     ? "border-emerald-600 bg-emerald-50/70 shadow-lg shadow-emerald-950/5 ring-2 ring-emerald-600/20"
                     : "border-slate-200 bg-slate-50/50 hover:border-slate-300 hover:bg-white"

@@ -5,7 +5,7 @@ import { ARTICLE_IDS } from "@/content/index"
 import type { Dict, PageCopy } from "@/content/types"
 import { pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
 import { still, type Frame } from "@/lib/media"
-import { InquiryForm } from "@/components/site/inquiry-form"
+import { InquiryForm, type InitialInquiryValues } from "@/components/site/inquiry-form"
 import { Showcase } from "@/components/site/hero"
 import { Spotlight } from "@/components/site/motion"
 import { QuoteCalculator } from "@/components/site/quote-calculator"
@@ -15,6 +15,7 @@ import { ProductShowcase } from "@/components/site/product-showcase"
 import { ProductionPipeline } from "@/components/site/production-pipeline"
 import { PackagingMatrix } from "@/components/site/packaging-matrix"
 import { CertificationsStrip } from "@/components/site/certifications-strip"
+import { WhyUsSection } from "@/components/site/why-us"
 import { BRAND_NAME, Mark, Wordmark } from "@/components/site/chrome"
 import type { Settings } from "@/lib/model"
 
@@ -55,143 +56,29 @@ function Kicker({ children, tone = "dark" }: { children: string; tone?: "dark" |
   )
 }
 
-export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict; frames: Frame[] }) {
-  const cover = frames[frames.length - 1]
-  const posters = frames.slice(0, -1)
-  const lead = dict.hero[0]
-  const [titleStart, titleEnd] = splitTitle(lead?.title ?? dict.nav.home)
-  const ribbon = dict.home.bar.split("·").map((part) => part.trim()).filter(Boolean)
-  const titleWords = titleStart.split(" ").length
-
+export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict; frames?: Frame[] }) {
   return (
     <>
-      <section className="relative isolate flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#f5f8f5] via-white to-white text-slate-900 pt-12 pb-14 border-b border-slate-200/80">
-        {/* Soft sunlit background glows */}
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(245,158,11,0.08),transparent_75%)]" />
-        <div className="pointer-events-none absolute -left-40 top-40 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(34,197,94,0.08),transparent_70%)] blur-3xl" />
-        <div className="pointer-events-none absolute -right-40 bottom-20 -z-10 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(245,158,11,0.08),transparent_70%)] blur-3xl" />
-
-        <div className={`${container} flex flex-col items-center text-center`}>
-          {/* Live Port / Export Desk Status Pill */}
-          <div className="rise inline-flex items-center gap-2.5 rounded-full border border-emerald-300 bg-white/95 px-5 py-2 text-xs text-emerald-900 shadow-sm backdrop-blur-md">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-            </span>
-            <span className="font-bold tracking-wide uppercase">
-              {locale === "tr"
-                ? "Canlı İhracat Masası • Mersin Port (MIP) & İzmir Limanı"
-                : "Live Export Desk • Mersin Port (MIP) & İzmir Seaport"}
-            </span>
-          </div>
-
-          {/* Headline */}
-          <h1 className="font-display mt-6 max-w-4xl text-[clamp(2.5rem,5.2vw,4.8rem)] font-extrabold leading-[1.05] tracking-tight text-slate-900">
-            <Words text={titleStart} start={0.1} />
-            {titleEnd ? (
-              <span className="text-emerald-gradient block font-extrabold mt-1">
-                <Words text={titleEnd} start={0.1 + titleWords * 0.055} />
-              </span>
-            ) : null}
-          </h1>
-
-          <p className="rise rise-3 mt-5 max-w-2xl text-base leading-relaxed text-slate-600 md:text-lg">
-            {lead?.lede ?? dict.metaDescription}
-          </p>
-
-          {/* Dual CTAs & Quality Badges */}
-          <div className="rise rise-4 mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a href={pathFor(locale, "quote")} className="btn-shine inline-flex h-13 items-center gap-2.5 rounded-2xl bg-gradient-to-r from-emerald-800 to-emerald-950 px-8 text-sm font-bold text-white shadow-lg shadow-emerald-950/20 transition hover:from-emerald-900 hover:to-black">
-              <span>{dict.ui.quote}</span>
-              <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
-            </a>
-            <a
-              href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20a%20B2B%20quotation"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-13 items-center gap-2.5 rounded-2xl border border-emerald-300 bg-white px-7 text-sm font-bold text-emerald-900 shadow-sm transition hover:bg-emerald-50"
-            >
-              <Phone className="size-4 text-emerald-600" />
-              <span>WhatsApp B2B Desk</span>
-            </a>
-            <a
-              href="#products-catalog"
-              className="inline-flex h-13 items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-6 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white"
-            >
-              <span>{dict.ui.explore}</span>
-            </a>
-          </div>
-
-          {/* Master Visual Hero Centerpiece Showcase */}
-          <HeroBanner
-            locale={locale}
-            labels={{
-              previous: dict.ui.previous,
-              next: dict.ui.next,
-              pause: dict.ui.pause,
-              play: dict.ui.play,
-              slide: dict.ui.slide,
-            }}
-          />
-        </div>
-      </section>
+      {/* Immersive Full-Bleed 5-Slide Hero Section with Controller & Marquee */}
+      <HeroBanner
+        locale={locale}
+        labels={{
+          previous: dict.ui.previous,
+          next: dict.ui.next,
+          pause: dict.ui.pause,
+          play: dict.ui.play,
+          slide: dict.ui.slide,
+        }}
+      />
 
       {/* Key Figures & Authority Stats Strip */}
       <StatsStrip locale={locale} />
 
-      {/* Flagship Products Showcase with Specifications & Formats */}
+      {/* B2B Excellence: Why Sourcing Teams Choose Asia Oil (4-Card Grid) */}
+      <WhyUsSection locale={locale} />
+
+      {/* Flagship Products Showcase with Catalog Cards, Specifications & Formats */}
       <ProductShowcase locale={locale} />
-
-      {/* Sleek High-Contrast Marquee Ticker */}
-      <div className="marquee-mask overflow-hidden border-y border-emerald-950/20 bg-[#061e14] py-4.5" aria-hidden="true">
-        <div className="marquee flex w-max gap-12 whitespace-nowrap">
-          {[0, 1].map((copy) => (
-            <div key={copy} className="flex gap-12">
-              {[...ribbon, ...ribbon].map((word, index) => (
-                <span key={`${copy}-${index}`} className="font-display flex items-center gap-12 text-sm md:text-base font-bold tracking-wider uppercase text-emerald-100">
-                  {word}
-                  <span className="text-amber-400">✦</span>
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Featured Core Categories */}
-      <section className="bg-slate-50/80 py-24 md:py-32 border-b border-slate-200/80">
-        <div className={container}>
-          <div className="reveal grid gap-8 md:grid-cols-[1fr_1fr] md:items-end">
-            <div>
-              <Kicker>{dict.home.collectionsKicker}</Kicker>
-              <h2 className="font-display mt-4 text-4xl font-extrabold tracking-tight text-slate-900 md:text-6xl">{dict.home.collectionsTitle}</h2>
-            </div>
-            <p className="max-w-md text-slate-600 md:justify-self-end leading-relaxed">{dict.home.closingText}</p>
-          </div>
-          <div className="mt-14 flex flex-col gap-6 md:h-[72vh] md:min-h-[34rem] md:flex-row">
-            <Collection
-              href={pathFor(locale, "sunflower")}
-              image={still("sunflower")}
-              index="01"
-              title={dict.nav.sunflower}
-              text={dict.home.sunText}
-              cta={dict.ui.explore}
-              tint="from-[#1c1404]/90 via-[#1c1404]/30"
-              accent="text-amber-400"
-            />
-            <Collection
-              href={pathFor(locale, "olive")}
-              image={still("olive")}
-              index="02"
-              title={dict.nav.olive}
-              text={dict.home.oliveText}
-              cta={dict.ui.explore}
-              tint="from-[#09170e]/90 via-[#09170e]/30"
-              accent="text-emerald-400"
-            />
-          </div>
-        </div>
-      </section>
 
       {/* 5-Stage Integrated Seed-to-Port Production Pipeline */}
       <ProductionPipeline locale={locale} />
@@ -477,6 +364,7 @@ export function StandardPage({
   settings,
   issuedAt,
   product,
+  initialInquiry,
 }: {
   locale: Locale
   dict: Dict
@@ -484,6 +372,7 @@ export function StandardPage({
   settings: Settings
   issuedAt: number
   product?: string
+  initialInquiry?: InitialInquiryValues
 }) {
   const copy = page === "faq" ? dict.faq : page === "privacy" ? dict.privacy : dict.pages[page]
   const image =
@@ -547,9 +436,9 @@ export function StandardPage({
             </aside>
             <div className="rounded-3xl border border-slate-200 bg-white p-8 md:p-12 shadow-xl">
               {page === "quote" ? (
-                <InquiryForm dict={dict} locale={locale} formType="rfq" product={product} issuedAt={issuedAt} />
+                <InquiryForm dict={dict} locale={locale} formType="rfq" product={product} initialValues={initialInquiry} issuedAt={issuedAt} />
               ) : (
-                <InquiryForm dict={dict} locale={locale} formType="contact" issuedAt={issuedAt} />
+                <InquiryForm dict={dict} locale={locale} formType="contact" initialValues={initialInquiry} issuedAt={issuedAt} />
               )}
             </div>
           </div>

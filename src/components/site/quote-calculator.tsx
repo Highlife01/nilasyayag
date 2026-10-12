@@ -15,6 +15,15 @@ const PACKAGING_LABELS: Record<PackagingType, { tr: string; en: string; capacity
   "FLEXITANK": { tr: "22.000 Litre Dökme Flexitank", en: "22.000L Bulk Flexitank", capacity: "~21.5 Metrik Ton / 20ft" },
 }
 
+const PORT_PRESETS = [
+  { label: "Mersin (FOB)", value: "Mersin Port (MIP), Türkiye" },
+  { label: "Jebel Ali (UAE)", value: "Jebel Ali, UAE" },
+  { label: "Rotterdam (NL)", value: "Rotterdam, Netherlands" },
+  { label: "Jeddah (KSA)", value: "Jeddah, Saudi Arabia" },
+  { label: "New York (USA)", value: "New York, USA" },
+  { label: "Alexandria (EG)", value: "Alexandria, Egypt" },
+]
+
 export function QuoteCalculator({ locale = "tr" }: { locale?: string }) {
   const [product, setProduct] = useState<ProductType>("sunflower")
   const [packaging, setPackaging] = useState<PackagingType>("5L_TIN")
@@ -27,7 +36,8 @@ export function QuoteCalculator({ locale = "tr" }: { locale?: string }) {
   const targetLocale = (["tr", "en", "ar", "ru", "de", "fr", "es", "it"].includes(locale) ? locale : "tr") as Locale
   const quotePath = pathFor(targetLocale, "quote")
 
-  const rfqUrl = `${quotePath}?product=${product}&orderType=container&quantity=${quantity}&packaging=${encodeURIComponent(packaging)}&destinationPort=${encodeURIComponent(destinationPort)}`
+  const rfqUrl = `${quotePath}?product=${product}&orderType=container&quantity=${quantity}&packaging=${encodeURIComponent(packaging)}&containerType=${containerType}&destinationPort=${encodeURIComponent(destinationPort)}`
+  const estMetricTons = (quantity * (containerType === "40ft" ? 26.5 : 21.5)).toFixed(1)
 
   return (
     <div className="relative overflow-hidden rounded-3xl border border-[#d4af37]/30 bg-gradient-to-b from-[#131b11] via-[#0e150d] to-[#080d07] p-6 sm:p-10 text-[#f7f1e3] shadow-[0_30px_90px_-20px_rgba(0,0,0,0.8)] backdrop-blur-xl">
@@ -168,9 +178,14 @@ export function QuoteCalculator({ locale = "tr" }: { locale?: string }) {
 
           {/* Destination Port Input */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-[#d4af37]">
-              5. {isTr ? "Varış Limanı / Ülke" : "Destination Seaport / Country"}
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#d4af37]">
+                5. {isTr ? "Varış Limanı / Ülke" : "Destination Seaport / Country"}
+              </label>
+              <span className="text-[10px] text-[#f7f1e3]/50">
+                {isTr ? "FOB Mersin veya CIF" : "FOB Mersin or CIF"}
+              </span>
+            </div>
             <div className="mt-2.5 flex gap-2">
               <input
                 type="text"
@@ -179,6 +194,24 @@ export function QuoteCalculator({ locale = "tr" }: { locale?: string }) {
                 placeholder={isTr ? "Örn: Jebel Ali, Rotterdam, New York, Jeddah..." : "e.g. Jebel Ali, Rotterdam, New York, Jeddah..."}
                 className="flex-1 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-white/30 focus:border-[#d4af37] focus:outline-none"
               />
+            </div>
+            {/* Quick Port Presets */}
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] text-[#f7f1e3]/40 mr-0.5">{isTr ? "Hızlı Seç:" : "Quick Select:"}</span>
+              {PORT_PRESETS.map((p) => (
+                <button
+                  key={p.value}
+                  type="button"
+                  onClick={() => setDestinationPort(p.value)}
+                  className={`rounded-lg border px-2 py-0.5 text-[10px] font-medium transition cursor-pointer ${
+                    destinationPort === p.value
+                      ? "border-[#d4af37] bg-[#d4af37]/20 text-white"
+                      : "border-white/10 bg-white/[0.02] text-[#f7f1e3]/60 hover:border-white/20 hover:text-white"
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -217,8 +250,9 @@ export function QuoteCalculator({ locale = "tr" }: { locale?: string }) {
 
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <span className="text-[#f7f1e3]/60">{isTr ? "Hacim:" : "Total Volume:"}</span>
-                <span className="font-bold text-white">
-                  {quantity} x {containerType} FCL
+                <span className="font-bold text-white text-right">
+                  {quantity} x {containerType} FCL{" "}
+                  <span className="block font-mono text-[11px] font-normal text-gold-light">~{estMetricTons} MT Net</span>
                 </span>
               </div>
 

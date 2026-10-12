@@ -286,39 +286,70 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
           </p>
         </div>
 
-        {/* Product Selector Navigation Tabs */}
-        <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {/* Benchmark Product Range Cards Grid */}
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {PRODUCTS.map((p) => {
             const isSelected = selectedProduct === p.id
+            const emoji = p.id === "sunflower" ? "🌻" : p.id === "olive" ? "🫒" : p.id === "corn" ? "🌽" : "🏷️"
+            const specPill =
+              p.id === "sunflower"
+                ? locale === "tr" ? "FFA < %0.10 · 232°C Duman" : "FFA < 0.10% · 232°C Smoke"
+                : p.id === "olive"
+                ? locale === "tr" ? "Soğuk Sıkım · IOC Sızma" : "Cold-Pressed · IOC EVOO"
+                : p.id === "corn"
+                ? locale === "tr" ? "Nötr Lezzet · Yüksek Duman" : "Neutral Taste · High Smoke"
+                : locale === "tr" ? "Özel Marka · EAN Barkod" : "Private Label · EAN Barcode"
+
             return (
               <button
                 key={p.id}
                 type="button"
                 onClick={() => setSelectedProduct(p.id)}
-                className={`group relative flex flex-col justify-between rounded-2xl border p-5 text-left transition duration-300 ${
-                  isSelected
-                    ? "border-emerald-600 bg-white shadow-xl shadow-emerald-900/10 ring-2 ring-emerald-600/20"
-                    : "border-slate-200 bg-white/70 hover:border-slate-300 hover:bg-white"
+                className={`group relative rounded-3xl border bg-white p-4 shadow-card hover:shadow-card-hover hover:border-emerald-500/50 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden text-left cursor-pointer ${
+                  isSelected ? "border-emerald-600 ring-2 ring-emerald-600/30 shadow-card-hover" : "border-slate-200/80"
                 }`}
               >
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[11px] font-bold tracking-wider text-slate-400">
-                      {p.hsCode}
-                    </span>
-                    <span
-                      className={`size-2.5 rounded-full transition ${
-                        isSelected ? "bg-emerald-600 scale-125" : "bg-slate-300"
-                      }`}
+                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-slate-100">
+                    <Image
+                      src={p.image}
+                      alt={p.title.en}
+                      fill
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity" />
+                    <span className="absolute top-3 left-3 text-2xl drop-shadow-sm">{emoji}</span>
+                    <span className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-white/95 backdrop-blur-md text-[10px] font-mono font-bold text-emerald-800 border border-emerald-200/80 shadow-xs">
+                      {specPill}
+                    </span>
                   </div>
-                  <h3 className="mt-3 font-display text-lg font-bold text-slate-900 leading-snug">
-                    {p.title[locale] || p.title.en}
-                  </h3>
+
+                  <div className="pt-4 px-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        {p.hsCode}
+                      </span>
+                      {isSelected && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                          <span className="size-1.5 rounded-full bg-emerald-600" />
+                          SEÇİLİ
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="mt-1.5 font-display text-base font-bold text-slate-900 group-hover:text-emerald-700 transition">
+                      {p.title[locale] || p.title.en}
+                    </h3>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-600 line-clamp-2">
+                      {p.description[locale] || p.description.en}
+                    </p>
+                  </div>
                 </div>
-                <p className="mt-3 text-xs text-slate-500 font-medium">
-                  {p.category[locale] || p.category.en}
-                </p>
+
+                <div className="mt-4 pt-3 border-t border-slate-100 px-1 flex items-center justify-between text-xs font-bold text-emerald-700">
+                  <span>{locale === "tr" ? "Spesifikasyonu Gör" : "Explore Technical Specs"}</span>
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                </div>
               </button>
             )
           })}

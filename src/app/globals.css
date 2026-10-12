@@ -609,3 +609,85 @@ details .acc > * {
   outline: 2px solid #a67c3d;
   outline-offset: 3px;
 }
+
+/* Benchmark design utilities */
+.container-x {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+@media (min-width: 640px) {
+  .container-x {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .container-x {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+.hero-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+}
+
+.shadow-card {
+  box-shadow: 0 2px 14px -2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-card-hover {
+  box-shadow: 0 20px 35px -10px rgba(6, 78, 59, 0.14), 0 8px 16px -6px rgba(0, 0, 0, 0.04);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.85rem;
+  border-radius: 9999px;
+  background-color: #ecfdf5;
+  border: 1px solid rgba(167, 243, 208, 0.8);
+  color: #065f46;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.075em;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.h2-title {
+  font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #0f172a;
+  line-height: 1.15;
+}
+@media (min-width: 640px) {
+  .h2-title {
+    font-size: 2.75rem;
+  }
+}
+@media (min-width: 1024px) {
+  .h2-title {
+    font-size: 3.25rem;
+  }
+}
+
+.section {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+@media (min-width: 768px) {
+  .section {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+}

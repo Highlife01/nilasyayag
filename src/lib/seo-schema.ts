@@ -187,7 +187,7 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
     logo: logoUrl,
     image: bannerImage,
     email: "export@asiaoil.com.tr",
-    telephone: "+905325000000",
+    telephone: "+905336840175",
     description: dict.metaDescription,
     address: {
       "@type": "PostalAddress",
@@ -230,7 +230,7 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
     contactPoint: [
       {
         "@type": "ContactPoint",
-        telephone: "+905325000000",
+        telephone: "+905336840175",
         contactType: "sales and export desk",
         email: "export@asiaoil.com.tr",
         areaServed: "Worldwide",

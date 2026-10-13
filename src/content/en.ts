@@ -382,9 +382,9 @@ const en: Dict = {
     rights: "Asia Oil. All Rights Reserved.",
   },
   consent: {
-    text: "We use essential cookies to ensure optimal functionality and anonymously measure visit metrics in compliance with privacy regulations.",
-    accept: "Accept All",
-    reject: "Essential Only",
+    text: "Visits are counted only with your permission. You can change your cookie preferences at any time.",
+    accept: "Allow visit counts",
+    reject: "Necessary only",
   },
   notFound: { title: "Page Not Found", text: "The requested page or document could not be located. Please return to the homepage or contact our desk." },
 }

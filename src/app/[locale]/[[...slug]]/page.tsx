@@ -7,7 +7,9 @@ import { ArticleIndex, ArticleView, HomeView, StandardPage } from "@/components/
 import { insightBase, isLocale, matchStatic, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
 import { heroFrames } from "@/lib/media"
 import { getRepo } from "@/server/runtime"
-import { siteUrl } from "@/lib/site"
+import { CONTACT_PHONE, siteUrl } from "@/lib/site"
+import { normalizeControl } from "@/lib/model"
+import { parseQuoteQuery, quoteReturnPath } from "@/lib/quote"
 import { VisitBeacon } from "@/components/site/visit-beacon"
 
 import { buildPageJsonLd, getKeywordsForPage, OG_LOCALES } from "@/lib/seo-schema"
@@ -137,6 +139,7 @@ export default async function LocalePage({
   const jar = await cookies()
   const consent = jar.get("nilasya_consent")?.value
   const articleSlug = article ? dict.articles[article].slug : undefined
+  const returnTo = page === "quote" ? quoteReturnPath(locale, query) : pathFor(locale, page, articleSlug)
   const issuedAt = formIssuedAt()
   const canonicalUrl = siteUrl() + pathFor(locale, page, articleSlug)
 
@@ -149,8 +152,8 @@ export default async function LocalePage({
   })
 
   return (
-    <SiteFrame locale={locale} dict={dict} page={page} articleSlug={articleSlug} settings={settings} consent={consent}>
-      <VisitBeacon />
+    <SiteFrame locale={locale} dict={dict} page={page} articleSlug={articleSlug} settings={settings} consent={consent} returnTo={returnTo}>
+      {consent === "all" ? <VisitBeacon /> : null}
       {page === "home" ? <HomeView locale={locale} dict={dict} frames={heroFrames()} /> : null}
       {page === "insights" && !article ? <ArticleIndex locale={locale} dict={dict} /> : null}
       {article ? <ArticleView locale={locale} dict={dict} id={article} /> : null}

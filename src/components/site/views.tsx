@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { WHATSAPP_URL, EXPORT_EMAIL } from "@/lib/site"
 import type { CSSProperties } from "react"
 import { ArrowRight, ArrowUpRight, Plus, Phone, Ship, CheckCircle2, ShieldCheck, Sparkles, Mail, ChevronDown } from "lucide-react"
 import { ARTICLE_IDS } from "@/content/index"
@@ -78,13 +79,13 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
       <WhyUsSection locale={locale} />
 
       {/* Flagship Products Showcase with Catalog Cards, Specifications & Formats */}
-      <ProductShowcase locale={locale} />
+      <ProductShowcase locale={locale} dict={dict} />
 
       {/* 5-Stage Integrated Seed-to-Port Production Pipeline */}
-      <ProductionPipeline locale={locale} />
+      <ProductionPipeline locale={locale} dict={dict} />
 
       {/* Comprehensive Packaging Solutions Matrix */}
-      <PackagingMatrix locale={locale} />
+      <PackagingMatrix locale={locale} dict={dict} />
 
       {/* Modern B2B Volume & Export Estimator Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-[#071d14] to-slate-950 py-24 text-white border-t border-emerald-950/40">
@@ -106,7 +107,7 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
                 : "Select your desired packaging and container volume; request an official FOB or CIF quotation dispatched from Mersin Port in one click."}
             </p>
           </div>
-          <QuoteCalculator locale={locale} />
+          <QuoteCalculator locale={locale} dict={dict} />
         </div>
       </section>
 
@@ -299,7 +300,7 @@ function Closing({ locale, dict }: { locale: Locale; dict: Dict }) {
             <ArrowUpRight className="size-4 rtl:-scale-x-100" aria-hidden="true" />
           </a>
           <a
-            href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20information"
+            href={`${WHATSAPP_URL}?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20information`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex h-14 items-center gap-2.5 rounded-2xl border border-white/20 bg-white/10 px-8 text-sm font-bold text-white shadow-sm backdrop-blur-md transition hover:bg-white/20"
@@ -408,8 +409,8 @@ export function StandardPage({
                   </div>
                   <div className="flex items-center gap-2.5 text-slate-700">
                     <Mail className="size-4 text-amber-500 shrink-0" />
-                    <a href={`mailto:${settings.publicEmail || "export@asiaoil.com.tr"}`} className="text-emerald-700 font-semibold hover:underline">
-                      {settings.publicEmail || "export@asiaoil.com.tr"}
+                    <a href={`mailto:${settings.publicEmail || EXPORT_EMAIL}`} className="text-emerald-700 font-semibold hover:underline">
+                      {settings.publicEmail || EXPORT_EMAIL}
                     </a>
                   </div>
                 </div>
@@ -450,7 +451,7 @@ export function StandardPage({
       {commercial ? (
         <section className="bg-gradient-to-b from-slate-900 via-[#071d14] to-slate-950 py-20 text-white border-t border-emerald-950/40">
           <div className={container}>
-            <QuoteCalculator locale={locale} />
+            <QuoteCalculator locale={locale} dict={dict} />
           </div>
         </section>
       ) : null}

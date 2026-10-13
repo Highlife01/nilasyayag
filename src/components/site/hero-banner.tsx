@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import { WHATSAPP_URL, CONTACT_PHONE } from "@/lib/site"
 import { useState, useEffect, useSyncExternalStore } from "react"
 import { ChevronLeft, ChevronRight, ArrowRight, ShieldCheck, Ship, Sparkles } from "lucide-react"
 import { pathFor, type Locale } from "@/lib/i18n/config"
@@ -260,13 +261,13 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
               </a>
 
               <a
-                href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20a%20B2B%20quotation"
+                href={`${WHATSAPP_URL}?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20a%20B2B%20quotation`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-6 py-4 rounded-xl bg-white hover:bg-emerald-50 border-2 border-emerald-600 text-emerald-950 font-black text-sm shadow-md backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2 cursor-pointer"
               >
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" />
-                <span>WhatsApp: +90 532 500 00 00</span>
+                <span>WhatsApp: {CONTACT_PHONE}</span>
               </a>
 
               <a

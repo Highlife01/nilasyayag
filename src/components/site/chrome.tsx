@@ -1,10 +1,13 @@
-import type { CSSProperties, ReactNode } from "react"
-import { ArrowUpRight, Globe, Menu, Phone, Mail, Ship, ShieldCheck, CheckCircle2 } from "lucide-react"
+import type { ReactNode } from "react"
+import { ArrowUpRight, Globe, Menu, Mail, Ship } from "lucide-react"
 import { ARTICLE_IDS, articleIdBySlug, getDict } from "@/content/index"
 import type { Dict } from "@/content/types"
 import { LOCALE_META, PUBLISHED_LOCALES, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
 import type { Settings } from "@/lib/model"
 import { HeaderShell } from "@/components/site/header-shell"
+import { CookieConsent } from "@/components/site/cookie-consent"
+import { WhatsAppButton } from "@/components/site/whatsapp-button"
+import { CONTACT_PHONE, EXPORT_EMAIL, WHATSAPP_URL } from "@/lib/site"
 
 const NAV: StaticPage[] = ["sunflower", "olive", "wholesale", "trade", "insights", "about"]
 const MORE: StaticPage[] = ["privateLabel", "quality", "faq", "contact", "privacy"]
@@ -45,6 +48,7 @@ export function SiteFrame({
   articleSlug,
   settings,
   consent,
+  returnTo,
   children,
 }: {
   locale: Locale
@@ -53,6 +57,7 @@ export function SiteFrame({
   articleSlug?: string
   settings: Settings
   consent: string | undefined
+  returnTo?: string
   children: ReactNode
 }) {
   const home = pathFor(locale, "home")
@@ -77,33 +82,31 @@ export function SiteFrame({
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
             <span className="font-semibold text-emerald-300">
-              {locale === "tr" ? "Liman İhracat Çıkışları:" : "Seaport Terminals:"}
+              {dict.ui.shipsFrom}
             </span>
             <span className="truncate">
-              {locale === "tr"
-                ? "Mersin Uluslararası Limanı (MIP) & İzmir Limanı • FOB / CIF Sevkiyat"
-                : "Mersin International Port (MIP) & Izmir Seaport • FOB / CIF Worldwide"}
+              {dict.ui.shipsFromValue}
             </span>
           </div>
 
           {/* Right: Direct Desk Info & WhatsApp & Language */}
           <div className="flex items-center gap-4 sm:gap-5 text-xs">
             <a
-              href="mailto:export@asiaoil.com.tr"
-              className="hidden md:flex items-center gap-1.5 hover:text-amber-300 transition"
+              href={`mailto:${settings.publicEmail || EXPORT_EMAIL}`}
+              className="flex items-center gap-1.5 hover:text-amber-300 transition"
             >
               <Mail className="size-3.5 text-amber-400" />
-              <span>export@asiaoil.com.tr</span>
+              <span>{settings.publicEmail || EXPORT_EMAIL}</span>
             </a>
 
             <a
-              href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20information"
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:flex items-center gap-1.5 text-emerald-300 hover:text-emerald-200 font-semibold transition"
             >
               <span className="size-1.5 rounded-full bg-emerald-400" />
-              <span>WhatsApp Desk</span>
+              <span>WhatsApp</span>
             </a>
 
             {/* Language Dropdown */}
@@ -143,7 +146,7 @@ export function SiteFrame({
           </a>
 
           {/* Desktop Navigation Links (Pill Style) */}
-          <nav className="hidden items-center gap-1.5 lg:flex" aria-label="Primary">
+          <nav className="hidden items-center gap-1.5 lg:flex" aria-label={dict.ui.menu}>
             {NAV.map((item) => {
               const active = page === item
               return (
@@ -179,6 +182,16 @@ export function SiteFrame({
                 <Menu className="size-5" />
               </summary>
               <div className="fixed inset-x-0 bottom-0 top-[114px] group-data-[solid=true]:top-20 z-50 overflow-y-auto bg-white px-6 py-8 shadow-2xl border-t border-slate-200">
+                <div className="mx-auto mb-6 max-w-lg">
+                  <p className="mb-3 text-sm font-semibold text-slate-600">{dict.ui.language}</p>
+                  <nav aria-label={dict.ui.language} className="grid grid-cols-2 gap-2">
+                    {PUBLISHED_LOCALES.map((code) => (
+                      <a key={code} href={pathFor(code, page, articleId ? getDict(code).articles[articleId].slug : undefined)} hrefLang={code} lang={code} aria-current={code === locale ? "true" : undefined} className={`rounded-lg border px-3 py-2 text-sm ${code === locale ? "border-emerald-700 bg-emerald-50 font-semibold text-emerald-800" : "border-slate-200 text-slate-700"}`}>
+                        {LOCALE_META[code].name}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
                 <nav className="mx-auto grid max-w-lg gap-2" aria-label={dict.ui.menu}>
                   {[...NAV, ...MORE].map((item, index) => (
                     <a
@@ -190,7 +203,7 @@ export function SiteFrame({
                       <span className="text-xs font-mono text-slate-400">0{index + 1}</span>
                     </a>
                   ))}
-
+                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="mt-4 flex min-h-12 items-center justify-center rounded-xl border border-emerald-700 text-sm font-bold text-emerald-800">WhatsApp · {CONTACT_PHONE}</a>
                   <a
                     href={pathFor(locale, "quote")}
                     className="mt-4 flex h-12 items-center justify-center rounded-xl bg-emerald-800 text-sm font-bold text-white shadow-lg hover:bg-emerald-900 transition"
@@ -261,16 +274,12 @@ export function SiteFrame({
               <div className="mt-6 space-y-2 text-xs text-[#f7f1e3]/80">
                 <div className="flex items-center gap-2">
                   <Ship className="size-4 text-emerald-400" />
-                  <span>
-                    {locale === "tr"
-                      ? "Mersin Uluslararası Limanı (MIP) & İzmir Limanı"
-                      : "Mersin International Port (MIP) & Izmir Seaport"}
-                  </span>
+                  <span>{dict.ui.shipsFromValue}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="size-4 text-amber-400" />
-                  <a href={`mailto:${settings.publicEmail || "export@asiaoil.com.tr"}`} className="text-amber-300 hover:underline">
-                    {settings.publicEmail || "export@asiaoil.com.tr"}
+                  <a href={`mailto:${settings.publicEmail || EXPORT_EMAIL}`} className="text-amber-300 hover:underline">
+                    {settings.publicEmail || EXPORT_EMAIL}
                   </a>
                 </div>
               </div>
@@ -349,18 +358,17 @@ export function SiteFrame({
           {/* Sub Footer Rights & Badges */}
           <div className="mt-16 pt-8 border-t border-white/10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-xs text-[#f7f1e3]/50">
             <p>© {new Date().getFullYear()} Asia Oil Türkiye. {dict.footer.rights}</p>
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-emerald-400 font-medium">
-              <span>ISO 22000:2018</span>
-              <span>•</span>
-              <span>{locale === "tr" ? "Helal & Koşer" : "Halal & Kosher"}</span>
-              <span>•</span>
-              <span>{locale === "tr" ? "EUR.1 Dolaşım Belgesi" : "EUR.1 Movement Certificate"}</span>
-              <span>•</span>
-              <span>IOC Standards</span>
+            <div className="flex items-center gap-4 text-emerald-400 font-medium">
+              <a href={pathFor(locale, "quality")} className="hover:underline">{dict.nav.quality}</a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:underline">WhatsApp · {CONTACT_PHONE}</a>
             </div>
           </div>
         </div>
+          <div className="mx-auto max-w-7xl px-5 pb-24 md:px-10">
+            <CookieConsent locale={locale} dict={dict} returnTo={returnTo || pathFor(locale, page, articleSlug)} consent={consent} />
+          </div>
       </footer>
+      <WhatsAppButton />
     </div>
   )
 }

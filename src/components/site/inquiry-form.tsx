@@ -1,6 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
+import { WHATSAPP_URL } from "@/lib/site"
 import { useActionState, useState } from "react"
 import { useFormStatus } from "react-dom"
 import {
@@ -227,7 +228,7 @@ export function InquiryForm({
           </button>
 
           <a
-            href="https://wa.me/905325000000"
+            href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-xl bg-emerald-800 px-6 py-3 text-xs font-bold text-white shadow-md shadow-emerald-950/15 transition hover:bg-emerald-900 cursor-pointer"

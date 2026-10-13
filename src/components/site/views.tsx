@@ -445,7 +445,14 @@ export function StandardPage({
         </section>
       ) : null}
       {!form ? <CopyBody copy={copy} /> : null}
-      {page === "sunflower" || page === "olive" ? <Spec dict={dict} family={page === "sunflower" ? dict.nav.sunflower : dict.nav.olive} /> : null}
+      {page === "sunflower" || page === "olive" ? <Spec dict={dict} family={page === "sunflower" ? dict.nav.sunflower : dict.nav.olive} page={page} locale={locale} /> : null}
+      {commercial ? (
+        <section className="bg-gradient-to-b from-slate-900 via-[#071d14] to-slate-950 py-20 text-white border-t border-emerald-950/40">
+          <div className={container}>
+            <QuoteCalculator locale={locale} />
+          </div>
+        </section>
+      ) : null}
       {page === "faq" ? (
         <section className="bg-slate-50/70 py-20 pb-28 border-t border-slate-200">
           <div className="mx-auto max-w-4xl px-5 md:px-10">
@@ -504,27 +511,98 @@ function QuoteBand({ locale, dict, product }: { locale: Locale; dict: Dict; prod
   )
 }
 
-function Spec({ dict, family }: { dict: Dict; family: string }) {
-  const rows = [
-    [dict.ui.family, family],
-    [dict.ui.shipsFrom, dict.ui.shipsFromValue],
-    [dict.ui.model, dict.ui.modelValue],
-    [dict.ui.packing, dict.ui.packingValue],
+function Spec({ dict, family, page, locale }: { dict: Dict; family: string; page?: string; locale?: Locale }) {
+  const isTr = locale === "tr"
+  const isOlive = page === "olive"
+
+  const chemicalSpecs = isOlive
+    ? [
+        { name: isTr ? "Gümrük Tarife İstatistik Pozisyonu (GTİP / HS Code)" : "Harmonized System Code (HS Code)", value: "1509.20.00.00 (Extra Virgin)" },
+        { name: isTr ? "Serbest Yağ Asitliği (Oleik Asit Cinsinden)" : "Free Fatty Acidity (as Oleic Acid)", value: "≤ %0.80 (Standart) / ≤ %0.40 (Ultra Premium)", highlight: true },
+        { name: isTr ? "Peroksit Değeri" : "Peroxide Value", value: "≤ 15 meq O₂/kg" },
+        { name: isTr ? "Ultraviyole Spektrofotometrik Analiz (K232)" : "UV Absorbance (K232)", value: "≤ 2.50" },
+        { name: isTr ? "Ultraviyole Spektrofotometrik Analiz (K270)" : "UV Absorbance (K270)", value: "≤ 0.22" },
+        { name: isTr ? "Delta K Değeri (ΔK)" : "Delta K (ΔK)", value: "≤ 0.01" },
+        { name: isTr ? "Sıkım Yöntemi & Sıcaklığı" : "Extraction Method & Temperature", value: isTr ? "Soğuk Sıkım (Cold Pressed) ≤ 27°C (Hasattan sonra ilk 12 saatte)" : "Continuous Cold Extraction ≤ 27°C within 12h of harvest", highlight: true },
+        { name: isTr ? "Duyusal & Organoleptik Profil" : "Sensory & Organoleptic Profile", value: isTr ? "Meyvemsi, hafif acımsı ve yakıcı, taze çimen ve enginar notaları" : "Medium/Intense fruity, balanced bitterness and pungency, green herbaceous notes" },
+        { name: isTr ? "Çıkış Limanı & Menşei" : "Seaport & Origin", value: isTr ? "Mersin Uluslararası Limanı (MIP) & İzmir Limanı / Ege & Akdeniz" : "Mersin Port (MIP) & Izmir Seaport / Aegean & Mediterranean Origin" },
+      ]
+    : [
+        { name: isTr ? "Gümrük Tarife İstatistik Pozisyonu (GTİP / HS Code)" : "Harmonized System Code (HS Code)", value: "1512.19.90.00 (Rafine Ayçiçek Yağı)" },
+        { name: isTr ? "Serbest Yağ Asitliği (Oleik Asit)" : "Free Fatty Acidity (FFA as Oleic)", value: "≤ %0.10 (Standart İhracat Spesifikasyonu)", highlight: true },
+        { name: isTr ? "Peroksit Değeri (Fabrika Çıkış)" : "Peroxide Value (Ex-Factory)", value: "≤ 1.0 meq O₂/kg" },
+        { name: isTr ? "Nem ve Uçucu Madde Oranı" : "Moisture & Volatile Matter", value: "≤ %0.05" },
+        { name: isTr ? "Renk (Lovibond 5 ¼” Hücrede)" : "Color (Lovibond 5 ¼” Cell)", value: "≤ 1.0 Kırmızı / 10 Sarı (Berrak, açık altın)" },
+        { name: isTr ? "Dumanlanma Noktası (Smoke Point)" : "Smoke Point", value: "≥ 232°C (Yüksek termal stabilite)", highlight: true },
+        { name: isTr ? "Koku ve Tat" : "Odor and Taste", value: isTr ? "Doğal nötr, yabancı koku ve tortudan arındırılmış" : "Bland, neutral, free from off-flavors and rancidity" },
+        { name: isTr ? "Yoğunluk (20°C)" : "Specific Gravity (20°C)", value: "0.918 – 0.923 g/cm³" },
+        { name: isTr ? "Çıkış Limanı & Menşei" : "Seaport & Origin", value: isTr ? "Mersin Uluslararası Limanı (MIP) / Çukurova & Trakya Menşei" : "Mersin Port (MIP), Türkiye / Mediterranean Hub" },
+      ]
+
+  const packagingList = [
+    { format: "1L PET", carton: "12 / 15", fcl: "~24.000 L / 20ft FCL", pallets: "10-11 Euro Pallet" },
+    { format: "2L PET", carton: "6", fcl: "~22.000 L / 20ft FCL", pallets: "10-11 Euro Pallet" },
+    { format: "5L PET / Teneke", carton: "4", fcl: "~4.400 Koli / 40ft HC", pallets: "Standart İhracat Paleti" },
+    { format: "18L Profesyonel Teneke", carton: "Tekli", fcl: "~1.200 Adet / 20ft", pallets: "Metal takviyeli palet" },
+    { format: "22.000L Flexitank", carton: "Dökme", fcl: "21.500 - 22.000 L / 20ft", pallets: "Tek yönlü gıdaya uygun astar" },
   ]
+
   return (
     <section className="bg-slate-50/70 pb-24 border-t border-slate-200/80">
       <div className="mx-auto max-w-5xl px-5 md:px-10">
         <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl md:p-12">
-          <Kicker>{family}</Kicker>
-          <h2 className="font-display mt-4 text-3xl font-extrabold text-slate-900 md:text-4xl">{dict.ui.specifications}</h2>
-          <dl className="mt-8 divide-y divide-slate-100 border-y border-slate-100">
-            {rows.map(([term, value]) => (
-              <div key={term} className="reveal grid gap-2 py-5 md:grid-cols-[16rem_1fr] md:gap-8">
-                <dt className="text-xs font-bold uppercase tracking-wider text-slate-500 pt-1">{term}</dt>
-                <dd className="text-base md:text-lg font-medium text-slate-800 leading-relaxed">{value}</dd>
-              </div>
-            ))}
-          </dl>
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-6">
+            <div>
+              <Kicker>{family}</Kicker>
+              <h2 className="font-display mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">
+                {isTr ? "Laboratuvar ve Kimyasal Spesifikasyonlar" : "Laboratory & Chemical Specifications"}
+              </h2>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3.5 py-1 text-xs font-bold text-emerald-800 border border-emerald-200">
+              <ShieldCheck className="size-4 text-emerald-600" />
+              <span>ISO 22000 & IOC Akredite</span>
+            </span>
+          </div>
+
+          <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/50">
+            <dl className="divide-y divide-slate-200/70">
+              {chemicalSpecs.map((item) => (
+                <div key={item.name} className={`grid gap-2 px-6 py-4.5 md:grid-cols-[18rem_1fr] md:gap-8 items-center ${item.highlight ? "bg-emerald-50/60" : ""}`}>
+                  <dt className="text-xs font-bold uppercase tracking-wider text-slate-600">{item.name}</dt>
+                  <dd className={`text-sm md:text-base font-semibold ${item.highlight ? "text-emerald-950 font-bold" : "text-slate-900"}`}>{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          {/* Packaging & Logistics Specs Table */}
+          <div className="mt-12">
+            <h3 className="font-display text-xl font-bold text-slate-900 mb-4">
+              {isTr ? "İhracat Ambalajlama & Konteyner Kapasite Matrisi" : "Export Packaging & Container Freight Matrix"}
+            </h3>
+            <div className="overflow-x-auto rounded-2xl border border-slate-200">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-100 text-xs uppercase font-bold text-slate-700">
+                  <tr>
+                    <th className="px-5 py-3.5">{isTr ? "Ambalaj Formatı" : "Packaging Format"}</th>
+                    <th className="px-5 py-3.5">{isTr ? "Koli İçi Adet" : "Carton Qty"}</th>
+                    <th className="px-5 py-3.5">{isTr ? "FCL Kapasitesi" : "FCL Loading Capacity"}</th>
+                    <th className="px-5 py-3.5">{isTr ? "Paletleme Standardı" : "Palletizing Standard"}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 bg-white">
+                  {packagingList.map((p) => (
+                    <tr key={p.format} className="hover:bg-slate-50/80 transition">
+                      <td className="px-5 py-3.5 font-bold text-slate-900">{p.format}</td>
+                      <td className="px-5 py-3.5 text-slate-600">{p.carton}</td>
+                      <td className="px-5 py-3.5 font-semibold text-emerald-800">{p.fcl}</td>
+                      <td className="px-5 py-3.5 text-slate-600">{p.pallets}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -1,13 +1,10 @@
-import type { ReactNode } from "react"
-import { ArrowUpRight, Globe, Menu, Mail, Ship } from "lucide-react"
+import type { CSSProperties, ReactNode } from "react"
+import { ArrowUpRight, Globe, Menu, Phone, Mail, Ship, ShieldCheck, CheckCircle2 } from "lucide-react"
 import { ARTICLE_IDS, articleIdBySlug, getDict } from "@/content/index"
 import type { Dict } from "@/content/types"
 import { LOCALE_META, PUBLISHED_LOCALES, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
 import type { Settings } from "@/lib/model"
 import { HeaderShell } from "@/components/site/header-shell"
-import { CookieConsent } from "@/components/site/cookie-consent"
-import { WhatsAppButton } from "@/components/site/whatsapp-button"
-import { CONTACT_PHONE, EXPORT_EMAIL, WHATSAPP_URL } from "@/lib/site"
 
 const NAV: StaticPage[] = ["sunflower", "olive", "wholesale", "trade", "insights", "about"]
 const MORE: StaticPage[] = ["privateLabel", "quality", "faq", "contact", "privacy"]
@@ -15,28 +12,15 @@ const MORE: StaticPage[] = ["privateLabel", "quality", "faq", "contact", "privac
 export const BRAND_NAME = "Asia Oil"
 const BRAND_TAGLINE = "EDIBLE OILS · TÜRKİYE"
 
-/** Modern golden oil drop inside clean circular seal */
+/** Modern high-tech brand mark */
 export function Mark({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 36 36" fill="none" className={className} aria-hidden="true">
-      <circle cx="18" cy="18" r="17" className="stroke-amber-500/40 fill-emerald-950/10" strokeWidth="1.5" />
-      <path
-        d="M18 6C18 6 10 16.5 10 22C10 26.4 13.6 30 18 30C22.4 30 26 26.4 26 22C26 16.5 18 6 18 6Z"
-        className="fill-gradient-to-b from-amber-400 to-amber-600"
-        fill="url(#goldDrop)"
-      />
-      <path
-        d="M18 12C18 12 13 19 13 22.5C13 25.3 15.2 27.5 18 27.5C20.8 27.5 23 25.3 23 22.5C23 19 18 12 18 12Z"
-        fill="#ffffff"
-        opacity="0.25"
-      />
-      <defs>
-        <linearGradient id="goldDrop" x1="18" y1="6" x2="18" y2="30" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#f59e0b" />
-          <stop offset="1" stopColor="#d97706" />
-        </linearGradient>
-      </defs>
-    </svg>
+    <span
+      className={`grid size-10 place-items-center rounded-xl bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-800 font-display text-lg font-black text-white shadow-md shadow-emerald-700/25 group-hover:scale-105 transition-transform duration-200 ${className}`}
+      aria-hidden="true"
+    >
+      A
+    </span>
   )
 }
 
@@ -44,8 +28,8 @@ export function Wordmark({ size = "md" }: { size?: "md" | "lg" }) {
   const title = size === "lg" ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
   return (
     <span className="leading-tight flex flex-col">
-      <span className={`font-display font-extrabold tracking-tight text-slate-900 ${title}`}>
-        ASIA OIL
+      <span className={`font-display font-black tracking-tight text-slate-900 ${title}`}>
+        ASIA<span className="text-emerald-700">OIL</span>
       </span>
       <span className="text-[0.62rem] font-bold tracking-[0.22em] text-emerald-800 uppercase">
         {BRAND_TAGLINE}
@@ -61,7 +45,6 @@ export function SiteFrame({
   articleSlug,
   settings,
   consent,
-  returnTo,
   children,
 }: {
   locale: Locale
@@ -70,7 +53,6 @@ export function SiteFrame({
   articleSlug?: string
   settings: Settings
   consent: string | undefined
-  returnTo?: string
   children: ReactNode
 }) {
   const home = pathFor(locale, "home")
@@ -90,41 +72,43 @@ export function SiteFrame({
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           {/* Left: Port Dispatch Status */}
           <div className="flex items-center gap-2 text-[#f7f1e3]/85 truncate">
-            <span className="relative flex h-2 w-2">
+            <span className="relative flex h-2 w-2 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
             <span className="font-semibold text-emerald-300">
-              {dict.ui.shipsFrom}
+              {locale === "tr" ? "Liman İhracat Çıkışları:" : "Seaport Terminals:"}
             </span>
             <span className="truncate">
-              {dict.ui.shipsFromValue}
+              {locale === "tr"
+                ? "Mersin Uluslararası Limanı (MIP) & İzmir Limanı • FOB / CIF Sevkiyat"
+                : "Mersin International Port (MIP) & Izmir Seaport • FOB / CIF Worldwide"}
             </span>
           </div>
 
           {/* Right: Direct Desk Info & WhatsApp & Language */}
-          <div className="hidden sm:flex items-center gap-5 text-xs">
+          <div className="flex items-center gap-4 sm:gap-5 text-xs">
             <a
-              href={`mailto:${settings.publicEmail || EXPORT_EMAIL}`}
-              className="flex items-center gap-1.5 hover:text-amber-300 transition"
+              href="mailto:export@asiaoil.com.tr"
+              className="hidden md:flex items-center gap-1.5 hover:text-amber-300 transition"
             >
               <Mail className="size-3.5 text-amber-400" />
-              <span>{settings.publicEmail || EXPORT_EMAIL}</span>
+              <span>export@asiaoil.com.tr</span>
             </a>
 
             <a
-              href={WHATSAPP_URL}
+              href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20information"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-emerald-300 hover:text-emerald-200 font-semibold transition"
+              className="hidden sm:flex items-center gap-1.5 text-emerald-300 hover:text-emerald-200 font-semibold transition"
             >
               <span className="size-1.5 rounded-full bg-emerald-400" />
-              <span>WhatsApp</span>
+              <span>WhatsApp Desk</span>
             </a>
 
             {/* Language Dropdown */}
             <details className="relative [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded bg-white/10 px-2 py-0.5 text-xs font-semibold hover:bg-white/20">
+              <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded bg-white/10 px-2.5 py-1 text-xs font-semibold hover:bg-white/20 transition">
                 <Globe className="size-3 text-amber-300" />
                 <span>{locale.toUpperCase()}</span>
               </summary>
@@ -150,31 +134,30 @@ export function SiteFrame({
       </div>
 
       {/* Main Persistent Clean Sticky Header */}
-      <HeaderShell className="site-header group sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200/80 transition-all duration-300">
+      <HeaderShell className="site-header group sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md border-b-2 border-slate-300 transition-all duration-300">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-5 md:px-10">
           {/* Logo */}
           <a href={home} className="group/brand flex items-center gap-3.5" aria-label={BRAND_NAME}>
-            <Mark className="size-10 transition duration-300 group-hover/brand:scale-105" />
+            <Mark className="transition duration-300 group-hover/brand:scale-105" />
             <Wordmark />
           </a>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden items-center gap-8 text-[0.88rem] font-bold tracking-tight text-slate-700 xl:flex" aria-label={dict.ui.menu}>
+          {/* Desktop Navigation Links (Pill Style) */}
+          <nav className="hidden items-center gap-1.5 lg:flex" aria-label="Primary">
             {NAV.map((item) => {
               const active = page === item
               return (
                 <a
                   key={item}
                   href={pathFor(locale, item)}
-                  className={`transition duration-200 hover:text-emerald-700 relative py-2 ${
-                    active ? "text-emerald-800 font-extrabold" : ""
+                  className={`rounded-xl px-4 py-2 text-sm transition-all duration-150 ${
+                    active
+                      ? "bg-emerald-950 text-white font-black shadow-md border border-emerald-800"
+                      : "text-slate-900 hover:bg-slate-100 hover:text-black font-extrabold"
                   }`}
                   aria-current={active ? "page" : undefined}
                 >
                   {dict.nav[item]}
-                  {active && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-700 rounded-full" />
-                  )}
                 </a>
               )
             })}
@@ -184,46 +167,65 @@ export function SiteFrame({
           <div className="flex items-center gap-3">
             <a
               href={pathFor(locale, "quote")}
-              className="btn-shine hidden sm:inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-800 to-emerald-900 px-6 text-xs font-bold text-white shadow-md shadow-emerald-950/20 transition hover:from-emerald-900 hover:to-slate-950"
+              className="btn-shine hidden sm:inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-900 hover:from-emerald-600 hover:to-teal-600 px-6 text-xs font-black text-white shadow-lg shadow-emerald-950/30 transition-all duration-200 hover:scale-105 active:scale-95 border border-emerald-400/30"
             >
+              <span>📋</span>
               <span>{dict.ui.quote}</span>
-              <ArrowUpRight className="size-4 rtl:-scale-x-100" />
             </a>
 
             {/* Mobile Menu */}
-            <details className="xl:hidden [&_summary::-webkit-details-marker]:hidden">
-              <summary className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border border-slate-200 text-slate-800 hover:bg-slate-100" aria-label={dict.ui.menu}>
+            <details className="lg:hidden [&_summary::-webkit-details-marker]:hidden">
+              <summary className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border-2 border-slate-300 text-slate-950 hover:bg-slate-100 shadow-xs font-bold" aria-label={dict.ui.menu}>
                 <Menu className="size-5" />
               </summary>
-              <div className="absolute inset-x-0 top-full z-50 max-h-[calc(100dvh_-_7.5rem)] overflow-y-auto bg-white px-6 py-8 shadow-2xl border-t border-slate-200">
-                <div className="mx-auto mb-6 max-w-lg">
-                  <p className="mb-3 text-sm font-semibold text-slate-600">{dict.ui.language}</p>
-                  <nav aria-label={dict.ui.language} className="grid grid-cols-2 gap-2">
-                    {PUBLISHED_LOCALES.map((code) => (
-                      <a key={code} href={pathFor(code, page, articleId ? getDict(code).articles[articleId].slug : undefined)} hrefLang={code} lang={code} aria-current={code === locale ? "true" : undefined} className={`rounded-lg border px-3 py-2 text-sm ${code === locale ? "border-emerald-700 bg-emerald-50 font-semibold text-emerald-800" : "border-slate-200 text-slate-700"}`}>
-                        {LOCALE_META[code].name}
-                      </a>
-                    ))}
-                  </nav>
-                </div>
+              <div className="fixed inset-x-0 bottom-0 top-[114px] group-data-[solid=true]:top-20 z-50 overflow-y-auto bg-white px-6 py-8 shadow-2xl border-t border-slate-200">
                 <nav className="mx-auto grid max-w-lg gap-2" aria-label={dict.ui.menu}>
                   {[...NAV, ...MORE].map((item, index) => (
                     <a
                       key={item}
                       href={pathFor(locale, item)}
-                      className="flex items-center justify-between border-b border-slate-100 py-3.5 text-lg font-bold text-slate-800 hover:text-emerald-800"
+                      className="flex items-center justify-between border-b border-slate-100 py-3 text-base font-bold text-slate-800 hover:text-emerald-800"
                     >
                       <span>{dict.nav[item]}</span>
                       <span className="text-xs font-mono text-slate-400">0{index + 1}</span>
                     </a>
                   ))}
-                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="mt-4 flex min-h-12 items-center justify-center rounded-xl border border-emerald-700 text-sm font-bold text-emerald-800">WhatsApp · {CONTACT_PHONE}</a>
+
                   <a
                     href={pathFor(locale, "quote")}
-                    className="mt-6 flex h-13 items-center justify-center rounded-xl bg-emerald-800 text-sm font-bold text-white shadow-lg"
+                    className="mt-4 flex h-12 items-center justify-center rounded-xl bg-emerald-800 text-sm font-bold text-white shadow-lg hover:bg-emerald-900 transition"
                   >
                     {dict.ui.quote}
                   </a>
+
+                  {/* Mobile Language Selection */}
+                  <div className="border-t border-slate-200 pt-6 mt-4">
+                    <div className="flex items-center justify-between mb-3 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      <span className="flex items-center gap-1.5">
+                        <Globe className="size-4 text-emerald-700" />
+                        {dict.ui.language}
+                      </span>
+                      <span className="text-emerald-700 font-mono">{locale.toUpperCase()}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      {PUBLISHED_LOCALES.map((code) => (
+                        <a
+                          key={code}
+                          href={pathFor(code, page, articleId ? getDict(code).articles[articleId].slug : undefined)}
+                          hrefLang={code}
+                          lang={code}
+                          className={`flex items-center justify-between rounded-lg border px-3 py-2 text-xs font-semibold transition ${
+                            code === locale
+                              ? "border-emerald-700 bg-emerald-50 text-emerald-800 font-bold"
+                              : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                          }`}
+                        >
+                          <span>{LOCALE_META[code].name}</span>
+                          <span className="text-[10px] font-mono uppercase text-slate-400">{code}</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
                 </nav>
               </div>
             </details>
@@ -259,7 +261,11 @@ export function SiteFrame({
               <div className="mt-6 space-y-2 text-xs text-[#f7f1e3]/80">
                 <div className="flex items-center gap-2">
                   <Ship className="size-4 text-emerald-400" />
-                  <span>{dict.ui.shipsFromValue}</span>
+                  <span>
+                    {locale === "tr"
+                      ? "Mersin Uluslararası Limanı (MIP) & İzmir Limanı"
+                      : "Mersin International Port (MIP) & Izmir Seaport"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="size-4 text-amber-400" />
@@ -301,7 +307,7 @@ export function SiteFrame({
                   {dict.nav.trade} (FOB / CIF)
                 </a>
                 <a href={pathFor(locale, "quality")} className="block hover:text-white transition">
-                  {dict.nav.quality} & Sertifikalar
+                  {dict.nav.quality}
                 </a>
                 <a href={pathFor(locale, "about")} className="block hover:text-white transition">
                   {dict.nav.about}
@@ -343,17 +349,18 @@ export function SiteFrame({
           {/* Sub Footer Rights & Badges */}
           <div className="mt-16 pt-8 border-t border-white/10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-xs text-[#f7f1e3]/50">
             <p>© {new Date().getFullYear()} Asia Oil Türkiye. {dict.footer.rights}</p>
-            <div className="flex items-center gap-4 text-emerald-400 font-medium">
-              <a href={pathFor(locale, "quality")} className="hover:underline">{dict.nav.quality}</a>
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:underline">WhatsApp · {CONTACT_PHONE}</a>
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-emerald-400 font-medium">
+              <span>ISO 22000:2018</span>
+              <span>•</span>
+              <span>{locale === "tr" ? "Helal & Koşer" : "Halal & Kosher"}</span>
+              <span>•</span>
+              <span>{locale === "tr" ? "EUR.1 Dolaşım Belgesi" : "EUR.1 Movement Certificate"}</span>
+              <span>•</span>
+              <span>IOC Standards</span>
             </div>
           </div>
         </div>
-          <div className="mx-auto max-w-7xl px-5 pb-24 md:px-10">
-            <CookieConsent locale={locale} dict={dict} returnTo={returnTo || pathFor(locale, page, articleSlug)} consent={consent} />
-          </div>
       </footer>
-      <WhatsAppButton />
     </div>
   )
 }

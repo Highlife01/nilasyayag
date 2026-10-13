@@ -2,25 +2,42 @@
 
 import { useState } from "react"
 import { ArrowUpRight, Calculator, CheckCircle2, Container, Package, Ship, Sparkles } from "lucide-react"
-import type { Dict } from "@/content/types"
-import { commerceCopy, packagingLabel } from "@/content/commerce-ui"
-import type { Locale } from "@/lib/i18n/config"
-import { QUOTE_PACKAGING, quoteUrl, type QuoteProduct, type QuotePackaging, type QuoteContainer } from "@/lib/quote"
+import { pathFor, type Locale } from "@/lib/i18n/config"
 
-type ProductType = QuoteProduct
-type PackagingType = QuotePackaging
-type ContainerType = QuoteContainer
+type ProductType = "sunflower" | "olive" | "both"
+type PackagingType = "1L_PET" | "5L_TIN" | "18L_TIN" | "FLEXITANK"
+type ContainerType = "20ft" | "40ft"
 
-export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }) {
+const PACKAGING_LABELS: Record<PackagingType, { tr: string; en: string; capacity: string }> = {
+  "1L_PET": { tr: "1 Litre PET Şişe (12'li Koli)", en: "1L PET Bottle (12-pack carton)", capacity: "~24.000 Şişe / FCL" },
+  "5L_TIN": { tr: "5 Litre İhracat Tenekesi (4'lü Koli)", en: "5L Export Tin (4-pack carton)", capacity: "~4.400 Teneke / FCL" },
+  "18L_TIN": { tr: "18 Litre Profesyonel Teneke", en: "18L Foodservice Tin", capacity: "~1.200 Teneke / FCL" },
+  "FLEXITANK": { tr: "22.000 Litre Dökme Flexitank", en: "22.000L Bulk Flexitank", capacity: "~21.5 Metrik Ton / 20ft" },
+}
+
+const PORT_PRESETS = [
+  { label: "Mersin (FOB)", value: "Mersin Port (MIP), Türkiye" },
+  { label: "Jebel Ali (UAE)", value: "Jebel Ali, UAE" },
+  { label: "Rotterdam (NL)", value: "Rotterdam, Netherlands" },
+  { label: "Jeddah (KSA)", value: "Jeddah, Saudi Arabia" },
+  { label: "New York (USA)", value: "New York, USA" },
+  { label: "Alexandria (EG)", value: "Alexandria, Egypt" },
+]
+
+export function QuoteCalculator({ locale = "tr" }: { locale?: string }) {
   const [product, setProduct] = useState<ProductType>("sunflower")
   const [packaging, setPackaging] = useState<PackagingType>("5L_TIN")
   const [containerType, setContainerType] = useState<ContainerType>("40ft")
   const [quantity, setQuantity] = useState<number>(2)
   const [destinationPort, setDestinationPort] = useState<string>("Jebel Ali, UAE")
 
-  const form = dict.form
-  const copy = commerceCopy(locale)
-  const rfqUrl = quoteUrl(locale, { product, orderType: "container", quantity, containerType, packaging, destinationPort })
+  const isTr = locale === "tr"
+  const packInfo = PACKAGING_LABELS[packaging]
+  const targetLocale = (["tr", "en", "ar", "ru", "de", "fr", "es", "it"].includes(locale) ? locale : "tr") as Locale
+  const quotePath = pathFor(targetLocale, "quote")
+
+  const rfqUrl = `${quotePath}?product=${product}&orderType=container&quantity=${quantity}&packaging=${encodeURIComponent(packaging)}&containerType=${containerType}&destinationPort=${encodeURIComponent(destinationPort)}`
+  const estMetricTons = (quantity * (containerType === "40ft" ? 26.5 : 21.5)).toFixed(1)
 
   return (
     <div className="relative overflow-hidden rounded-3xl border border-[#d4af37]/30 bg-gradient-to-b from-[#131b11] via-[#0e150d] to-[#080d07] p-6 sm:p-10 text-[#f7f1e3] shadow-[0_30px_90px_-20px_rgba(0,0,0,0.8)] backdrop-blur-xl">
@@ -33,13 +50,15 @@ export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-gold-light/30 bg-gold-light/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-gold-light">
             <Calculator className="h-3.5 w-3.5" />
-            <span>{dict.home.processKicker}</span>
+            <span>{isTr ? "Hızlı B2B Hacim & İhracat Hesaplayıcı" : "Quick B2B Volume & Export Estimator"}</span>
           </div>
           <h3 className="font-display mt-3 text-2xl font-bold text-white sm:text-3xl">
-            {copy.configure}
+            {isTr ? "Konteyner ve Ambalajınızı Seçin" : "Configure Your Container & Packaging"}
           </h3>
           <p className="mt-1 text-sm text-[#f7f1e3]/70">
-            {copy.configLede}
+            {isTr
+              ? "Mersin Uluslararası Limanı (MIP) çıkışlı ihracat için anında ön konfigürasyon yapın."
+              : "Pre-configure your shipment dispatched from Mersin International Port (MIP)."}
           </p>
         </div>
 
@@ -55,13 +74,13 @@ export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }
           {/* Step 1: Product */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-[#d4af37]">
-              1. {form.product}
+              1. {isTr ? "Ürün Grubu" : "Product Category"}
             </label>
             <div className="mt-2.5 grid grid-cols-3 gap-2.5">
               {[
-                { id: "sunflower", label: form.sunflower, sub: dict.pages.sunflower.kicker },
-                { id: "olive", label: form.olive, sub: dict.pages.olive.kicker },
-                { id: "both", label: form.both, sub: form.container },
+                { id: "sunflower", label: isTr ? "Ayçiçek Yağı" : "Sunflower Oil", sub: "Codex STAN 210" },
+                { id: "olive", label: isTr ? "Zeytinyağı" : "Olive Oil", sub: "IOC Extra Virgin" },
+                { id: "both", label: isTr ? "Karma FCL" : "Mixed FCL", sub: isTr ? "İkili Yükleme" : "Dual Load" },
               ].map((item) => (
                 <button
                   key={item.id}
@@ -83,14 +102,14 @@ export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }
           {/* Step 2: Packaging */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-[#d4af37]">
-              2. {form.packaging}
+              2. {isTr ? "Ambalaj Formatı" : "Packaging Format"}
             </label>
             <div className="mt-2.5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-              {QUOTE_PACKAGING.map((pkg) => (
+              {(Object.keys(PACKAGING_LABELS) as PackagingType[]).map((pkg) => (
                 <button
                   key={pkg}
                   type="button"
-                  onClick={() => { setPackaging(pkg); if (pkg === "FLEXITANK") setContainerType("20ft") }}
+                  onClick={() => setPackaging(pkg)}
                   className={`flex flex-col items-start rounded-xl border p-3 text-left transition ${
                     packaging === pkg
                       ? "border-[#d4af37] bg-[#d4af37]/15 text-white"
@@ -99,10 +118,10 @@ export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }
                 >
                   <Package className="h-4 w-4 text-gold-light mb-1.5" />
                   <span className="text-xs font-bold leading-tight">
-                    {packagingLabel(pkg, locale)}
+                    {pkg === "1L_PET" ? "1L PET" : pkg === "5L_TIN" ? "5L Teneke" : pkg === "18L_TIN" ? "18L Teneke" : "22.000L Flexi"}
                   </span>
                   <span className="mt-1 text-[10px] text-[#f7f1e3]/50">
-                    {pkg === "FLEXITANK" ? form.bulk : copy.cartons}
+                    {pkg === "FLEXITANK" ? "Dökme" : isTr ? "Kolili" : "Cartons"}
                   </span>
                 </button>
               ))}
@@ -113,7 +132,7 @@ export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-[#d4af37]">
-                3. {copy.containerSize}
+                3. {isTr ? "Konteyner Tipi" : "Container Size"}
               </label>
               <div className="mt-2.5 grid grid-cols-2 gap-2">
                 {[
@@ -124,8 +143,7 @@ export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }
                     key={c.id}
                     type="button"
                     onClick={() => setContainerType(c.id as ContainerType)}
-                    disabled={packaging === "FLEXITANK" && c.id === "40ft"}
-                    className={`flex items-center justify-center gap-1.5 rounded-xl border py-2.5 text-xs font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed ${
+                    className={`flex items-center justify-center gap-1.5 rounded-xl border py-2.5 text-xs font-semibold transition ${
                       containerType === c.id
                         ? "border-[#d4af37] bg-[#d4af37]/15 text-white"
                         : "border-white/10 bg-white/[0.03] text-[#f7f1e3]/70 hover:border-white/20 hover:text-white"
@@ -140,12 +158,11 @@ export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }
 
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-[#d4af37]">
-                4. {form.quantity} (FCL)
+                4. {isTr ? "Miktar (FCL Konteyner)" : "Quantity (FCL Containers)"}
               </label>
               <div className="mt-2.5 flex items-center gap-3">
                 <input
                   type="range"
-                  aria-label={form.quantity}
                   min="1"
                   max="20"
                   value={quantity}
@@ -161,19 +178,40 @@ export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }
 
           {/* Destination Port Input */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-[#d4af37]">
-              5. {form.destination}
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#d4af37]">
+                5. {isTr ? "Varış Limanı / Ülke" : "Destination Seaport / Country"}
+              </label>
+              <span className="text-[10px] text-[#f7f1e3]/50">
+                {isTr ? "FOB Mersin veya CIF" : "FOB Mersin or CIF"}
+              </span>
+            </div>
             <div className="mt-2.5 flex gap-2">
               <input
                 type="text"
-                aria-label={form.destination}
-                maxLength={120}
                 value={destinationPort}
                 onChange={(e) => setDestinationPort(e.target.value)}
-                placeholder={copy.portPh}
+                placeholder={isTr ? "Örn: Jebel Ali, Rotterdam, New York, Jeddah..." : "e.g. Jebel Ali, Rotterdam, New York, Jeddah..."}
                 className="flex-1 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-white/30 focus:border-[#d4af37] focus:outline-none"
               />
+            </div>
+            {/* Quick Port Presets */}
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] text-[#f7f1e3]/40 mr-0.5">{isTr ? "Hızlı Seç:" : "Quick Select:"}</span>
+              {PORT_PRESETS.map((p) => (
+                <button
+                  key={p.value}
+                  type="button"
+                  onClick={() => setDestinationPort(p.value)}
+                  className={`rounded-lg border px-2 py-0.5 text-[10px] font-medium transition cursor-pointer ${
+                    destinationPort === p.value
+                      ? "border-[#d4af37] bg-[#d4af37]/20 text-white"
+                      : "border-white/10 bg-white/[0.02] text-[#f7f1e3]/60 hover:border-white/20 hover:text-white"
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -183,38 +221,43 @@ export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }
           <div>
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#d4af37]">
               <Sparkles className="h-4 w-4 text-gold-light" />
-              <span>{copy.summary}</span>
+              <span>{isTr ? "Konfigürasyon Özeti" : "Shipment Summary"}</span>
             </div>
 
             <div className="mt-6 space-y-4 text-sm">
               <div className="flex items-start justify-between border-b border-white/10 pb-3">
-                <span className="text-[#f7f1e3]/60">{form.product}:</span>
+                <span className="text-[#f7f1e3]/60">{isTr ? "Ürün:" : "Product:"}</span>
                 <span className="font-semibold text-white">
-                  {product === "sunflower" ? form.sunflower : product === "olive" ? form.olive : form.both}
+                  {product === "sunflower"
+                    ? isTr ? "Rafine Ayçiçek Yağı" : "Refined Sunflower Oil"
+                    : product === "olive"
+                    ? isTr ? "Natürel Sızma Zeytinyağı" : "Extra Virgin Olive Oil"
+                    : isTr ? "Karma (Ayçiçek + Zeytinyağı)" : "Mixed (Sunflower + Olive)"}
                 </span>
               </div>
 
               <div className="flex items-start justify-between border-b border-white/10 pb-3">
-                <span className="text-[#f7f1e3]/60">{form.packaging}:</span>
+                <span className="text-[#f7f1e3]/60">{isTr ? "Format:" : "Format:"}</span>
                 <span className="text-right font-medium text-white max-w-[14rem]">
-                  {packagingLabel(packaging, locale)}
+                  {isTr ? packInfo.tr : packInfo.en}
                 </span>
               </div>
 
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <span className="text-[#f7f1e3]/60">{copy.capacity}:</span>
-                <span className="font-mono text-xs text-gold-light">{copy.confirm}</span>
+                <span className="text-[#f7f1e3]/60">{isTr ? "Tahmini Yük:" : "Capacity / FCL:"}</span>
+                <span className="font-mono text-xs text-gold-light">{packInfo.capacity}</span>
               </div>
 
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <span className="text-[#f7f1e3]/60">{form.quantity}:</span>
-                <span className="font-bold text-white">
-                  {quantity} x {containerType} FCL
+                <span className="text-[#f7f1e3]/60">{isTr ? "Hacim:" : "Total Volume:"}</span>
+                <span className="font-bold text-white text-right">
+                  {quantity} x {containerType} FCL{" "}
+                  <span className="block font-mono text-[11px] font-normal text-gold-light">~{estMetricTons} MT Net</span>
                 </span>
               </div>
 
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <span className="text-[#f7f1e3]/60">{form.destination}:</span>
+                <span className="text-[#f7f1e3]/60">{isTr ? "Varış:" : "Destination:"}</span>
                 <span className="font-semibold text-emerald-400">{destinationPort || "FOB Mersin"}</span>
               </div>
             </div>
@@ -223,11 +266,19 @@ export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }
             <div className="mt-6 rounded-xl bg-white/[0.03] p-3 text-[11px] text-[#f7f1e3]/70 space-y-1.5">
               <div className="flex items-center gap-1.5 text-emerald-300">
                 <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
-                <span>{dict.pages.quality.sections[0].h}</span>
+                <span>
+                  {isTr
+                    ? "SGS / Bureau Veritas Bağımsız Gözetim Raporu"
+                    : "SGS / Bureau Veritas Third-Party Inspection Report"}
+                </span>
               </div>
               <div className="flex items-center gap-1.5 text-emerald-300">
                 <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
-                <span>{copy.verification}</span>
+                <span>
+                  {isTr
+                    ? "Helal & ISO 22000 Sertifikalı Fabrika Üretimi"
+                    : "Halal & ISO 22000 Certified Production Facility"}
+                </span>
               </div>
             </div>
           </div>
@@ -237,7 +288,7 @@ export function QuoteCalculator({ locale, dict }: { locale: Locale; dict: Dict }
               href={rfqUrl}
               className="btn-shine group flex h-13 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#f0dba6] to-[#d4af37] px-6 text-sm font-bold text-slate-950 shadow-lg shadow-gold/20 transition hover:scale-[1.02]"
             >
-              <span>{dict.ui.quote}</span>
+              <span>{isTr ? "Bu Konfigürasyonla Teklif İste" : "Request Official Quotation"}</span>
               <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" />
             </a>
           </div>

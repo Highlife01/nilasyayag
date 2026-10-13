@@ -7,10 +7,10 @@ import { ArticleIndex, ArticleView, HomeView, StandardPage } from "@/components/
 import { insightBase, isLocale, matchStatic, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
 import { heroFrames } from "@/lib/media"
 import { getRepo } from "@/server/runtime"
-import { CONTACT_PHONE, siteUrl } from "@/lib/site"
-import { normalizeControl } from "@/lib/model"
-import { parseQuoteQuery, quoteReturnPath } from "@/lib/quote"
+import { siteUrl } from "@/lib/site"
 import { VisitBeacon } from "@/components/site/visit-beacon"
+
+import { buildPageJsonLd, getKeywordsForPage, OG_LOCALES } from "@/lib/seo-schema"
 
 type Params = { locale: string; slug?: string[] }
 
@@ -30,12 +30,70 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   for (const code of ["tr", "en", "ar", "ru", "de", "fr", "es", "it"] as Locale[]) {
     languages[code] = siteUrl() + pathFor(code, page, article ? getDict(code).articles[article].slug : undefined)
   }
+  const ogLocale = OG_LOCALES[locale] || "en_US"
+  const alternateOgLocales = (["tr", "en", "ar", "ru", "de", "fr", "es", "it"] as Locale[])
+    .filter((l) => l !== locale)
+    .map((l) => OG_LOCALES[l])
+  const keywords = getKeywordsForPage(locale, page, article)
+  const ogImage = `${siteUrl()}/media/hero/master-banner.webp`
+
   return {
     title,
     description,
+    keywords,
     alternates: { canonical, languages },
-    openGraph: { title, description, url: canonical, siteName: "Asia Oil", locale },
-    robots: { index: true, follow: true },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "Asia Oil",
+      locale: ogLocale,
+      alternateLocale: alternateOgLocales,
+      type: article ? "article" : "website",
+      images: [
+        {
+          url: ogImage,
+          width: 2400,
+          height: 1260,
+          alt: `${title} - Asia Oil Global Export`,
+          type: "image/webp",
+        },
+      ],
+      ...(article
+        ? {
+            publishedTime: "2025-01-15T08:00:00.000Z",
+            modifiedTime: new Date().toISOString(),
+            authors: ["Asia Oil Technical Export Desk"],
+          }
+        : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      nocache: false,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    other: {
+      "geo.region": "TR-33",
+      "geo.placename": "Mersin, Akdeniz, Türkiye",
+      "geo.position": "36.7950;34.6400",
+      "ICBM": "36.7950, 34.6400",
+      "geo.country": "TR",
+      "DC.title": title,
+      "format-detection": "telephone=yes, address=yes, email=yes",
+    },
   }
 }
 
@@ -66,82 +124,43 @@ export default async function LocalePage({
   if (!resolved) notFound()
   const { locale, dict, page, article } = resolved
   const query = await searchParams
-  const prefill = parseQuoteQuery(query)
-  let settings = normalizeControl(null).settings
-  try {
-    settings = await (await getRepo()).getSettings()
-  } catch (error) {
-    console.warn("Public settings unavailable:", error)
+  const initialInquiry = {
+    product: typeof query.product === "string" ? query.product : undefined,
+    orderType: typeof query.orderType === "string" ? query.orderType : undefined,
+    quantity: typeof query.quantity === "string" ? query.quantity : undefined,
+    packaging: typeof query.packaging === "string" ? query.packaging : undefined,
+    destinationPort: typeof query.destinationPort === "string" ? query.destinationPort : undefined,
+    containerType: typeof query.containerType === "string" ? query.containerType : undefined,
   }
+  const product = initialInquiry.product
+  const settings = await (await getRepo()).getSettings()
   const jar = await cookies()
   const consent = jar.get("nilasya_consent")?.value
   const articleSlug = article ? dict.articles[article].slug : undefined
-  const returnTo = page === "quote" ? quoteReturnPath(locale, query) : pathFor(locale, page, articleSlug)
   const issuedAt = formIssuedAt()
+  const canonicalUrl = siteUrl() + pathFor(locale, page, articleSlug)
+
+  const jsonLdGraph = buildPageJsonLd({
+    locale,
+    dict,
+    page,
+    articleId: article,
+    canonicalUrl,
+  })
+
   return (
-    <SiteFrame locale={locale} dict={dict} page={page} articleSlug={articleSlug} settings={settings} consent={consent} returnTo={returnTo}>
-      {consent === "all" ? <VisitBeacon /> : null}
+    <SiteFrame locale={locale} dict={dict} page={page} articleSlug={articleSlug} settings={settings} consent={consent}>
+      <VisitBeacon />
       {page === "home" ? <HomeView locale={locale} dict={dict} frames={heroFrames()} /> : null}
       {page === "insights" && !article ? <ArticleIndex locale={locale} dict={dict} /> : null}
       {article ? <ArticleView locale={locale} dict={dict} id={article} /> : null}
       {page !== "home" && page !== "insights" ? (
-        <StandardPage locale={locale} dict={dict} page={page} settings={settings} issuedAt={issuedAt} prefill={prefill} />
+        <StandardPage locale={locale} dict={dict} page={page} settings={settings} issuedAt={issuedAt} product={product} initialInquiry={initialInquiry} />
       ) : null}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([
-            {
-              "@context": "https://schema.org",
-              "@type": "Corporation",
-              name: "Asia Oil",
-              legalName: "Asia Oil",
-              url: siteUrl(),
-              logo: `${siteUrl()}/icon.svg`,
-              image: `${siteUrl()}/media/hero/master-banner.webp`,
-              email: "export@asiaoil.com.tr",
-              telephone: CONTACT_PHONE,
-              address: {
-                "@type": "PostalAddress",
-                addressCountry: "TR",
-                addressLocality: "Mersin / İzmir",
-                addressRegion: "Akdeniz & Ege",
-              },
-              geo: {
-                "@type": "GeoCoordinates",
-                latitude: "36.7950",
-                longitude: "34.6400",
-              },
-              areaServed: [
-                { "@type": "AdministrativeArea", name: "Worldwide" },
-                { "@type": "AdministrativeArea", name: "Middle East" },
-                { "@type": "AdministrativeArea", name: "European Union" },
-                { "@type": "AdministrativeArea", name: "North America" },
-                { "@type": "AdministrativeArea", name: "Africa" },
-                { "@type": "AdministrativeArea", name: "Central Asia" },
-              ],
-              knowsAbout: [
-                "Refined Sunflower Oil (HS 1512.19)",
-                "Extra Virgin Olive Oil (HS 1509.20)",
-                "Bulk Edible Oil Export",
-                "FOB Mersin & CIF Port Logistics",
-                "Private Label Edible Oils",
-              ],
-              contactPoint: {
-                "@type": "ContactPoint",
-                email: "export@asiaoil.com.tr",
-                contactType: "sales and export desk",
-                availableLanguage: ["Turkish", "English", "Arabic", "Russian", "German", "French", "Spanish", "Italian"],
-              },
-            },
-            {
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "Asia Oil",
-              url: siteUrl(),
-              inLanguage: ["tr", "en", "ar", "ru", "de", "fr", "es", "it"],
-            },
-          ]),
+          __html: JSON.stringify(jsonLdGraph),
         }}
       />
     </SiteFrame>

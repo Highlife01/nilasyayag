@@ -1,10 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import type { Locale } from "@/lib/i18n/config"
-import { Package, Box, ArrowUpRight, Check, Sparkles } from "lucide-react"
-import type { Dict } from "@/content/types"
-import { commerceCopy, packagingLabel } from "@/content/commerce-ui"
+import { pathFor, type Locale } from "@/lib/i18n/config"
+import { Package, ShieldCheck, Box, Layers, ArrowUpRight, Check, Sparkles } from "lucide-react"
 
 interface PackagingCategory {
   id: "retail" | "horeca" | "bulk"
@@ -419,10 +417,9 @@ const CATEGORIES: PackagingCategory[] = [
   },
 ]
 
-export function PackagingMatrix({ locale, dict }: { locale: Locale; dict: Dict }) {
+export function PackagingMatrix({ locale }: { locale: Locale }) {
   const [activeTab, setActiveTab] = useState<"retail" | "horeca" | "bulk">("retail")
   const currentCategory = CATEGORIES.find((c) => c.id === activeTab) ?? CATEGORIES[0]
-  const copy = commerceCopy(locale)
 
   return (
     <section className="bg-[#f8fafc] py-24 md:py-32 border-t border-slate-200">
@@ -433,15 +430,25 @@ export function PackagingMatrix({ locale, dict }: { locale: Locale; dict: Dict }
             <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-800 border border-slate-300">
               <Box className="size-3.5 text-emerald-700" />
               <span>
-                {dict.articles.packaging.kicker}
+                {locale === "tr" ? "Esnek Lojistik ve Paketleme" : "Flexible Logistics & Packaging"}
               </span>
             </div>
             <h2 className="font-display mt-4 text-4xl font-extrabold tracking-tight text-slate-900 md:text-6xl">
-              <span className="text-emerald-gradient">{dict.articles.packaging.h1}</span>
+              {locale === "tr" ? (
+                <>
+                  0.5 Litreden 24.000 Litreye <span className="text-emerald-gradient">Global Ambalaj Matrisi</span>
+                </>
+              ) : (
+                <>
+                  From 0.5L PET to 24,000L <span className="text-emerald-gradient">Bulk Packaging Matrix</span>
+                </>
+              )}
             </h2>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-slate-600 md:text-base">
-            {dict.articles.packaging.lede}
+            {locale === "tr"
+              ? "Her pazarın ve alıcının ihtiyacına özel: Süpermarket rafları için hafif PET şişeler, profesyonel restoranlar için laklı tenekeler veya sanayi için Flexitank çözümleri."
+              : "Tailored to every market demand: Lightweight retail PET for supermarkets, foodservice lacquered tins for restaurants, or bulk flexitanks for food factories."}
           </p>
         </div>
 
@@ -490,7 +497,7 @@ export function PackagingMatrix({ locale, dict }: { locale: Locale; dict: Dict }
 
               <div>
                 <span className="font-mono text-xs font-bold tracking-widest text-emerald-700 uppercase">
-                  {packagingLabel(item.size, locale)}
+                  {item.size}
                 </span>
                 <h3 className="font-display mt-2 text-2xl font-bold text-slate-900">
                   {item.title[locale] || item.title.en}
@@ -500,7 +507,7 @@ export function PackagingMatrix({ locale, dict }: { locale: Locale; dict: Dict }
                 <div className="mt-5 space-y-2.5 rounded-2xl bg-slate-50 p-4 border border-slate-100 text-xs">
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500 font-medium">
-                      {dict.form.packaging}
+                      {locale === "tr" ? "Koli İçi Adet:" : "Packaging Unit:"}
                     </span>
                     <span className="font-bold text-slate-900">
                       {item.packing[locale] || item.packing.en}
@@ -508,18 +515,18 @@ export function PackagingMatrix({ locale, dict }: { locale: Locale; dict: Dict }
                   </div>
                   <div className="flex items-center justify-between border-t border-slate-200/60 pt-2">
                     <span className="text-slate-500 font-medium">
-                      {copy.capacity}
+                      {locale === "tr" ? "20' FCL Kapasite:" : "20' FCL Capacity:"}
                     </span>
                     <span className="font-bold text-emerald-800">
-                      {packagingLabel(item.fcl20, locale).replace(/Koli/g, copy.cartons).replace(/Tank/g, "IBC")}
+                      {item.fcl20}
                     </span>
                   </div>
                   <div className="flex items-center justify-between border-t border-slate-200/60 pt-2">
                     <span className="text-slate-500 font-medium">
-                      {copy.shelfLife}
+                      {locale === "tr" ? "Raf Ömrü:" : "Shelf Life:"}
                     </span>
                     <span className="font-bold text-slate-900">
-                      {copy.confirm}
+                      {item.shelfLife}
                     </span>
                   </div>
                 </div>
@@ -538,12 +545,10 @@ export function PackagingMatrix({ locale, dict }: { locale: Locale; dict: Dict }
               {/* Action Button */}
               <div className="mt-8 pt-4 border-t border-slate-100">
                 <a
-                  href={`mailto:export@asiaoil.com.tr?subject=${encodeURIComponent(
-                    `${dict.ui.quote}: ${packagingLabel(item.size, locale)} ${item.title[locale]}`
-                  )}`}
+                  href={pathFor(locale, "quote")}
                   className="group/btn inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-100 py-3 text-xs font-bold text-slate-800 transition duration-300 hover:bg-emerald-800 hover:text-white"
                 >
-                  <span>{dict.ui.quote}</span>
+                  <span>{locale === "tr" ? "Teklif & Numune İste" : "Request Quote & Sample"}</span>
                   <ArrowUpRight className="size-3.5 transition group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 rtl:-scale-x-100" />
                 </a>
               </div>

@@ -357,7 +357,7 @@ const tr: Dict = {
     rights: "Asia Oil",
   },
   consent: {
-    text: "Ziyaret, yalnızca izin verirseniz sayılır. Seçim bir çerezde durur. Site localStorage kullanmaz.",
+    text: "Ziyaret sayımı yalnızca izin verirseniz yapılır. Çerez tercihlerinizi istediğiniz zaman değiştirebilirsiniz.",
     accept: "Ziyaret sayımına izin ver",
     reject: "Yalnızca zorunlu",
   },

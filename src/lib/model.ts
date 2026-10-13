@@ -1,4 +1,4 @@
-import { SUPERADMIN_EMAIL, EXPORT_EMAIL } from "@/lib/site"
+import { CONTACT_PHONE, SUPERADMIN_EMAIL, EXPORT_EMAIL, WHATSAPP_NUMBER } from "@/lib/site"
 import type { InquiryStatus, Role } from "@/lib/domain"
 
 export type Note = { id: string; at: string; author: string; body: string }
@@ -70,8 +70,8 @@ export function emptyControl(now = new Date().toISOString()): Control {
       legalName: "Asia Oil",
       publicEmail: EXPORT_EMAIL,
       notifyEmail: EXPORT_EMAIL,
-      phone: "",
-      whatsapp: "",
+      phone: CONTACT_PHONE,
+      whatsapp: WHATSAPP_NUMBER,
       address: "",
       city: "",
       country: "Türkiye",
@@ -113,7 +113,7 @@ export type Repo = {
   createInquiry: (inquiry: Inquiry, audit: Audit) => Promise<void>
   setNotification: (inquiry: Inquiry, notification: Inquiry["notification"]) => Promise<void>
   getInquiry: (id: string) => Promise<Inquiry | null>
-  listInquiries: (filter?: { status?: InquiryStatus; limit?: number }) => Promise<Inquiry[]>
+  listInquiries: (filter?: { status?: InquiryStatus; limit?: number; before?: { createdAt: string; id: string } }) => Promise<Inquiry[]>
   updateInquiry: (id: string, fn: (lead: Inquiry) => Audit | null) => Promise<Inquiry | null>
   appendAudit: (audit: Audit) => Promise<void>
   recordVisit: (visit: Visit, visitorId?: string) => Promise<void>
@@ -150,7 +150,7 @@ export function normalizeSnapshot(input: (Partial<Snapshot> & LegacyStore) | nul
   }
 }
 
-const byNewest = (a: Inquiry, b: Inquiry) => (a.createdAt < b.createdAt ? 1 : -1)
+const byNewest = (a: Inquiry, b: Inquiry) => a.createdAt === b.createdAt ? (a.id < b.id ? 1 : a.id > b.id ? -1 : 0) : (a.createdAt < b.createdAt ? 1 : -1)
 
 export function createMemoryRepo(initial?: Partial<Snapshot>, persist?: (snapshot: Snapshot) => Promise<void>): Repo {
   const data = normalizeSnapshot(initial)
@@ -158,9 +158,15 @@ export function createMemoryRepo(initial?: Partial<Snapshot>, persist?: (snapsho
 
   function write<T>(fn: () => T): Promise<T> {
     const run = chain.then(async () => {
-      const result = fn()
-      if (persist) await persist(data)
-      return result
+      const previous = structuredClone(data)
+      try {
+        const result = fn()
+        if (persist) await persist(data)
+        return result
+      } catch (error) {
+        Object.assign(data, previous)
+        throw error
+      }
     })
     chain = run.then(
       () => undefined,
@@ -220,7 +226,11 @@ export function createMemoryRepo(initial?: Partial<Snapshot>, persist?: (snapsho
       return found ? structuredClone(found) : null
     },
     async listInquiries(filter) {
-      const rows = data.inquiries.filter((item) => !filter?.status || item.status === filter.status).sort(byNewest)
+      const rows = data.inquiries.filter((item) => {
+        if (filter?.status && item.status !== filter.status) return false
+        const cursor = filter?.before
+        return !cursor || item.createdAt < cursor.createdAt || (item.createdAt === cursor.createdAt && item.id < cursor.id)
+      }).sort(byNewest)
       return structuredClone(rows.slice(0, filter?.limit ?? 500))
     },
     updateInquiry(id, fn) {

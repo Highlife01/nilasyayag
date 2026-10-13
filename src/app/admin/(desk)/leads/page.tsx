@@ -26,15 +26,37 @@ const STATUS_FILTERS: { key: string; label: string; status?: InquiryStatus; colo
   { key: "lost", label: "Kaybedildi", status: "lost", color: "bg-rose-100 text-rose-800 border-rose-300" },
 ]
 
-export default async function LeadsPage({ searchParams }: { searchParams: Promise<{ status?: string }> }) {
+const PAGE_SIZE = 50
+
+function readCursor(value?: string): { createdAt: string; id: string } | undefined {
+  if (!value || value.length > 512) return undefined
+  try {
+    const parsed = JSON.parse(Buffer.from(value, "base64url").toString("utf8")) as { createdAt?: unknown; id?: unknown }
+    if (typeof parsed.createdAt !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(parsed.createdAt) || !Number.isFinite(Date.parse(parsed.createdAt))) return undefined
+    if (typeof parsed.id !== "string" || !parsed.id || parsed.id.length > 128) return undefined
+    return { createdAt: parsed.createdAt, id: parsed.id }
+  } catch {
+    return undefined
+  }
+}
+
+export default async function LeadsPage({ searchParams }: { searchParams: Promise<{ status?: string; before?: string }> }) {
   if (!(await requireUser("leads"))) redirect("/admin")
   const query = await searchParams
-  const activeStatus = query.status as InquiryStatus | undefined
-
-  const allLeads = await (await getRepo()).listInquiries({ limit: 500 })
-  const filteredLeads = activeStatus
-    ? allLeads.filter((l) => l.status === activeStatus)
-    : allLeads
+  const activeStatus = STATUS_FILTERS.find((filter) => filter.status === query.status)?.status
+  const before = readCursor(query.before)
+  const repo = await getRepo()
+  const [overview, rows] = await Promise.all([
+    repo.overview(new Date().toISOString()),
+    repo.listInquiries({ status: activeStatus, before, limit: PAGE_SIZE + 1 }),
+  ])
+  const filteredLeads = rows.slice(0, PAGE_SIZE)
+  const hasNext = rows.length > PAGE_SIZE
+  const last = filteredLeads.at(-1)
+  const nextParams = new URLSearchParams()
+  if (activeStatus) nextParams.set("status", activeStatus)
+  if (last) nextParams.set("before", Buffer.from(JSON.stringify({ createdAt: last.createdAt, id: last.id })).toString("base64url"))
+  const firstPageUrl = activeStatus ? `/admin/leads?status=${activeStatus}` : "/admin/leads"
 
   return (
     <div className="space-y-6">
@@ -55,10 +77,10 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
 
         <div className="flex items-center gap-2">
           <span className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm">
-            Toplam: <strong className="text-slate-900 font-mono">{allLeads.length}</strong>
+            Toplam: <strong className="text-slate-900 font-mono">{overview.total}</strong>
           </span>
           <span className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">
-            Yeni: <strong className="font-mono">{allLeads.filter((l) => l.status === "new").length}</strong>
+            Yeni: <strong className="font-mono">{overview.fresh}</strong>
           </span>
         </div>
       </div>
@@ -68,9 +90,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
         <Filter className="h-4 w-4 text-slate-400 mr-1" />
         {STATUS_FILTERS.map((f) => {
           const isSelected = (!activeStatus && f.key === "all") || activeStatus === f.status
-          const count = f.status
-            ? allLeads.filter((l) => l.status === f.status).length
-            : allLeads.length
+          const count = f.status === "new" ? overview.fresh : !f.status ? overview.total : null
           return (
             <Link
               key={f.key}
@@ -82,13 +102,13 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
               }`}
             >
               <span>{f.label}</span>
-              <span
+              {count !== null ? <span
                 className={`rounded-full px-1.5 py-0.2 text-[10px] font-mono ${
                   isSelected ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
                 }`}
               >
                 {count}
-              </span>
+              </span> : null}
             </Link>
           )
         })}
@@ -238,6 +258,13 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
           </div>
         ) : null}
       </div>
+      <nav aria-label="Talep sayfaları" className="flex flex-wrap items-center justify-between gap-3 text-sm">
+        <p className="text-slate-500">Bu sayfada {filteredLeads.length} talep gösteriliyor.</p>
+        <div className="flex gap-3">
+          {before ? <Link href={firstPageUrl} className="rounded-lg border border-slate-200 bg-white px-4 py-2">İlk sayfa</Link> : null}
+          {hasNext ? <Link href={`/admin/leads?${nextParams.toString()}`} className="rounded-lg bg-emerald-900 px-4 py-2 text-white">Daha eski talepler</Link> : null}
+        </div>
+      </nav>
     </div>
   )
 }

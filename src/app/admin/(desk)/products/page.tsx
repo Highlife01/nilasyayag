@@ -29,7 +29,7 @@ export default async function ProductsAdminPage() {
         { size: "18 Litre", type: "Gıdaya Uygun Teneke", carton: "Tekli Shrink", pallet: "33 teneke/palet" },
         { size: "22.000 Litre", type: "Flexitank / Dökme", carton: "20ft Konteyner İçine", pallet: "Tek parça dökme" },
       ],
-      image: "/media/hero/1.png",
+      image: "/media/hero/1.webp",
       status: "Zirve Sezon & Aktif Sevkiyat",
     },
     {
@@ -49,7 +49,7 @@ export default async function ProductsAdminPage() {
         { size: "3 Litre & 5 Litre", type: "Litolojili Teneke", carton: "4 adet/koli", pallet: "40 koli/palet" },
         { size: "200 Litre & IBC", type: "Gıda Varili / 1000L IBC", carton: "Endüstriyel", pallet: "4 varil/palet" },
       ],
-      image: "/media/hero/3.png",
+      image: "/media/hero/3.webp",
       status: "Yeni Hasat & Soğuk Sıkım",
     },
   ]

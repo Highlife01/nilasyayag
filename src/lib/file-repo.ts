@@ -8,15 +8,20 @@ export function createFileRepo(filePath: string): Repo {
   async function save(snapshot: Snapshot) {
     await mkdir(path.dirname(filePath), { recursive: true })
     const temp = `${filePath}.${process.pid}.tmp`
-    await writeFile(temp, JSON.stringify(snapshot), "utf8")
+    await writeFile(temp, JSON.stringify(snapshot), { encoding: "utf8", mode: 0o600 })
     await rename(temp, filePath)
   }
 
   async function load(): Promise<Repo> {
     let initial: Snapshot
     try {
-      initial = normalizeSnapshot(JSON.parse(await readFile(filePath, "utf8")))
-    } catch {
+      const parsed: unknown = JSON.parse(await readFile(filePath, "utf8"))
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        throw new Error("The runtime data file must contain an object")
+      }
+      initial = normalizeSnapshot(parsed)
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error
       initial = normalizeSnapshot(null)
     }
     return createMemoryRepo(initial, save)

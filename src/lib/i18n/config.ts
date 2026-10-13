@@ -191,12 +191,23 @@ export function isLocale(value: string): value is Locale {
 
 export function preferredLocale(header: string | null): Locale {
   if (!header) return "en"
-  const parts = header.split(",").map((part) => part.split(";")[0]?.trim().toLowerCase() ?? "")
-  for (const part of parts) {
-    const base = part.split("-")[0]
-    if (base && isLocale(base)) return base
+  const ranges = header.split(",").flatMap((part, index) => {
+    const [language, ...parameters] = part.trim().toLowerCase().split(";")
+    const qualityParameter = parameters.map((value) => value.trim()).find((value) => value.startsWith("q="))
+    const rawQuality = qualityParameter?.slice(2).trim()
+    if (rawQuality !== undefined && !/^(?:0(?:\.\d{0,3})?|1(?:\.0{0,3})?)$/.test(rawQuality)) return []
+    return [{ language: language?.trim().split("-")[0] ?? "", quality: rawQuality === undefined ? 1 : Number(rawQuality), index }]
+  })
+  const excluded = new Set(ranges.filter((range) => range.quality === 0).map((range) => range.language))
+  const fallback = PUBLISHED_LOCALES.find((locale) => locale === "en" && !excluded.has(locale))
+    ?? PUBLISHED_LOCALES.find((locale) => !excluded.has(locale))
+    ?? "en"
+  for (const range of ranges.sort((a, b) => b.quality - a.quality || a.index - b.index)) {
+    if (range.quality === 0) continue
+    if (isLocale(range.language)) return range.language
+    if (range.language === "*") return fallback
   }
-  return "en"
+  return fallback
 }
 
 export function slugFor(locale: Locale, page: Exclude<StaticPage, "home">) {

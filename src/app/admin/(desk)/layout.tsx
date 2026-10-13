@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { can, type Action } from "@/lib/domain"
-import { logoutAction } from "@/server/admin-actions"
+import { LogoutForm } from "./_components/logout-form"
 import { readSession } from "@/server/session"
 import {
   LayoutDashboard,
@@ -11,7 +11,6 @@ import {
   Globe,
   FileText,
   Settings as SettingsIcon,
-  LogOut,
   ExternalLink,
   ShieldCheck,
   Building2,
@@ -114,15 +113,7 @@ export default async function DeskLayout({ children }: { children: React.ReactNo
               <ExternalLink className="h-3 w-3" />
             </a>
 
-            <form action={logoutAction}>
-              <button
-                type="submit"
-                className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-rose-400 hover:bg-rose-950/40 hover:text-rose-300 transition"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                <span>Çıkış</span>
-              </button>
-            </form>
+            <LogoutForm />
           </div>
         </div>
       </aside>

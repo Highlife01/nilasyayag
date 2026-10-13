@@ -3,6 +3,8 @@
 import { useState } from "react"
 import type { Locale } from "@/lib/i18n/config"
 import { Sprout, Factory, Flame, Sparkles, Ship, CheckCircle2, ArrowRight } from "lucide-react"
+import type { Dict } from "@/content/types"
+import { commerceCopy } from "@/content/commerce-ui"
 
 interface Stage {
   number: string
@@ -302,10 +304,11 @@ const STAGES: Stage[] = [
   },
 ]
 
-export function ProductionPipeline({ locale }: { locale: Locale }) {
+export function ProductionPipeline({ locale, dict }: { locale: Locale; dict: Dict }) {
   const [activeStage, setActiveStage] = useState(0)
   const current = STAGES[activeStage]
   const Icon = current.icon
+  const copy = commerceCopy(locale)
 
   return (
     <section className="bg-white py-24 md:py-32 border-t border-slate-200">
@@ -316,25 +319,15 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
             <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 text-xs font-semibold text-emerald-800 border border-emerald-200">
               <Factory className="size-3.5 text-emerald-600" />
               <span>
-                {locale === "tr" ? "Tohumdan Sofraya Entegre Rafinasyon" : "Integrated Seed-to-Table Refining"}
+                {dict.home.processKicker}
               </span>
             </div>
             <h2 className="font-display mt-4 text-4xl font-extrabold tracking-tight text-slate-900 md:text-6xl">
-              {locale === "tr" ? (
-                <>
-                  5 Aşamalı Üretim & <span className="text-emerald-gradient">Global İhracat Döngüsü</span>
-                </>
-              ) : (
-                <>
-                  5-Stage Refining & <span className="text-emerald-gradient">Global Maritime Delivery</span>
-                </>
-              )}
+              <span className="text-emerald-gradient">{dict.home.processTitle}</span>
             </h2>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-slate-600 md:text-base">
-            {locale === "tr"
-              ? "Tohum seçiminden liman sevkiyatına kadar her adım tam entegre, akredite laboratuvar onaylı ve uluslararası gıda güvenliği standartlarına tam uyumlu yürütülür."
-              : "From seed selection to deep-sea maritime dispatch, every stage operates under strict laboratory surveillance and international food safety accreditations."}
+            {dict.pages.quality.lede}
           </p>
         </div>
 
@@ -356,7 +349,7 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
               >
                 <div className="flex items-center justify-between">
                   <span className={`font-mono text-xs font-bold tracking-wider ${isSelected ? "text-emerald-800" : "text-slate-400"}`}>
-                    STAGE {s.number}
+                    {copy.stage} {s.number}
                   </span>
                   <SIcon className={`size-4 transition duration-300 ${isSelected ? "text-emerald-600" : "text-slate-400 group-hover:text-emerald-600"}`} />
                 </div>
@@ -378,7 +371,7 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
             <div className="lg:col-span-8">
               <div className="flex items-center gap-3">
                 <span className="inline-flex items-center gap-2 rounded-full bg-emerald-800 px-3.5 py-1 text-xs font-mono font-bold tracking-widest text-white">
-                  AŞAMA {current.number} / 05
+                  {copy.stage} {current.number} / 05
                 </span>
                 <span className="text-xs font-semibold text-emerald-800 tracking-wide">
                   {current.tagline[locale] || current.tagline.en}
@@ -390,12 +383,12 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
               </h3>
 
               <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">
-                {current.description[locale] || current.description.en}
+                {activeStage === 4 ? dict.pages.trade.lede : current.description[locale]}
               </p>
 
               {/* Key Bullet Points */}
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                {(current.points[locale] || current.points.en).map((pt, i) => (
+                {(activeStage === 4 ? [dict.ui.shipsFromValue, dict.pages.trade.kicker, copy.verification] : current.points[locale]).map((pt, i) => (
                   <div
                     key={i}
                     className="flex items-start gap-2.5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
@@ -416,19 +409,19 @@ export function ProductionPipeline({ locale }: { locale: Locale }) {
               </div>
 
               <div className="mt-6 font-display text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
-                <span className="text-emerald-800">{current.metric.value}</span>
+                <span className="text-emerald-800">{activeStage === 4 ? "FOB / CIF" : activeStage === 3 ? copy.confirm : current.metric.value}</span>
               </div>
               <p className="mt-1 text-xs font-bold tracking-wider uppercase text-slate-500">
-                {current.metric.label[locale] || current.metric.label.en}
+                {activeStage === 4 ? dict.nav.trade : current.metric.label[locale]}
               </p>
 
               <a
                 href={`mailto:export@asiaoil.com.tr?subject=${encodeURIComponent(
-                  `Inquiry about Stage ${current.number} Specifications`
+                  `${copy.documents}: ${copy.stage} ${current.number}`
                 )}`}
                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-800 py-3 text-xs font-bold text-white transition duration-300 hover:bg-emerald-900 shadow-md shadow-emerald-950/10"
               >
-                <span>{locale === "tr" ? "Teknik Rapor Talep Et" : "Request Spec Sheet"}</span>
+                <span>{copy.documents}</span>
                 <ArrowRight className="size-3.5 rtl:-scale-x-100" />
               </a>
             </div>

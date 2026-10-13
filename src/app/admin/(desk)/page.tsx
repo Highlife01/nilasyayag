@@ -1,6 +1,9 @@
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { getRepo } from "@/server/runtime"
+import { requireUser } from "@/server/session"
+import { can } from "@/lib/domain"
 import type { Inquiry } from "@/lib/model"
 import {
   Inbox,
@@ -19,12 +22,26 @@ export const metadata = {
 }
 
 export default async function OverviewPage() {
+  const user = await requireUser("analytics")
+  if (!user) redirect("/admin/login")
+  if (!can(user.role, "leads")) {
+    return (
+      <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-7">
+        <h1 className="font-display text-3xl font-bold">Yönetim paneli</h1>
+        <p className="text-sm text-slate-600">Rolünüzün izin verdiği bölümlere sol menüden ulaşabilirsiniz. Talep kayıtları CRM yetkisi olan ekip üyelerine açıktır.</p>
+        {can(user.role, "seo") ? <Link href="/admin/seo" className="inline-block text-sm font-semibold text-emerald-800 underline">SEO ve dil sayfaları</Link> : null}
+      </section>
+    )
+  }
   const repo = await getRepo()
-  const inquiries: Inquiry[] = await repo.listInquiries({ limit: 1000 })
+  const since = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10) + "T00:00:00.000Z"
+  const [overview, inquiries] = await Promise.all([repo.overview(since), repo.listInquiries({ limit: 1000 })])
 
   // Metrics
-  const totalCount = inquiries.length
-  const newCount = inquiries.filter((i: Inquiry) => i.status === "new").length
+  const totalCount = overview.total
+  const newCount = overview.fresh
+  const sampleCount = inquiries.length
+  const sampleLabel = sampleCount < totalCount ? `Son ${sampleCount.toLocaleString("tr-TR")} kayıt` : "Tüm kayıtlar"
   const inProgressCount = inquiries.filter((i: Inquiry) => i.status === "contacted" || i.status === "quoted").length
   const wonCount = inquiries.filter((i: Inquiry) => i.status === "won").length
   const uniqueCountries = new Set(inquiries.map((i: Inquiry) => i.country).filter(Boolean))
@@ -52,7 +69,7 @@ export default async function OverviewPage() {
               <span>Asia Oil Executive Control Center</span>
             </div>
             <h1 className="font-display mt-3 text-3xl md:text-4xl font-bold tracking-tight text-[#fbf9f4]">
-              Hoş Geldiniz, Cebrail Bey
+              Hoş Geldiniz
             </h1>
             <p className="mt-1.5 max-w-2xl text-sm text-slate-300 font-light leading-relaxed">
               Ayçiçek yağı ve natürel sızma zeytinyağı toptan ihracat talepleri, 8 dilli B2B portalı üzerinden gelen teklifler ve Mersin Limanı konteyner sevkiyat kontrolü aktif durumda.
@@ -112,7 +129,7 @@ export default async function OverviewPage() {
             <span className="text-xs text-slate-500 font-medium">aktif süreç</span>
           </div>
           <p className="mt-2 text-xs text-slate-500">
-            {wonCount} kazanılan sevkiyat sözleşmesi
+            {wonCount} kazanılan talep · {sampleLabel}
           </p>
         </div>
 
@@ -128,12 +145,12 @@ export default async function OverviewPage() {
           </div>
           <div className="mt-3 flex items-baseline gap-2">
             <span className="font-display text-4xl font-bold text-slate-900">
-              {Math.max(uniqueCountries.size, 1)}
+              {uniqueCountries.size}
             </span>
             <span className="text-xs text-emerald-600 font-medium">Global Alıcı</span>
           </div>
           <p className="mt-2 text-xs text-slate-500">
-            Orta Doğu, Avrupa, Afrika & Asya
+            {sampleLabel} içindeki alıcı ülkeleri
           </p>
         </div>
 
@@ -233,7 +250,7 @@ export default async function OverviewPage() {
         <div className="space-y-6">
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-base font-bold text-slate-900">Ürün Talep Dağılımı</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Alıcıların odaklandığı amiral gruplar</p>
+            <p className="text-xs text-slate-500 mt-0.5">{sampleLabel} içindeki ürün ilgisi</p>
 
             <div className="mt-5 space-y-4">
               <div>
@@ -244,7 +261,7 @@ export default async function OverviewPage() {
                 <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
                   <div
                     className="h-full bg-amber-500 rounded-full"
-                    style={{ width: `${totalCount ? Math.max(15, (sunflowerCount / totalCount) * 100) : 60}%` }}
+                    style={{ width: `${sampleCount ? (sunflowerCount / sampleCount) * 100 : 0}%` }}
                   />
                 </div>
               </div>
@@ -257,15 +274,15 @@ export default async function OverviewPage() {
                 <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
                   <div
                     className="h-full bg-emerald-600 rounded-full"
-                    style={{ width: `${totalCount ? Math.max(15, (oliveCount / totalCount) * 100) : 40}%` }}
+                    style={{ width: `${sampleCount ? (oliveCount / sampleCount) * 100 : 0}%` }}
                   />
                 </div>
               </div>
             </div>
 
             <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-              <span>Ambalaj lideri:</span>
-              <span className="font-bold text-slate-800">5L Pet & 18L Teneke</span>
+              <span>Veri kapsamı:</span>
+              <span className="font-bold text-slate-800">{sampleLabel}</span>
             </div>
           </div>
 
@@ -287,7 +304,7 @@ export default async function OverviewPage() {
         <div className="flex items-center justify-between pb-3">
           <div>
             <h2 className="text-base font-bold text-slate-900">Haftalık B2B Talep Trafiği</h2>
-            <p className="text-xs text-slate-500">Son 7 günlük teklif ve mesaj alma sıklığı</p>
+            <p className="text-xs text-slate-500">Son 7 günlük teklif ve mesaj alma sıklığı · {sampleLabel}</p>
           </div>
           <span className="text-xs font-mono font-semibold text-slate-400">Canlı Metrik</span>
         </div>

@@ -100,7 +100,8 @@ export async function authenticate(email: string, password: string, otp: string)
   if (!user) return { ok: false as const, reason: "credentials" as const }
   const role: Role = normalized === SUPERADMIN_EMAIL ? "superadmin" : user.role
 
-  if (control.mfa.enabled && control.mfa.secret) {
+  if (control.mfa.enabled) {
+    if (!control.mfa.secret) throw new Error("MFA is enabled without a configured secret")
     const totp = new OTPAuth.TOTP({
       issuer: "Nilasya",
       label: SUPERADMIN_EMAIL,
@@ -115,13 +116,29 @@ export async function authenticate(email: string, password: string, otp: string)
 
   const now = new Date()
   const sid = crypto.randomUUID()
+  const token = await signSession(normalized, role, control.sessionVersion, sid)
   await repo.createSession({
     id: sid,
     email: normalized,
     createdAt: now.toISOString(),
     expiresAt: new Date(now.getTime() + MAX_AGE * 1000).toISOString(),
   })
-  const token = await signSession(normalized, role, control.sessionVersion, sid)
+  try {
+    await repo.appendAudit({
+      id: crypto.randomUUID(),
+      at: now.toISOString(),
+      actor: normalized,
+      action: "auth.login",
+      detail: role,
+    })
+  } catch (error) {
+    try {
+      await repo.deleteSession(sid)
+    } catch {
+      console.warn("The failed login session could not be removed; no session cookie was issued.")
+    }
+    throw error
+  }
   const jar = await cookies()
   jar.set(COOKIE, token, sessionCookieOptions())
   return { ok: true as const, role }
@@ -130,14 +147,16 @@ export async function authenticate(email: string, password: string, otp: string)
 export async function endSession() {
   const jar = await cookies()
   const token = jar.get(COOKIE)?.value
-  jar.set(COOKIE, "", { ...sessionCookieOptions(), maxAge: 0 })
-  if (!token) return
-  try {
-    const { sid } = await verify(token)
+  if (token) {
+    let sid: string | undefined
+    try {
+      sid = (await verify(token)).sid
+    } catch {
+      // An unverifiable token has nothing stored to revoke.
+    }
     if (sid) await (await getRepo()).deleteSession(sid)
-  } catch {
-    // An unverifiable token has nothing stored to revoke.
   }
+  jar.set(COOKIE, "", { ...sessionCookieOptions(), maxAge: 0 })
 }
 
 export { COOKIE }

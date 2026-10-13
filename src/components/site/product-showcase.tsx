@@ -3,7 +3,10 @@
 import { useState } from "react"
 import Image from "next/image"
 import type { Locale } from "@/lib/i18n/config"
-import { Droplet, Award, ArrowUpRight, Check, Sparkles, ShieldCheck, Flame, Scale } from "lucide-react"
+import { Droplet, ArrowUpRight, Check, Sparkles, ShieldCheck } from "lucide-react"
+import type { Dict } from "@/content/types"
+import { commerceCopy, packagingLabel } from "@/content/commerce-ui"
+import { WHATSAPP_URL } from "@/lib/site"
 
 interface Product {
   id: string
@@ -231,8 +234,8 @@ const PRODUCTS: Product[] = [
     },
     specs: [
       { label: { tr: "Doymamış Yağ Asidi", en: "Monounsaturated Fats", ar: "الدهون الأحادية غير المشبعة", ru: "Мононенасыщенные жиры", de: "Einfach ungesättigte Fette", fr: "Acides gras mono-insaturés", es: "Grasas monoinsaturadas", it: "Grassi monoinsaturi" }, val: "> %60" },
-      { label: { tr: "Trans Yağ Oranı", en: "Trans-Fat Content", ar: "الدهون المتحولة", ru: "Трансжиры", de: "Transfettsäuren", fr: "Acides gras trans", es: "Grasas trans", it: "Grassi trans" }, val: "%0.00 (Sıfır)" },
-      { label: { tr: "Kızartma Döngüsü", en: "Frying Lifespan", ar: "دورة استخدام القلي", ru: "Ресурс жарки", de: "Frittierzyklen", fr: "Cycles de friture", es: "Ciclos de fritura", it: "Cicli di frittura" }, val: "2X Uzun Ömür" },
+      { label: { tr: "Trans Yağ Oranı", en: "Trans-Fat Content", ar: "الدهون المتحولة", ru: "Трансжиры", de: "Transfettsäuren", fr: "Acides gras trans", es: "Grasas trans", it: "Grassi trans" }, val: "0.00%" },
+      { label: { tr: "Kızartma Döngüsü", en: "Frying Lifespan", ar: "دورة استخدام القلي", ru: "Ресурс жарки", de: "Frittierzyklen", fr: "Cycles de friture", es: "Ciclos de fritura", it: "Cicli di frittura" }, val: "2×" },
       { label: { tr: "Duman Noktası", en: "Smoke Point", ar: "نقطة الدخان", ru: "Точка дымления", de: "Rauchpunkt", fr: "Point de fumée", es: "Punto de humo", it: "Punto di fumo" }, val: "238°C" },
     ],
     packages: ["18L Teneke", "200L Varil", "1.000L IBC Tank", "24.000L Flexitank"],
@@ -243,9 +246,10 @@ const PRODUCTS: Product[] = [
   },
 ]
 
-export function ProductShowcase({ locale }: { locale: Locale }) {
+export function ProductShowcase({ locale, dict }: { locale: Locale; dict: Dict }) {
   const [selectedProduct, setSelectedProduct] = useState<string>("sunflower")
   const current = PRODUCTS.find((p) => p.id === selectedProduct) ?? PRODUCTS[0]
+  const copy = commerceCopy(locale)
 
   return (
     <section id="products-catalog" className="bg-[#fcfbf9] py-24 md:py-32 border-t border-slate-200/80">
@@ -256,25 +260,15 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
             <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100/80 px-4 py-1.5 text-xs font-semibold text-emerald-900 border border-emerald-300">
               <Droplet className="size-3.5 text-emerald-700" />
               <span>
-                {locale === "tr" ? "İhracat Ürün Portföyümüz" : "Global Export Product Line"}
+                {dict.home.collectionsKicker}
               </span>
             </div>
             <h2 className="font-display mt-4 text-4xl font-extrabold tracking-tight text-slate-900 md:text-6xl">
-              {locale === "tr" ? (
-                <>
-                  Uluslararası Standartlarda <span className="text-emerald-gradient">Bitkisel Sıvı Yağlar</span>
-                </>
-              ) : (
-                <>
-                  International Grade <span className="text-emerald-gradient">Edible Vegetable Oils</span>
-                </>
-              )}
+              <span className="text-emerald-gradient">{dict.home.collectionsTitle}</span>
             </h2>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-slate-600 md:text-base">
-            {locale === "tr"
-              ? "Akredite laboratuvar analizleri, gıda güvenliği sertifikaları ve esnek ambalaj opsiyonlarıyla toptan konteyner ve dökme ihracata hazır ürünlerimiz."
-              : "Ready for global FCL container and bulk maritime export with accredited laboratory certificates, food safety audits, and flexible packaging options."}
+            {dict.pages.wholesale.lede}
           </p>
         </div>
 
@@ -346,7 +340,7 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
                 {/* Laboratory Specs Grid */}
                 <div className="mt-8">
                   <h4 className="text-xs font-bold tracking-wider uppercase text-slate-400">
-                    {locale === "tr" ? "Laboratuvar ve Kalite Spesifikasyonları" : "Laboratory & Technical Specs"}
+                    {dict.ui.specifications}
                   </h4>
                   <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {current.specs.map((s, idx) => (
@@ -368,7 +362,7 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
                 {/* Packaging Formats Available */}
                 <div className="mt-6">
                   <h4 className="text-xs font-bold tracking-wider uppercase text-slate-400">
-                    {locale === "tr" ? "Mevcut Ambalaj Formatları" : "Available Packaging Units"}
+                    {dict.form.packaging}
                   </h4>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {current.packages.map((pkg, pIdx) => (
@@ -377,7 +371,7 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
                         className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm"
                       >
                         <Check className="size-3 text-emerald-600" />
-                        {pkg}
+                        {packagingLabel(pkg, locale)}
                       </span>
                     ))}
                   </div>
@@ -388,22 +382,22 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
               <div className="mt-10 flex flex-wrap items-center gap-4 pt-6 border-t border-slate-100">
                 <a
                   href={`mailto:export@asiaoil.com.tr?subject=${encodeURIComponent(
-                    `FOB/CIF Quotation Request: ${current.title.en} (${current.hsCode})`
+                    `${dict.ui.quote}: ${current.title[locale]} (${current.hsCode})`
                   )}`}
                   className="btn-shine inline-flex h-12 items-center gap-2.5 rounded-xl bg-emerald-800 px-7 text-sm font-semibold text-white transition hover:bg-emerald-900 shadow-md shadow-emerald-950/20"
                 >
-                  <span>{locale === "tr" ? "Resmi Fiyat Teklifi Al" : "Request Official Quote"}</span>
+                  <span>{dict.ui.quote}</span>
                   <ArrowUpRight className="size-4 rtl:-scale-x-100" />
                 </a>
 
                 <a
-                  href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20information%20about%20edible%20oils"
+                  href={`${WHATSAPP_URL}?text=${encodeURIComponent(`${dict.ui.quote}: ${current.title[locale]}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex h-12 items-center gap-2.5 rounded-xl border border-emerald-300 bg-emerald-50/70 px-6 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-100"
                 >
                   <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>WhatsApp B2B Desk</span>
+                  <span>WhatsApp · {dict.nav.contact}</span>
                 </a>
               </div>
             </div>
@@ -412,7 +406,7 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
             <div className="relative min-h-[320px] bg-slate-900 lg:col-span-5">
               <Image
                 src={current.image}
-                alt={current.title.en}
+                alt={current.title[locale]}
                 fill
                 className="object-cover"
                 sizes="(min-width: 1024px) 40vw, 100vw"
@@ -424,13 +418,11 @@ export function ProductShowcase({ locale }: { locale: Locale }) {
                 <div className="flex items-center gap-2 text-amber-400">
                   <ShieldCheck className="size-5" />
                   <span className="text-xs font-bold uppercase tracking-wider">
-                    {locale === "tr" ? "Mersin Liman Yükleme Garantisi" : "Mersin Port Dispatch Guarantee"}
+                    {dict.pages.quality.kicker}
                   </span>
                 </div>
                 <p className="mt-2 text-xs text-white/80 leading-relaxed">
-                  {locale === "tr"
-                    ? "Tüm siparişler EUR.1 belgesi, Menşe Şahadetnamesi ve SGS / Bureau Veritas gözetiminde mühürlü teslim edilir."
-                    : "All shipments dispatched with EUR.1, Certificate of Origin, and optional independent SGS pre-shipment survey."}
+                  {copy.verification}
                 </p>
               </div>
             </div>

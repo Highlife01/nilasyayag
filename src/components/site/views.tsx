@@ -1,6 +1,6 @@
 import Image from "next/image"
 import type { CSSProperties } from "react"
-import { ArrowRight, ArrowUpRight, Plus, Phone, Ship, CheckCircle2, ShieldCheck, Sparkles } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Plus, Phone } from "lucide-react"
 import { ARTICLE_IDS } from "@/content/index"
 import type { Dict, PageCopy } from "@/content/types"
 import { pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
@@ -17,6 +17,9 @@ import { PackagingMatrix } from "@/components/site/packaging-matrix"
 import { CertificationsStrip } from "@/components/site/certifications-strip"
 import { BRAND_NAME, Mark, Wordmark } from "@/components/site/chrome"
 import type { Settings } from "@/lib/model"
+import type { QuotePrefill } from "@/lib/quote"
+import { commerceCopy } from "@/content/commerce-ui"
+import { WHATSAPP_URL } from "@/lib/site"
 
 const container = "mx-auto max-w-7xl px-5 md:px-10"
 const goldButton = "btn-shine group inline-flex h-14 items-center gap-3 bg-gold-light text-sm font-medium tracking-wide text-ink transition hover:bg-[#f0dba6]"
@@ -56,7 +59,6 @@ function Kicker({ children, tone = "dark" }: { children: string; tone?: "dark" |
 }
 
 export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict; frames: Frame[] }) {
-  const cover = frames[frames.length - 1]
   const posters = frames.slice(0, -1)
   const lead = dict.hero[0]
   const [titleStart, titleEnd] = splitTitle(lead?.title ?? dict.nav.home)
@@ -99,9 +101,7 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
             </span>
             <span className="font-bold tracking-wide uppercase">
-              {locale === "tr"
-                ? "Canlı İhracat Masası • Mersin Port (MIP) & İzmir Limanı"
-                : "Live Export Desk • Mersin Port (MIP) & İzmir Seaport"}
+              {dict.ui.shipsFrom} · {dict.ui.shipsFromValue}
             </span>
           </div>
 
@@ -126,13 +126,13 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
               <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
             </a>
             <a
-              href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20a%20B2B%20quotation"
+              href={`${WHATSAPP_URL}?text=${encodeURIComponent(dict.ui.quote)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-13 items-center gap-2.5 rounded-2xl border border-emerald-300 bg-white px-7 text-sm font-bold text-emerald-900 shadow-sm transition hover:bg-emerald-50"
             >
               <Phone className="size-4 text-emerald-600" />
-              <span>WhatsApp B2B Desk</span>
+              <span>WhatsApp · {dict.nav.contact}</span>
             </a>
             <a
               href="#products-catalog"
@@ -144,6 +144,7 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
 
           {/* Master Visual Hero Centerpiece Showcase */}
           <HeroBanner
+            dict={dict}
             locale={locale}
             labels={{
               previous: dict.ui.previous,
@@ -160,7 +161,7 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
       <StatsStrip locale={locale} />
 
       {/* Flagship Products Showcase with Specifications & Formats */}
-      <ProductShowcase locale={locale} />
+      <ProductShowcase locale={locale} dict={dict} />
 
       <div className="marquee-mask overflow-hidden border-y border-gold/20 bg-paper py-5" aria-hidden="true">
         <div className="marquee flex w-max gap-12 whitespace-nowrap">
@@ -212,28 +213,24 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
       </section>
 
       {/* 5-Stage Integrated Seed-to-Port Production Pipeline */}
-      <ProductionPipeline locale={locale} />
+      <ProductionPipeline locale={locale} dict={dict} />
 
       {/* Comprehensive Packaging Solutions Matrix */}
-      <PackagingMatrix locale={locale} />
+      <PackagingMatrix locale={locale} dict={dict} />
 
       {/* Modern B2B Volume & Export Estimator Section */}
       <section className="bg-paper py-20 border-t border-gold/15">
         <div className={container}>
           <div className="reveal mb-10 max-w-2xl">
-            <Kicker>{locale === "tr" ? "İhracat Planlama" : "Export Planning"}</Kicker>
+            <Kicker>{dict.home.processKicker}</Kicker>
             <h2 className="font-display mt-4 text-4xl leading-tight md:text-5xl">
-              {locale === "tr"
-                ? "Konteyner ve Sevkiyatınızı Şimdi Yapılandırın"
-                : "Configure Your Container & Shipment Now"}
+              {commerceCopy(locale).configure}
             </h2>
             <p className="mt-3 text-base text-[#5c574e]">
-              {locale === "tr"
-                ? "Dilediğiniz ambalaj ve konteyner hacmini belirleyin; Mersin Limanı çıkışlı FOB veya CIF teslimat için tek tıkla resmi teklif isteyin."
-                : "Select your desired packaging and container volume; request an official FOB or CIF quotation dispatched from Mersin Port in one click."}
+              {commerceCopy(locale).configLede}
             </p>
           </div>
-          <QuoteCalculator locale={locale} />
+          <QuoteCalculator locale={locale} dict={dict} />
         </div>
       </section>
 
@@ -465,14 +462,14 @@ export function StandardPage({
   page,
   settings,
   issuedAt,
-  product,
+  prefill,
 }: {
   locale: Locale
   dict: Dict
   page: Exclude<StaticPage, "home" | "insights">
   settings: Settings
   issuedAt: number
-  product?: string
+  prefill?: QuotePrefill
 }) {
   const copy = page === "faq" ? dict.faq : page === "privacy" ? dict.privacy : dict.pages[page]
   const image =
@@ -505,7 +502,7 @@ export function StandardPage({
             </aside>
             <div className="border border-[#e6dcc6] bg-white p-6 shadow-[0_40px_100px_-60px_rgba(18,26,13,0.5)] md:p-12">
               {page === "quote" ? (
-                <InquiryForm dict={dict} locale={locale} formType="rfq" product={product} issuedAt={issuedAt} />
+                <InquiryForm dict={dict} locale={locale} formType="rfq" prefill={prefill} issuedAt={issuedAt} />
               ) : (
                 <InquiryForm dict={dict} locale={locale} formType="contact" issuedAt={issuedAt} />
               )}

@@ -2,10 +2,17 @@
   "hosting": {
     "site": "nilasyayag",
     "source": ".",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
     "frameworksBackend": {
       "region": "europe-west1",
       "memory": "1GiB"
     }
+  },
+  "firestore": {
+    "indexes": "firestore.indexes.json"
   }
 }

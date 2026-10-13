@@ -5,9 +5,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       { userAgent: "*", allow: "/", disallow: ["/admin", "/admin/", "/api", "/api/"] },
-      { userAgent: "GPTBot", allow: ["/", "/llms.txt"], disallow: ["/admin"] },
-      { userAgent: "ClaudeBot", allow: ["/", "/llms.txt"], disallow: ["/admin"] },
-      { userAgent: "PerplexityBot", allow: ["/", "/llms.txt"], disallow: ["/admin"] },
+      { userAgent: ["GPTBot", "ClaudeBot", "PerplexityBot", "CCBot"], allow: ["/", "/llms.txt"], disallow: ["/admin", "/api"] },
     ],
     sitemap: `${siteUrl()}/sitemap.xml`,
     host: siteUrl(),

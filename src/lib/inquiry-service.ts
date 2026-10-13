@@ -4,7 +4,7 @@ import type { Inquiry, Repo } from "@/lib/model"
 
 export type SubmitResult =
   | { ok: true; id: string }
-  | { ok: false; code: "invalid" | "fast" | "stale" | "rate" | "locale"; fields?: Record<string, string> }
+  | { ok: false; code: "invalid" | "fast" | "stale" | "rate" | "locale" | "unavailable"; fields?: Record<string, string> }
 
 const HOUR = 60 * 60 * 1000
 
@@ -37,11 +37,15 @@ export async function submitInquiry(
 
   const ipHash = sha(ctx.ip || "unknown", ctx.salt)
   const emailHash = sha(value.email.toLowerCase(), ctx.salt)
-  const withinLimits =
-    (await repo.consumeRate(`inquiry:ip:${ipHash}`, INQUIRY_LIMITS.perIp, HOUR, ctx.now)) &&
-    (await repo.consumeRate(`inquiry:email:${emailHash}`, INQUIRY_LIMITS.perEmail, HOUR, ctx.now)) &&
-    (await repo.consumeRate("inquiry:site", INQUIRY_LIMITS.site, HOUR, ctx.now))
-  if (!withinLimits) return { ok: false, code: "rate" }
+  try {
+    const withinLimits =
+      (await repo.consumeRate(`inquiry:ip:${ipHash}`, INQUIRY_LIMITS.perIp, HOUR, ctx.now)) &&
+      (await repo.consumeRate(`inquiry:email:${emailHash}`, INQUIRY_LIMITS.perEmail, HOUR, ctx.now)) &&
+      (await repo.consumeRate("inquiry:site", INQUIRY_LIMITS.site, HOUR, ctx.now))
+    if (!withinLimits) return { ok: false, code: "rate" }
+  } catch {
+    return { ok: false, code: "unavailable" }
+  }
 
   const country = value.country === "OTHER" ? value.countryOther.trim() : value.country
   const createdAt = new Date(ctx.now).toISOString()
@@ -71,14 +75,29 @@ export async function submitInquiry(
     history: [{ at: createdAt, status: "new", actor: "website" }],
   }
 
-  await repo.createInquiry(inquiry, {
-    id: crypto.randomUUID(),
-    at: createdAt,
-    actor: "website",
-    action: "inquiry.create",
-    detail: `${inquiry.collection}:${inquiry.id}:${inquiry.company}`,
-  })
+  try {
+    await repo.createInquiry(inquiry, {
+      id: crypto.randomUUID(),
+      at: createdAt,
+      actor: "website",
+      action: "inquiry.create",
+      detail: `${inquiry.collection}:${inquiry.id}:${inquiry.company}`,
+    })
+  } catch {
+    return { ok: false, code: "unavailable" }
+  }
 
-  await repo.setNotification(inquiry, await ctx.notify(inquiry))
+  let notification: Inquiry["notification"]
+  try {
+    notification = await ctx.notify(inquiry)
+  } catch {
+    notification = { status: "failed", detail: "The notification failed. The inquiry is saved." }
+  }
+  try {
+    await repo.setNotification(inquiry, notification)
+  } catch {
+    // The inquiry is already durable. Asking the visitor to retry would create a duplicate.
+    console.warn("The inquiry is saved, but its notification status could not be updated.")
+  }
   return { ok: true, id: inquiry.id }
 }

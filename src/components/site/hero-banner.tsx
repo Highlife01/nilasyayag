@@ -2,11 +2,13 @@
 
 import Image from "next/image"
 import { useState, useEffect, useRef, useSyncExternalStore } from "react"
-import { ChevronLeft, ChevronRight, Pause, Play, Ship, Sparkles, Heart, Globe, Package, Award, Leaf } from "lucide-react"
+import { ChevronLeft, ChevronRight, Pause, Play, Ship, Sparkles, Globe, Package, Award, Leaf } from "lucide-react"
 import type { Locale } from "@/lib/i18n/config"
+import type { Dict } from "@/content/types"
 
 type HeroBannerProps = {
   locale: Locale
+  dict: Dict
   labels: {
     previous: string
     next: string
@@ -29,38 +31,32 @@ function getPrefersReducedMotion() {
   return window.matchMedia(MOTION_QUERY).matches
 }
 
-export function HeroBanner({ locale, labels }: HeroBannerProps) {
+export function HeroBanner({ dict, labels }: HeroBannerProps) {
   const [active, setActive] = useState(0)
   const [playing, setPlaying] = useState(true)
   const reduced = useSyncExternalStore(subscribeMotion, getPrefersReducedMotion, () => false)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const isTr = locale === "tr"
-
   const slides = [
     {
       id: "anatolia",
       src: "/media/hero/master-banner.webp",
-      badge: isTr ? "From Anatolia to the World • Ana Koleksiyon" : "From Anatolia to the World • Master Collection",
-      alt: isTr
-        ? "Asia Oil - Anadolu'dan Dünyaya Ayçiçek ve Zeytinyağı İhracatı"
-        : "Asia Oil - Natural Goodness from Anatolia to the World",
-      kicker: isTr ? "✦ ASIA OIL • Anadolu'nun Doğal Bereketi" : "✦ ASIA OIL • Natural Goodness from Anatolia",
-      port: isTr ? "FOB Mersin & CIF Dünya Limanları" : "FOB Mersin & CIF Global Seaports",
-      sunflowerDesc: isTr ? "500ml, 1L, 2L, 5L PET & Teneke • Max %0.10 FFA" : "500ml, 1L, 2L, 5L PET & Tin • Max 0.10% FFA",
-      oliveDesc: isTr ? "Soğuk Sıkım (≤ 27°C) • 500ml, 1L Cam & 5L Teneke" : "Cold Pressed (≤ 27°C) • 500ml, 1L Glass & 5L Tin",
+      badge: dict.home.collectionsKicker,
+      alt: dict.hero[0]?.alt ?? dict.metaDescription,
+      kicker: dict.hero[0]?.kicker ?? dict.home.collectionsKicker,
+      port: dict.ui.shipsFromValue,
+      sunflowerDesc: dict.ui.packingValue,
+      oliveDesc: dict.pages.olive.kicker,
     },
     {
       id: "signature",
       src: "/media/hero/banner-signature.webp",
-      badge: isTr ? "Asia Oil Signature • İhracat Ambalajları" : "Asia Oil Signature • Export Packaging Line",
-      alt: isTr
-        ? "Asia Oil - Premium Teneke ve Şişe Yağ Koleksiyonu"
-        : "Asia Oil - Premium Bottled & Tinned Edible Oils Collection",
-      kicker: isTr ? "✦ ASIA OIL • Üstün İhracat Standartları" : "✦ ASIA OIL • Premium Export Quality",
-      port: isTr ? "Mersin Port (MIP) & İzmir Limanı" : "Mersin Port (MIP) & İzmir Seaport",
-      sunflowerDesc: isTr ? "İnce Rafinasyon • Nötr Koku & Yüksek Duman Noktası" : "Fine Refined • Neutral Aroma & High Smoke Point",
-      oliveDesc: isTr ? "Ege & Akdeniz Zeytinleri • Düşük Asit Oranı" : "Aegean & Mediterranean Olives • Low Acidity",
+      badge: dict.form.packaging,
+      alt: dict.hero[1]?.alt ?? dict.metaDescription,
+      kicker: dict.hero[1]?.kicker ?? dict.form.packaging,
+      port: dict.ui.shipsFromValue,
+      sunflowerDesc: dict.pages.sunflower.kicker,
+      oliveDesc: dict.ui.packingValue,
     },
   ]
 
@@ -78,23 +74,15 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
     setActive((prev) => (prev + step + count) % count)
   }
 
-  const features = isTr
-    ? [
-        { icon: Leaf, label: "%100 Doğal", sub: "Saf & Katkısız" },
-        { icon: Award, label: "Üstün Kalite", sub: "Uluslararası Standart" },
-        { icon: Heart, label: "Sağlıklı Tercih", sub: "Hafif & Besleyici" },
-        { icon: Globe, label: "Küresel İhracat", sub: "FOB Mersin / CIF" },
-        { icon: Sparkles, label: "Zengin Besin Değeri", sub: "E Vitamini & Omega" },
-        { icon: Package, label: "Çeşitli Ambalaj", sub: "PET, Cam & Teneke" },
-      ]
-    : [
-        { icon: Leaf, label: "100% Natural", sub: "Pure & Additive-Free" },
-        { icon: Award, label: "Premium Quality", sub: "International Certified" },
-        { icon: Heart, label: "Healthy Choice", sub: "Light & Nutritious" },
-        { icon: Globe, label: "Global Export", sub: "FOB Mersin / CIF" },
-        { icon: Sparkles, label: "Rich in Nutrients", sub: "Vitamin E & Omegas" },
-        { icon: Package, label: "Various Packaging", sub: "PET, Glass & Tin" },
-      ]
+  const features = [
+    { icon: Leaf, label: dict.form.sunflower, sub: dict.pages.sunflower.kicker },
+    { icon: Award, label: dict.form.olive, sub: dict.pages.olive.kicker },
+    { icon: Globe, label: dict.nav.trade, sub: dict.ui.shipsFromValue },
+    { icon: Package, label: dict.form.packaging, sub: dict.ui.packingValue },
+    { icon: Sparkles, label: dict.nav.privateLabel, sub: dict.ui.modelValue },
+    { icon: Award, label: dict.nav.quality, sub: dict.pages.quality.kicker },
+  ]
+
 
   return (
     <div ref={containerRef} className="rise rise-4 relative mt-12 w-full">
@@ -144,7 +132,7 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
         <div className="absolute bottom-16 left-3 z-30 hidden sm:block max-w-[280px] md:bottom-20 md:left-6">
           <div className="rounded-2xl border border-white/20 bg-black/65 backdrop-blur-md p-3 text-left shadow-lg">
             <span className="font-bold text-sun flex items-center gap-1.5 text-xs md:text-sm">
-              <span>🌻</span> {isTr ? "Rafine Ayçiçek Yağı" : "Refined Sunflower Oil"}
+              <span>🌻</span> {dict.form.sunflower}
             </span>
             <span className="mt-1 block text-[11px] leading-snug text-[#f7f1e3]/80">
               {slides[active]?.sunflowerDesc}
@@ -155,7 +143,7 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
         <div className="absolute bottom-16 right-3 z-30 hidden sm:block max-w-[280px] md:bottom-20 md:right-6">
           <div className="rounded-2xl border border-white/20 bg-black/65 backdrop-blur-md p-3 text-right shadow-lg">
             <span className="font-bold text-emerald-400 flex items-center justify-end gap-1.5 text-xs md:text-sm">
-              <span>🫒</span> {isTr ? "Natürel Sızma Zeytinyağı" : "Extra Virgin Olive Oil"}
+              <span>🫒</span> {dict.form.olive}
             </span>
             <span className="mt-1 block text-[11px] leading-snug text-[#f7f1e3]/80">
               {slides[active]?.oliveDesc}

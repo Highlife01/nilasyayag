@@ -1,6 +1,8 @@
 import { requireUser } from "@/server/session"
 import { redirect } from "next/navigation"
 import { siteUrl } from "@/lib/site"
+import { ARTICLE_IDS, getDict } from "@/content/index"
+import { LOCALE_META, PUBLISHED_LOCALES, pathFor } from "@/lib/i18n/config"
 import {
   Search,
   CheckCircle2,
@@ -19,43 +21,14 @@ export default async function SeoAdminPage() {
   if (!(await requireUser("seo"))) redirect("/admin")
   const base = siteUrl()
 
-  const languages = [
-    { code: "tr", name: "Türkçe", path: "/tr", status: "Aktif (Doğrulandı)" },
-    { code: "en", name: "İngilizce (Global)", path: "/en", status: "Aktif (Doğrulandı)" },
-    { code: "ar", name: "Arapça (RTL)", path: "/ar", status: "Aktif (Doğrulandı)" },
-    { code: "ru", name: "Rusça", path: "/ru", status: "Aktif (Doğrulandı)" },
-    { code: "de", name: "Almanca", path: "/de", status: "Aktif (Doğrulandı)" },
-    { code: "fr", name: "Fransızca", path: "/fr", status: "Aktif (Doğrulandı)" },
-    { code: "es", name: "İspanyolca", path: "/es", status: "Aktif (Doğrulandı)" },
-    { code: "it", name: "İtalyanca", path: "/it", status: "Aktif (Doğrulandı)" },
-  ]
-
-  const geoQuestions = [
-    {
-      q: "How can I request a bulk sunflower oil quotation from Türkiye?",
-      slug: "/en/insights/bulk-sunflower-oil-quotation",
-      readiness: "100% Hazır",
-      summary: "Firma adı, yetkili, ürün hacmi, ambalaj tipi (PET, Teneke, Flexitank) ve Incoterms ile anında dosya açılabilmektedir.",
-    },
-    {
-      q: "What packaging options are available for edible oils export?",
-      slug: "/en/insights/packaging-options",
-      readiness: "100% Hazır",
-      summary: "500ml, 1L, 2L, 5L PET, 18L Teneke, 200L Varil ve 22.000L Flexitank dökme seçenekleri mevcuttur.",
-    },
-    {
-      q: "What documents are required for edible oil imports from Türkiye?",
-      slug: "/en/insights/import-documents",
-      readiness: "100% Hazır",
-      summary: "Spesifikasyon, parti analiz raporu, Menşe Şahadetnamesi (COO), çeki listesi, konşimento ve ticari fatura seti.",
-    },
-    {
-      q: "What should a food distributor prepare before requesting a quote?",
-      slug: "/en/insights/distributor-preparation",
-      readiness: "100% Hazır",
-      summary: "Satış kanalı, hedef pazar, kabul edilen ambalaj formatları ve tahmini ilk deneme konteyner hacmi.",
-    },
-  ]
+  const languages = PUBLISHED_LOCALES.map((code) => ({ code, name: LOCALE_META[code].name, path: pathFor(code, "home"), status: "Yayımlı" }))
+  const english = getDict("en")
+  const geoQuestions = ARTICLE_IDS.map((id) => ({
+    q: english.articles[id].h1,
+    slug: pathFor("en", "insights", english.articles[id].slug),
+    readiness: "İçerik yayımlı",
+    summary: english.articles[id].description,
+  }))
 
   return (
     <div className="space-y-8">
@@ -88,8 +61,8 @@ export default async function SeoAdminPage() {
             <span className="text-xs font-bold uppercase tracking-wider">Schema.org JSON-LD</span>
             <CheckCircle2 className="h-4 w-4 text-emerald-600" />
           </div>
-          <p className="font-display text-3xl font-bold text-slate-900 mt-2">4 Şema Tipi</p>
-          <p className="text-xs text-slate-500 mt-1">Organization, Product, Breadcrumb, FAQ</p>
+          <p className="font-display text-3xl font-bold text-slate-900 mt-2">Kuruluş & WebSite</p>
+          <p className="text-xs text-slate-500 mt-1">Sayfalarda kuruluş ve web sitesi bilgileri</p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -138,7 +111,7 @@ export default async function SeoAdminPage() {
           <span>Yapay Zekâ Keşif Modeli (GEO Readiness)</span>
         </div>
         <p className="mt-1 text-xs text-slate-600 leading-relaxed max-w-3xl">
-          ChatGPT, Google Gemini ve Perplexity gibi yapay zekâ motorları, doğrudan alıcıların sorduğu ihracat sorularını ararken web sitemizdeki rehber içeriklerini birincil kaynak olarak gösterir.
+          Yayımlı rehberler alıcıların ihracat sorularını yanıtlar. Arama motorlarının bu içerikleri indeksleme veya kaynak gösterme durumu bu panel tarafından ölçülmez.
         </p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">

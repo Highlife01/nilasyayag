@@ -7,7 +7,9 @@ import { ArticleIndex, ArticleView, HomeView, StandardPage } from "@/components/
 import { insightBase, isLocale, matchStatic, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
 import { heroFrames } from "@/lib/media"
 import { getRepo } from "@/server/runtime"
-import { siteUrl } from "@/lib/site"
+import { CONTACT_PHONE, siteUrl } from "@/lib/site"
+import { normalizeControl } from "@/lib/model"
+import { parseQuoteQuery, quoteReturnPath } from "@/lib/quote"
 import { VisitBeacon } from "@/components/site/visit-beacon"
 
 type Params = { locale: string; slug?: string[] }
@@ -64,20 +66,26 @@ export default async function LocalePage({
   if (!resolved) notFound()
   const { locale, dict, page, article } = resolved
   const query = await searchParams
-  const product = typeof query.product === "string" ? query.product : undefined
-  const settings = await (await getRepo()).getSettings()
+  const prefill = parseQuoteQuery(query)
+  let settings = normalizeControl(null).settings
+  try {
+    settings = await (await getRepo()).getSettings()
+  } catch (error) {
+    console.warn("Public settings unavailable:", error)
+  }
   const jar = await cookies()
   const consent = jar.get("nilasya_consent")?.value
   const articleSlug = article ? dict.articles[article].slug : undefined
+  const returnTo = page === "quote" ? quoteReturnPath(locale, query) : pathFor(locale, page, articleSlug)
   const issuedAt = formIssuedAt()
   return (
-    <SiteFrame locale={locale} dict={dict} page={page} articleSlug={articleSlug} settings={settings} consent={consent}>
-      <VisitBeacon />
+    <SiteFrame locale={locale} dict={dict} page={page} articleSlug={articleSlug} settings={settings} consent={consent} returnTo={returnTo}>
+      {consent === "all" ? <VisitBeacon /> : null}
       {page === "home" ? <HomeView locale={locale} dict={dict} frames={heroFrames()} /> : null}
       {page === "insights" && !article ? <ArticleIndex locale={locale} dict={dict} /> : null}
       {article ? <ArticleView locale={locale} dict={dict} id={article} /> : null}
       {page !== "home" && page !== "insights" ? (
-        <StandardPage locale={locale} dict={dict} page={page} settings={settings} issuedAt={issuedAt} product={product} />
+        <StandardPage locale={locale} dict={dict} page={page} settings={settings} issuedAt={issuedAt} prefill={prefill} />
       ) : null}
       <script
         type="application/ld+json"
@@ -92,7 +100,7 @@ export default async function LocalePage({
               logo: `${siteUrl()}/icon.svg`,
               image: `${siteUrl()}/media/hero/master-banner.webp`,
               email: "export@asiaoil.com.tr",
-              telephone: "+905325000000",
+              telephone: CONTACT_PHONE,
               address: {
                 "@type": "PostalAddress",
                 addressCountry: "TR",

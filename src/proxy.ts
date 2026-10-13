@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { isLocale, preferredLocale } from "@/lib/i18n/config"
+import { analyticsAllowed } from "@/lib/consent"
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -32,7 +33,8 @@ export function proxy(request: NextRequest) {
 
   headers.set("x-locale", first)
   const response = NextResponse.next({ request: { headers } })
-  if (!request.cookies.get("nilasya_vid")) {
+  const allowed = analyticsAllowed(request.cookies.get("nilasya_consent")?.value)
+  if (allowed && !request.cookies.get("nilasya_vid")) {
     response.cookies.set("nilasya_vid", crypto.randomUUID(), {
       httpOnly: true,
       sameSite: "lax",
@@ -40,6 +42,8 @@ export function proxy(request: NextRequest) {
       path: "/",
       maxAge: 60 * 60 * 24 * 180,
     })
+  } else if (!allowed && request.cookies.get("nilasya_vid")) {
+    response.cookies.set("nilasya_vid", "", { path: "/", maxAge: 0 })
   }
   return response
 }

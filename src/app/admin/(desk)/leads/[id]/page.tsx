@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation"
-import { can } from "@/lib/domain"
+import { can, canTransition, type InquiryStatus } from "@/lib/domain"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,10 +10,13 @@ import { requireUser } from "@/server/session"
 
 export const metadata = { robots: { index: false, follow: false } }
 
-export default async function LeadPage({ params }: { params: Promise<{ id: string }> }) {
+const STATUS_LABELS: Record<InquiryStatus, string> = { new: "Yeni", contacted: "İletişime Geçildi", quoted: "Teklif Verildi", won: "Kazanıldı", lost: "Kaybedildi" }
+
+export default async function LeadPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ error?: string; saved?: string }> }) {
   const user = await requireUser("leads")
   if (!user) redirect("/admin")
   const { id } = await params
+  const query = await searchParams
   const lead = await (await getRepo()).getInquiry(id)
   if (!lead) notFound()
   const editable = can(user.role, "leads.write")
@@ -33,14 +36,16 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
         <div className="md:col-span-2">Bildirim: {lead.notification.status} — {lead.notification.detail}</div>
       </dl>
       <p className="mt-6 leading-relaxed">{lead.message}</p>
+      {query.error ? <p role="alert" className="mt-6 border border-red-300 bg-red-50 p-3 text-sm text-red-900">{query.error === "invalid-transition" || query.error === "invalid-status" ? "Bu durum değişikliğine izin verilmiyor. Güncel durum için listelenen seçeneklerden birini seçin." : "Değişiklik kaydedilemedi. Yeniden deneyin."}</p> : null}
+      {query.saved === "1" && !query.error ? <p role="status" className="mt-6 border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-900">Değişiklikler kaydedildi.</p> : null}
       {editable ? (
         <form action={updateLeadAction} className="mt-8 grid gap-4 border border-[#e2dac8] bg-[#fbf9f4] p-5">
           <input type="hidden" name="id" value={lead.id} />
           <div className="grid gap-2">
             <Label htmlFor="status">Durum</Label>
             <select id="status" name="status" defaultValue={lead.status} className="h-11 border border-input bg-white px-3">
-              {["new", "contacted", "quoted", "won", "lost"].map((status) => (
-                <option key={status}>{status}</option>
+              {(Object.keys(STATUS_LABELS) as InquiryStatus[]).filter((status) => canTransition(lead.status, status)).map((status) => (
+                <option key={status} value={status}>{STATUS_LABELS[status]}</option>
               ))}
             </select>
           </div>

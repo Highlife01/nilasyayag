@@ -12,7 +12,7 @@ export function LoginForm() {
     <form action={action} className="mt-8 grid gap-4">
       {state.error ? (
         <p className="border border-[#8c3a2f] bg-[#f8ece8] px-3 py-2 text-sm" role="alert">
-          {state.error === "otp" ? "Doğrulama kodu geçersiz." : state.error === "rate" ? "Çok fazla deneme." : "E-posta veya parola uygun değil."}
+          {state.error === "unavailable" ? "Giriş hizmetine şu anda ulaşılamıyor. Lütfen yeniden deneyin." : state.error === "otp" ? "Doğrulama kodu geçersiz." : state.error === "rate" ? "Çok fazla deneme." : "E-posta veya parola uygun değil."}
         </p>
       ) : null}
       <div className="grid gap-2">

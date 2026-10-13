@@ -382,7 +382,7 @@ const en: Dict = {
     rights: "Asia Oil",
   },
   consent: {
-    text: "A visit is counted only if you allow it. The choice is stored in a cookie. The site does not use localStorage.",
+    text: "Visits are counted only with your permission. You can change your cookie preferences at any time.",
     accept: "Allow visit counts",
     reject: "Necessary only",
   },

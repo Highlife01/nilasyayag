@@ -18,13 +18,17 @@ export async function submitInquiryAction(_prev: FormState, formData: FormData):
   for (const [key, value] of formData.entries()) {
     if (typeof value === "string") raw[key] = value
   }
-  const repo = await getRepo()
-  const result = await submitInquiry(repo, raw, {
-    ip: clientIp(headerList),
-    salt: process.env.NILASYA_SESSION_SECRET || "nilasya-dev",
-    now: Date.now(),
-    notify: notifyInquiry,
-  })
-  if (!result.ok) return { ok: false, code: result.code, fields: result.fields }
-  return { ok: true, done: true, id: result.id }
+  try {
+    const repo = await getRepo()
+    const result = await submitInquiry(repo, raw, {
+      ip: clientIp(headerList),
+      salt: process.env.NILASYA_SESSION_SECRET || "nilasya-dev",
+      now: Date.now(),
+      notify: notifyInquiry,
+    })
+    if (!result.ok) return { ok: false, code: result.code, fields: result.fields }
+    return { ok: true, done: true, id: result.id }
+  } catch {
+    return { ok: false, code: "unavailable" }
+  }
 }

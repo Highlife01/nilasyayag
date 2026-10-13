@@ -199,7 +199,7 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
           </div>
           <div className="mt-14 grid gap-6 md:grid-cols-2">
             {ARTICLE_IDS.map((id, index) => (
-              <ArticleCard key={id} href={pathFor(locale, "insights", dict.articles[id].slug)} index={index} kicker={dict.articles[id].kicker} title={dict.articles[id].h1} text={dict.articles[id].lede} />
+              <ArticleCard key={id} href={pathFor(locale, "insights", dict.articles[id].slug)} index={index} kicker={dict.articles[id].kicker} title={dict.articles[id].h1} text={dict.articles[id].lede} label={dict.ui.explore} />
             ))}
           </div>
         </div>
@@ -251,7 +251,7 @@ function Collection({
   )
 }
 
-function ArticleCard({ href, index, kicker, title, text }: { href: string; index: number; kicker: string; title: string; text: string }) {
+function ArticleCard({ href, index, kicker, title, text, label }: { href: string; index: number; kicker: string; title: string; text: string; label?: string }) {
   return (
     <a
       href={href}
@@ -269,7 +269,7 @@ function ArticleCard({ href, index, kicker, title, text }: { href: string; index
         <h3 className="font-display mt-7 text-2xl font-bold leading-snug text-slate-900 group-hover:text-emerald-800 transition md:text-3xl">{title}</h3>
         <p className="mt-3 text-sm leading-relaxed text-slate-600">{text}</p>
         <span className="mt-7 inline-flex items-center gap-2 text-xs font-bold text-emerald-700 group-hover:text-emerald-900">
-          <span>İncele</span>
+          <span>{label || "İncele"}</span>
           <ArrowUpRight className="size-4 transition duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
         </span>
       </div>
@@ -278,6 +278,7 @@ function ArticleCard({ href, index, kicker, title, text }: { href: string; index
 }
 
 function Closing({ locale, dict }: { locale: Locale; dict: Dict }) {
+  const isTr = locale === "tr"
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-[#092217] via-[#051810] to-[#020b07] px-5 py-28 text-center text-white md:py-36 border-t border-emerald-950/40">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(16,185,129,0.15),transparent_70%)]" />
@@ -309,9 +310,9 @@ function Closing({ locale, dict }: { locale: Locale; dict: Dict }) {
         </div>
         <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-xs text-emerald-300/80 font-medium">
           <span>✓ ISO 22000:2018</span>
-          <span>✓ Helal & Kosher</span>
+          <span>✓ {isTr ? "Helal & Kosher Sertifikalı" : "Halal & Kosher Certified"}</span>
           <span>✓ Mersin International Port (MIP)</span>
-          <span>✓ EUR.1 Dolaşım Sertifikası</span>
+          <span>✓ {isTr ? "EUR.1 Dolaşım Sertifikası" : "EUR.1 Movement Certificate"}</span>
         </div>
       </div>
     </section>
@@ -325,7 +326,7 @@ export function ArticleIndex({ locale, dict }: { locale: Locale; dict: Dict }) {
       <section className="bg-slate-50/70 py-20 md:py-28 border-t border-slate-200">
         <div className={`${container} grid gap-6 md:grid-cols-2`}>
           {ARTICLE_IDS.map((id, index) => (
-            <ArticleCard key={id} href={pathFor(locale, "insights", dict.articles[id].slug)} index={index} kicker={dict.articles[id].kicker} title={dict.articles[id].title} text={dict.articles[id].description} />
+            <ArticleCard key={id} href={pathFor(locale, "insights", dict.articles[id].slug)} index={index} kicker={dict.articles[id].kicker} title={dict.articles[id].title} text={dict.articles[id].description} label={dict.ui.read} />
           ))}
         </div>
       </section>
@@ -348,7 +349,7 @@ export function ArticleView({ locale, dict, id }: { locale: Locale; dict: Dict; 
       <section className="border-t border-slate-200 bg-slate-50/80 py-20">
         <div className={`${container} grid gap-6 md:grid-cols-2`}>
           {others.map((other, index) => (
-            <ArticleCard key={other} href={pathFor(locale, "insights", dict.articles[other].slug)} index={index} kicker={dict.articles[other].kicker} title={dict.articles[other].title} text={dict.articles[other].description} />
+            <ArticleCard key={other} href={pathFor(locale, "insights", dict.articles[other].slug)} index={index} kicker={dict.articles[other].kicker} title={dict.articles[other].title} text={dict.articles[other].description} label={dict.ui.read} />
           ))}
         </div>
       </section>
@@ -517,34 +518,117 @@ function Spec({ dict, family, page, locale }: { dict: Dict; family: string; page
 
   const chemicalSpecs = isOlive
     ? [
-        { name: isTr ? "Gümrük Tarife İstatistik Pozisyonu (GTİP / HS Code)" : "Harmonized System Code (HS Code)", value: "1509.20.00.00 (Extra Virgin)" },
-        { name: isTr ? "Serbest Yağ Asitliği (Oleik Asit Cinsinden)" : "Free Fatty Acidity (as Oleic Acid)", value: "≤ %0.80 (Standart) / ≤ %0.40 (Ultra Premium)", highlight: true },
-        { name: isTr ? "Peroksit Değeri" : "Peroxide Value", value: "≤ 15 meq O₂/kg" },
-        { name: isTr ? "Ultraviyole Spektrofotometrik Analiz (K232)" : "UV Absorbance (K232)", value: "≤ 2.50" },
-        { name: isTr ? "Ultraviyole Spektrofotometrik Analiz (K270)" : "UV Absorbance (K270)", value: "≤ 0.22" },
-        { name: isTr ? "Delta K Değeri (ΔK)" : "Delta K (ΔK)", value: "≤ 0.01" },
-        { name: isTr ? "Sıkım Yöntemi & Sıcaklığı" : "Extraction Method & Temperature", value: isTr ? "Soğuk Sıkım (Cold Pressed) ≤ 27°C (Hasattan sonra ilk 12 saatte)" : "Continuous Cold Extraction ≤ 27°C within 12h of harvest", highlight: true },
-        { name: isTr ? "Duyusal & Organoleptik Profil" : "Sensory & Organoleptic Profile", value: isTr ? "Meyvemsi, hafif acımsı ve yakıcı, taze çimen ve enginar notaları" : "Medium/Intense fruity, balanced bitterness and pungency, green herbaceous notes" },
-        { name: isTr ? "Çıkış Limanı & Menşei" : "Seaport & Origin", value: isTr ? "Mersin Uluslararası Limanı (MIP) & İzmir Limanı / Ege & Akdeniz" : "Mersin Port (MIP) & Izmir Seaport / Aegean & Mediterranean Origin" },
+        {
+          name: isTr ? "Gümrük Tarife İstatistik Pozisyonu (GTİP / HS Code)" : "Harmonized System Code (HS Code)",
+          value: isTr ? "1509.20.00.00 (Natürel Sızma Zeytinyağı)" : "1509.20.00.00 (Extra Virgin Olive Oil)",
+        },
+        {
+          name: isTr ? "Serbest Yağ Asitliği (Oleik Asit Cinsinden)" : "Free Fatty Acidity (as Oleic Acid)",
+          value: isTr ? "≤ %0.80 (Standart İhracat) / ≤ %0.40 (Ultra Premium)" : "≤ 0.80% (Standard Export) / ≤ 0.40% (Ultra Premium)",
+          highlight: true,
+        },
+        {
+          name: isTr ? "Peroksit Değeri" : "Peroxide Value",
+          value: "≤ 15 meq O₂/kg",
+        },
+        {
+          name: isTr ? "Ultraviyole Spektrofotometrik Analiz (K232)" : "UV Absorbance (K232)",
+          value: "≤ 2.50",
+        },
+        {
+          name: isTr ? "Ultraviyole Spektrofotometrik Analiz (K270)" : "UV Absorbance (K270)",
+          value: "≤ 0.22",
+        },
+        {
+          name: isTr ? "Delta K Değeri (ΔK)" : "Delta K (ΔK)",
+          value: "≤ 0.01",
+        },
+        {
+          name: isTr ? "Sıkım Yöntemi & Sıcaklığı" : "Extraction Method & Temperature",
+          value: isTr ? "Soğuk Sıkım (Cold Pressed) ≤ 27°C (Hasattan sonra ilk 12 saatte)" : "Continuous Cold Extraction ≤ 27°C within 12h of harvest",
+          highlight: true,
+        },
+        {
+          name: isTr ? "Duyusal & Organoleptik Profil" : "Sensory & Organoleptic Profile",
+          value: isTr ? "Meyvemsi, dengeli acılık ve yakıcılık, taze çimen ve enginar notaları" : "Medium/Intense fruity, balanced bitterness and pungency, green herbaceous notes",
+        },
+        {
+          name: isTr ? "Çıkış Limanı & Menşei" : "Seaport & Origin",
+          value: isTr ? "Mersin Uluslararası Limanı (MIP) & İzmir Limanı / Ege & Akdeniz Menşei" : "Mersin Port (MIP) & Izmir Seaport / Aegean & Mediterranean Origin",
+        },
       ]
     : [
-        { name: isTr ? "Gümrük Tarife İstatistik Pozisyonu (GTİP / HS Code)" : "Harmonized System Code (HS Code)", value: "1512.19.90.00 (Rafine Ayçiçek Yağı)" },
-        { name: isTr ? "Serbest Yağ Asitliği (Oleik Asit)" : "Free Fatty Acidity (FFA as Oleic)", value: "≤ %0.10 (Standart İhracat Spesifikasyonu)", highlight: true },
-        { name: isTr ? "Peroksit Değeri (Fabrika Çıkış)" : "Peroxide Value (Ex-Factory)", value: "≤ 1.0 meq O₂/kg" },
-        { name: isTr ? "Nem ve Uçucu Madde Oranı" : "Moisture & Volatile Matter", value: "≤ %0.05" },
-        { name: isTr ? "Renk (Lovibond 5 ¼” Hücrede)" : "Color (Lovibond 5 ¼” Cell)", value: "≤ 1.0 Kırmızı / 10 Sarı (Berrak, açık altın)" },
-        { name: isTr ? "Dumanlanma Noktası (Smoke Point)" : "Smoke Point", value: "≥ 232°C (Yüksek termal stabilite)", highlight: true },
-        { name: isTr ? "Koku ve Tat" : "Odor and Taste", value: isTr ? "Doğal nötr, yabancı koku ve tortudan arındırılmış" : "Bland, neutral, free from off-flavors and rancidity" },
-        { name: isTr ? "Yoğunluk (20°C)" : "Specific Gravity (20°C)", value: "0.918 – 0.923 g/cm³" },
-        { name: isTr ? "Çıkış Limanı & Menşei" : "Seaport & Origin", value: isTr ? "Mersin Uluslararası Limanı (MIP) / Çukurova & Trakya Menşei" : "Mersin Port (MIP), Türkiye / Mediterranean Hub" },
+        {
+          name: isTr ? "Gümrük Tarife İstatistik Pozisyonu (GTİP / HS Code)" : "Harmonized System Code (HS Code)",
+          value: isTr ? "1512.19.90.00 (Rafine Ayçiçek Yağı)" : "1512.19.90.00 (Refined Sunflower Oil)",
+        },
+        {
+          name: isTr ? "Serbest Yağ Asitliği (Oleik Asit Cinsinden)" : "Free Fatty Acidity (FFA as Oleic)",
+          value: isTr ? "≤ %0.10 (Standart İhracat Spesifikasyonu)" : "≤ 0.10% (Standard Export Specification)",
+          highlight: true,
+        },
+        {
+          name: isTr ? "Peroksit Değeri (Fabrika Çıkış)" : "Peroxide Value (Ex-Factory)",
+          value: "≤ 1.0 meq O₂/kg",
+        },
+        {
+          name: isTr ? "Nem ve Uçucu Madde Oranı" : "Moisture & Volatile Matter",
+          value: "≤ 0.05%",
+        },
+        {
+          name: isTr ? "Renk (Lovibond 5 ¼” Hücrede)" : "Color (Lovibond 5 ¼” Cell)",
+          value: isTr ? "≤ 1.0 Kırmızı / 10 Sarı (Berrak, açık altın sarısı)" : "≤ 1.0 Red / 10 Yellow (Clear golden yellow)",
+        },
+        {
+          name: isTr ? "Dumanlanma Noktası (Smoke Point)" : "Smoke Point",
+          value: isTr ? "≥ 232°C (Yüksek termal stabilite & kızartma direnci)" : "≥ 232°C (High thermal stability & deep frying resilience)",
+          highlight: true,
+        },
+        {
+          name: isTr ? "Koku ve Tat" : "Odor and Taste",
+          value: isTr ? "Doğal nötr, yabancı koku ve tortudan tamamen arındırılmış" : "Bland, neutral, completely free from foreign odors and rancidity",
+        },
+        {
+          name: isTr ? "Yoğunluk (20°C)" : "Specific Gravity (20°C)",
+          value: "0.918 – 0.923 g/cm³",
+        },
+        {
+          name: isTr ? "Çıkış Limanı & Menşei" : "Seaport & Origin",
+          value: isTr ? "Mersin Uluslararası Limanı (MIP) / Çukurova & Trakya Menşei" : "Mersin Port (MIP), Türkiye / Mediterranean Hub",
+        },
       ]
 
   const packagingList = [
-    { format: "1L PET", carton: "12 / 15", fcl: "~24.000 L / 20ft FCL", pallets: "10-11 Euro Pallet" },
-    { format: "2L PET", carton: "6", fcl: "~22.000 L / 20ft FCL", pallets: "10-11 Euro Pallet" },
-    { format: "5L PET / Teneke", carton: "4", fcl: "~4.400 Koli / 40ft HC", pallets: "Standart İhracat Paleti" },
-    { format: "18L Profesyonel Teneke", carton: "Tekli", fcl: "~1.200 Adet / 20ft", pallets: "Metal takviyeli palet" },
-    { format: "22.000L Flexitank", carton: "Dökme", fcl: "21.500 - 22.000 L / 20ft", pallets: "Tek yönlü gıdaya uygun astar" },
+    {
+      format: "1L PET",
+      carton: isTr ? "12 / 15 Şişe" : "12 / 15 Bottles",
+      fcl: isTr ? "~24.000 L / 20ft FCL" : "~24,000 L / 20ft FCL",
+      pallets: isTr ? "10-11 Euro Palet" : "10-11 Euro Pallets",
+    },
+    {
+      format: "2L PET",
+      carton: isTr ? "6 Şişe" : "6 Bottles",
+      fcl: isTr ? "~22.000 L / 20ft FCL" : "~22,000 L / 20ft FCL",
+      pallets: isTr ? "10-11 Euro Palet" : "10-11 Euro Pallets",
+    },
+    {
+      format: isTr ? "5L PET / Teneke" : "5L PET / Tin Can",
+      carton: isTr ? "4 Adet" : "4 Units",
+      fcl: isTr ? "~4.400 Koli / 40ft HC" : "~4,400 Cartons / 40ft HC",
+      pallets: isTr ? "Standart İhracat Paleti" : "Standard Export Pallet",
+    },
+    {
+      format: isTr ? "18L Profesyonel Teneke" : "18L Industrial Tin Can",
+      carton: isTr ? "Tekli Teneke" : "Single Tin Can",
+      fcl: isTr ? "~1.200 Adet / 20ft" : "~1,200 Units / 20ft",
+      pallets: isTr ? "Metal takviyeli palet" : "Reinforced Industrial Pallet",
+    },
+    {
+      format: isTr ? "22.000L Flexitank" : "22,000L Flexitank",
+      carton: isTr ? "Dökme / Flexitank" : "Bulk / Single Liner",
+      fcl: isTr ? "21.500 - 22.000 L / 20ft" : "21,500 - 22,000 L / 20ft",
+      pallets: isTr ? "Tek yönlü gıdaya uygun astar" : "Food-grade single-use liner",
+    },
   ]
 
   return (

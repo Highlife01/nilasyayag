@@ -174,7 +174,7 @@ export function SiteFrame({
             </a>
 
             {/* Mobile Menu */}
-            <details className="xl:hidden [&_summary::-webkit-details-marker]:hidden">
+            <details className="lg:hidden [&_summary::-webkit-details-marker]:hidden">
               <summary className="grid size-11 cursor-pointer list-none place-items-center rounded-xl border-2 border-slate-300 text-slate-950 hover:bg-slate-100 shadow-xs font-bold" aria-label={dict.ui.menu}>
                 <Menu className="size-5" />
               </summary>

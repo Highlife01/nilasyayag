@@ -1,30 +1,63 @@
 # Asia Oil (Nilasya Agro Foods) - Robots Configuration
+# Global B2B Export & Technical GEO Dossier
+
 User-agent: *
 Allow: /
+Allow: /llms.txt
 Disallow: /admin
 Disallow: /admin/
 Disallow: /api
 Disallow: /api/
 
-# AI Crawlers & Scrapers
+# OpenAI ChatGPT & SearchGPT
 User-agent: GPTBot
+User-agent: OAI-SearchBot
 Allow: /
 Allow: /llms.txt
 Disallow: /admin
+Disallow: /api
 
+# Anthropic Claude
 User-agent: ClaudeBot
+User-agent: anthropic-ai
 Allow: /
 Allow: /llms.txt
 Disallow: /admin
+Disallow: /api
 
+# Perplexity AI
 User-agent: PerplexityBot
 Allow: /
 Allow: /llms.txt
 Disallow: /admin
+Disallow: /api
 
+# Google Gemini & Google-Extended
+User-agent: Google-Extended
+User-agent: Googlebot
+Allow: /
+Allow: /llms.txt
+Disallow: /admin
+Disallow: /api
+
+# Apple Intelligence
+User-agent: Applebot
+User-agent: Applebot-Extended
+Allow: /
+Allow: /llms.txt
+Disallow: /admin
+Disallow: /api
+
+# Meta, Amazon, Cohere & Other AI Crawlers
+User-agent: meta-externalagent
+User-agent: Amazonbot
+User-agent: Diffbot
+User-agent: cohere-ai
 User-agent: CCBot
 Allow: /
+Allow: /llms.txt
 Disallow: /admin
+Disallow: /api
 
 # Sitemaps & Host
 Sitemap: https://www.asiaoil.com.tr/sitemap.xml

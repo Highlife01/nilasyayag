@@ -196,17 +196,16 @@ function pathFor(locale, page, articleSlug) {
 
 function getPriority(page) {
   if (page === "home") return "1.0"
-  if (["sunflower", "olive", "wholesale", "trade", "quote"].includes(page)) return "0.9"
-  if (page === "insights") return "0.8"
-  if (["quality", "about", "contact", "privateLabel"].includes(page)) return "0.7"
-  if (page === "faq") return "0.6"
+  if (["sunflower", "olive", "wholesale"].includes(page)) return "0.9"
+  if (["quote", "trade", "privateLabel", "quality"].includes(page)) return "0.8"
+  if (["insights", "contact", "faq", "about"].includes(page)) return "0.7"
   return "0.3"
 }
 
 function getChangeFreq(page) {
-  if (["home", "sunflower", "olive", "quote"].includes(page)) return "weekly"
-  if (["insights", "wholesale", "trade"].includes(page)) return "weekly"
-  if (["about", "quality", "contact", "faq"].includes(page)) return "monthly"
+  if (page === "home") return "daily"
+  if (["sunflower", "olive", "wholesale", "quote", "trade", "insights", "faq"].includes(page)) return "weekly"
+  if (["about", "quality", "contact", "privateLabel"].includes(page)) return "monthly"
   return "yearly"
 }
 
@@ -244,7 +243,7 @@ for (const locale of PUBLISHED_LOCALES) {
     xml += `  <url>\n`
     xml += `    <loc>${url}</loc>\n`
     xml += `    <lastmod>${today}</lastmod>\n`
-    xml += `    <changefreq>monthly</changefreq>\n`
+    xml += `    <changefreq>weekly</changefreq>\n`
     xml += `    <priority>0.8</priority>\n`
 
     for (const altLocale of PUBLISHED_LOCALES) {
@@ -267,32 +266,65 @@ console.log(`Generated: ${sitemapPath} (${xml.length} bytes)`)
 
 // Generate robots.txt
 const robotsTxt = `# Asia Oil (Nilasya Agro Foods) - Robots Configuration
+# Global B2B Export & Technical GEO Dossier
+
 User-agent: *
 Allow: /
+Allow: /llms.txt
 Disallow: /admin
 Disallow: /admin/
 Disallow: /api
 Disallow: /api/
 
-# AI Crawlers & Scrapers
+# OpenAI ChatGPT & SearchGPT
 User-agent: GPTBot
+User-agent: OAI-SearchBot
 Allow: /
 Allow: /llms.txt
 Disallow: /admin
+Disallow: /api
 
+# Anthropic Claude
 User-agent: ClaudeBot
+User-agent: anthropic-ai
 Allow: /
 Allow: /llms.txt
 Disallow: /admin
+Disallow: /api
 
+# Perplexity AI
 User-agent: PerplexityBot
 Allow: /
 Allow: /llms.txt
 Disallow: /admin
+Disallow: /api
 
+# Google Gemini & Google-Extended
+User-agent: Google-Extended
+User-agent: Googlebot
+Allow: /
+Allow: /llms.txt
+Disallow: /admin
+Disallow: /api
+
+# Apple Intelligence
+User-agent: Applebot
+User-agent: Applebot-Extended
+Allow: /
+Allow: /llms.txt
+Disallow: /admin
+Disallow: /api
+
+# Meta, Amazon, Cohere & Other AI Crawlers
+User-agent: meta-externalagent
+User-agent: Amazonbot
+User-agent: Diffbot
+User-agent: cohere-ai
 User-agent: CCBot
 Allow: /
+Allow: /llms.txt
 Disallow: /admin
+Disallow: /api
 
 # Sitemaps & Host
 Sitemap: ${BASE_URL}/sitemap.xml

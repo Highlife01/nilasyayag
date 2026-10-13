@@ -10,6 +10,8 @@ import { getRepo } from "@/server/runtime"
 import { siteUrl } from "@/lib/site"
 import { VisitBeacon } from "@/components/site/visit-beacon"
 
+import { buildPageJsonLd, getKeywordsForPage, OG_LOCALES } from "@/lib/seo-schema"
+
 type Params = { locale: string; slug?: string[] }
 
 function formIssuedAt() {
@@ -28,12 +30,70 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   for (const code of ["tr", "en", "ar", "ru", "de", "fr", "es", "it"] as Locale[]) {
     languages[code] = siteUrl() + pathFor(code, page, article ? getDict(code).articles[article].slug : undefined)
   }
+  const ogLocale = OG_LOCALES[locale] || "en_US"
+  const alternateOgLocales = (["tr", "en", "ar", "ru", "de", "fr", "es", "it"] as Locale[])
+    .filter((l) => l !== locale)
+    .map((l) => OG_LOCALES[l])
+  const keywords = getKeywordsForPage(locale, page, article)
+  const ogImage = `${siteUrl()}/media/hero/master-banner.webp`
+
   return {
     title,
     description,
+    keywords,
     alternates: { canonical, languages },
-    openGraph: { title, description, url: canonical, siteName: "Asia Oil", locale },
-    robots: { index: true, follow: true },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "Asia Oil",
+      locale: ogLocale,
+      alternateLocale: alternateOgLocales,
+      type: article ? "article" : "website",
+      images: [
+        {
+          url: ogImage,
+          width: 2400,
+          height: 1260,
+          alt: `${title} - Asia Oil Global Export`,
+          type: "image/webp",
+        },
+      ],
+      ...(article
+        ? {
+            publishedTime: "2025-01-15T08:00:00.000Z",
+            modifiedTime: new Date().toISOString(),
+            authors: ["Asia Oil Technical Export Desk"],
+          }
+        : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      nocache: false,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    other: {
+      "geo.region": "TR-33",
+      "geo.placename": "Mersin, Akdeniz, Türkiye",
+      "geo.position": "36.7950;34.6400",
+      "ICBM": "36.7950, 34.6400",
+      "geo.country": "TR",
+      "DC.title": title,
+      "format-detection": "telephone=yes, address=yes, email=yes",
+    },
   }
 }
 
@@ -78,6 +138,16 @@ export default async function LocalePage({
   const consent = jar.get("nilasya_consent")?.value
   const articleSlug = article ? dict.articles[article].slug : undefined
   const issuedAt = formIssuedAt()
+  const canonicalUrl = siteUrl() + pathFor(locale, page, articleSlug)
+
+  const jsonLdGraph = buildPageJsonLd({
+    locale,
+    dict,
+    page,
+    articleId: article,
+    canonicalUrl,
+  })
+
   return (
     <SiteFrame locale={locale} dict={dict} page={page} articleSlug={articleSlug} settings={settings} consent={consent}>
       <VisitBeacon />
@@ -90,58 +160,7 @@ export default async function LocalePage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([
-            {
-              "@context": "https://schema.org",
-              "@type": "Corporation",
-              name: "Asia Oil",
-              legalName: "Asia Oil",
-              url: siteUrl(),
-              logo: `${siteUrl()}/icon.svg`,
-              image: `${siteUrl()}/media/hero/master-banner.webp`,
-              email: "export@asiaoil.com.tr",
-              telephone: "+905325000000",
-              address: {
-                "@type": "PostalAddress",
-                addressCountry: "TR",
-                addressLocality: "Mersin / İzmir",
-                addressRegion: "Akdeniz & Ege",
-              },
-              geo: {
-                "@type": "GeoCoordinates",
-                latitude: "36.7950",
-                longitude: "34.6400",
-              },
-              areaServed: [
-                { "@type": "AdministrativeArea", name: "Worldwide" },
-                { "@type": "AdministrativeArea", name: "Middle East" },
-                { "@type": "AdministrativeArea", name: "European Union" },
-                { "@type": "AdministrativeArea", name: "North America" },
-                { "@type": "AdministrativeArea", name: "Africa" },
-                { "@type": "AdministrativeArea", name: "Central Asia" },
-              ],
-              knowsAbout: [
-                "Refined Sunflower Oil (HS 1512.19)",
-                "Extra Virgin Olive Oil (HS 1509.20)",
-                "Bulk Edible Oil Export",
-                "FOB Mersin & CIF Port Logistics",
-                "Private Label Edible Oils",
-              ],
-              contactPoint: {
-                "@type": "ContactPoint",
-                email: "export@asiaoil.com.tr",
-                contactType: "sales and export desk",
-                availableLanguage: ["Turkish", "English", "Arabic", "Russian", "German", "French", "Spanish", "Italian"],
-              },
-            },
-            {
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "Asia Oil",
-              url: siteUrl(),
-              inLanguage: ["tr", "en", "ar", "ru", "de", "fr", "es", "it"],
-            },
-          ]),
+          __html: JSON.stringify(jsonLdGraph),
         }}
       />
     </SiteFrame>

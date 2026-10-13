@@ -15,8 +15,34 @@ const arabic = Noto_Naskh_Arabic({ subsets: ["arabic"], weight: ["500", "600", "
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
-  title: { default: BRAND, template: `%s · ${BRAND}` },
-  description: "Sunflower oil and olive oil wholesale quotations from Türkiye.",
+  title: { default: `${BRAND} — Global B2B Edible Oil Export`, template: `%s · ${BRAND}` },
+  description: "Asia Oil supplies premium refined sunflower oil (HS 1512.19) and certified olive oil (HS 1509.20) from Türkiye. B2B wholesale quotations, flexitanks, and private label bottling.",
+  applicationName: BRAND,
+  authors: [{ name: "Asia Oil Export Desk", url: siteUrl() }],
+  creator: BRAND,
+  publisher: BRAND,
+  category: "Agri-Food Commodities & Edible Oils",
+  classification: "International B2B Commodity Export",
+  formatDetection: {
+    telephone: true,
+    date: true,
+    address: true,
+    email: true,
+  },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
+  },
+  other: {
+    "geo.region": "TR-33",
+    "geo.placename": "Mersin, Akdeniz, Türkiye",
+    "geo.position": "36.7950;34.6400",
+    "ICBM": "36.7950, 34.6400",
+    "geo.country": "TR",
+  },
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

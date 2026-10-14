@@ -1,11 +1,14 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { can, type Action } from "@/lib/domain"
 import { logoutAction } from "@/server/admin-actions"
+import { getRepo } from "@/server/runtime"
 import { readSession } from "@/server/session"
 import {
   LayoutDashboard,
   Inbox,
+  Activity,
   Package,
   Ship,
   Globe,
@@ -15,6 +18,7 @@ import {
   ExternalLink,
   ShieldCheck,
   Building2,
+  AlertTriangle,
 } from "lucide-react"
 
 type NavLinkItem = {
@@ -27,7 +31,8 @@ type NavLinkItem = {
 
 const NAV_ITEMS: NavLinkItem[] = [
   { label: "Genel Bakış", href: "/admin", action: "analytics", icon: LayoutDashboard },
-  { label: "Talepler & CRM", href: "/admin/leads", action: "leads", icon: Inbox },
+  { label: "İletişim & Talepler", href: "/admin/leads", action: "leads", icon: Inbox },
+  { label: "Ziyaretçi & Giriş Analizi", href: "/admin/analytics", action: "analytics", icon: Activity },
   { label: "Ürünler & Ambalaj", href: "/admin/products", action: "analytics", icon: Package },
   { label: "Lojistik & Radar", href: "/admin/logistics", action: "analytics", icon: Ship },
   { label: "SEO & GEO Merkezi", href: "/admin/seo", action: "seo", icon: Globe },
@@ -39,6 +44,15 @@ export default async function DeskLayout({ children }: { children: React.ReactNo
   const user = await readSession()
   if (!user) redirect("/admin/login")
 
+  let dbStatus: "firestore" | "file" | "error" = "error"
+  try {
+    const repo = await getRepo()
+    await repo.getControl()
+    dbStatus = repo.backendType
+  } catch {
+    dbStatus = "error"
+  }
+
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 md:grid md:grid-cols-[17.5rem_1fr]">
       {/* Sidebar */}
@@ -46,9 +60,9 @@ export default async function DeskLayout({ children }: { children: React.ReactNo
         <div>
           {/* Brand header */}
           <div className="border-b border-slate-800/80 px-6 py-6">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#d4af37] to-[#8a6820] text-slate-950 font-black shadow-md">
-                AO
+            <div className="flex items-center gap-3">
+              <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full overflow-hidden ring-1 ring-[#d4af37]/50 shadow-md">
+                <Image src="/icon.png" alt="Asia Oil" width={40} height={40} className="size-full object-cover" />
               </span>
               <div>
                 <p className="font-display text-xl font-bold tracking-tight text-white leading-none">
@@ -68,10 +82,10 @@ export default async function DeskLayout({ children }: { children: React.ReactNo
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
                 </span>
                 <span className="text-xs font-semibold text-emerald-300">
-                  {user.role === "superadmin" ? "Süper Yönetici" : user.role}
+                  {user.role === "superadmin" ? "Süper Yönetici (Superadmin)" : user.role}
                 </span>
               </div>
-              <p className="mt-1 text-[11px] text-slate-400 truncate font-mono">
+              <p className="mt-1 text-[11px] text-slate-300 truncate font-mono">
                 {user.email}
               </p>
             </div>
@@ -117,7 +131,7 @@ export default async function DeskLayout({ children }: { children: React.ReactNo
             <form action={logoutAction}>
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-rose-400 hover:bg-rose-950/40 hover:text-rose-300 transition"
+                className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-rose-400 hover:bg-rose-950/40 hover:text-rose-300 transition cursor-pointer"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 <span>Çıkış</span>
@@ -133,7 +147,7 @@ export default async function DeskLayout({ children }: { children: React.ReactNo
           <div className="flex items-center gap-3">
             <Building2 className="h-5 w-5 text-slate-500" />
             <span className="text-sm font-semibold text-slate-800">
-              Asia Oil • B2B İhracat Yönetimi
+              Asia Oil • B2B İhracat ve Analitik Yönetimi
             </span>
           </div>
 
@@ -143,10 +157,22 @@ export default async function DeskLayout({ children }: { children: React.ReactNo
               <span>Mersin Limanı / TR (UTC+3)</span>
             </div>
 
-            <div className="flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
-              <span className="h-2 w-2 rounded-full bg-emerald-600 animate-pulse" />
-              <span>Cloud Firestore Aktif</span>
-            </div>
+            {dbStatus === "firestore" ? (
+              <div className="flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
+                <span className="h-2 w-2 rounded-full bg-emerald-600 animate-pulse" />
+                <span>Cloud Firestore Aktif</span>
+              </div>
+            ) : dbStatus === "file" ? (
+              <div className="flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
+                <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+                <span>Sunucu Veritabanı Aktif</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-800">
+                <AlertTriangle className="h-3.5 w-3.5 text-rose-600" />
+                <span>Veritabanı Bağlantı Hatası</span>
+              </div>
+            )}
           </div>
         </header>
 

@@ -11,13 +11,12 @@ export function firestoreConfigured() {
 export async function getRepo(): Promise<Repo> {
   if (repo) return repo
   if (firestoreConfigured()) {
-    try {
-      const { createFirestoreRepo } = await import("@/lib/firestore-repo")
-      repo = createFirestoreRepo()
-      return repo
-    } catch (err) {
-      console.warn("Firestore repo init failed, falling back to memory/file repo:", err)
-    }
+    const { createFirestoreRepo } = await import("@/lib/firestore-repo")
+    repo = createFirestoreRepo()
+    return repo
+  }
+  if (process.env.NODE_ENV === "production" && process.env.NILASYA_ALLOW_FILE_STORE !== "1") {
+    throw new Error("Üretim ortamında Firestore yapılandırması eksik (FIREBASE_SERVICE_ACCOUNT_JSON veya FIREBASE_USE_ADC=1 gerekli).")
   }
   repo = createFileRepo(runtimeFile())
   return repo

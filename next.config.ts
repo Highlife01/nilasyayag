@@ -4,6 +4,11 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   output: "standalone",
   serverExternalPackages: ["firebase-admin", "firebase-functions"],
+  env: {
+    NILASYA_SESSION_SECRET: process.env.NILASYA_SESSION_SECRET || "",
+    NILASYA_ADMIN_PASSWORD: process.env.NILASYA_ADMIN_PASSWORD || "",
+    FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID || "ajansonline",
+  },
   images: { formats: ["image/webp", "image/avif"] },
   turbopack: {
     rules: {

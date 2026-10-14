@@ -4,7 +4,7 @@ import type { Inquiry, Repo } from "@/lib/model"
 
 export type SubmitResult =
   | { ok: true; id: string }
-  | { ok: false; code: "invalid" | "fast" | "stale" | "rate" | "locale"; fields?: Record<string, string> }
+  | { ok: false; code: "invalid" | "fast" | "stale" | "rate" | "locale" | "db_error"; fields?: Record<string, string> }
 
 const HOUR = 60 * 60 * 1000
 
@@ -13,7 +13,15 @@ export const INQUIRY_LIMITS = { perIp: 5, perEmail: 5, site: 300 }
 export async function submitInquiry(
   repo: Repo,
   raw: Record<string, string>,
-  ctx: { ip: string; salt: string; now: number; notify: (inquiry: Inquiry) => Promise<Inquiry["notification"]> },
+  ctx: {
+    ip: string
+    salt: string
+    now: number
+    notify: (inquiry: Inquiry) => Promise<Inquiry["notification"]>
+    sessionId?: string
+    consentGranted?: boolean
+    isTest?: boolean
+  },
 ): Promise<SubmitResult> {
   if ((raw.website ?? "").trim()) return { ok: true, id: "" }
 
@@ -37,10 +45,16 @@ export async function submitInquiry(
 
   const ipHash = sha(ctx.ip || "unknown", ctx.salt)
   const emailHash = sha(value.email.toLowerCase(), ctx.salt)
-  const withinLimits =
-    (await repo.consumeRate(`inquiry:ip:${ipHash}`, INQUIRY_LIMITS.perIp, HOUR, ctx.now)) &&
-    (await repo.consumeRate(`inquiry:email:${emailHash}`, INQUIRY_LIMITS.perEmail, HOUR, ctx.now)) &&
-    (await repo.consumeRate("inquiry:site", INQUIRY_LIMITS.site, HOUR, ctx.now))
+
+  let withinLimits = false
+  try {
+    withinLimits =
+      (await repo.consumeRate(`inquiry:ip:${ipHash}`, INQUIRY_LIMITS.perIp, HOUR, ctx.now)) &&
+      (await repo.consumeRate(`inquiry:email:${emailHash}`, INQUIRY_LIMITS.perEmail, HOUR, ctx.now)) &&
+      (await repo.consumeRate("inquiry:site", INQUIRY_LIMITS.site, HOUR, ctx.now))
+  } catch {
+    return { ok: false, code: "db_error" }
+  }
   if (!withinLimits) return { ok: false, code: "rate" }
 
   const country = value.country === "OTHER" ? value.countryOther.trim() : value.country
@@ -69,16 +83,41 @@ export async function submitInquiry(
     notification: { status: "queued", detail: "Waiting for the mailer." },
     notes: [],
     history: [{ at: createdAt, status: "new", actor: "website" }],
+    ...(ctx.sessionId ? { sessionId: ctx.sessionId } : {}),
+    ...(ctx.isTest ? { isTest: true } : {}),
   }
 
-  await repo.createInquiry(inquiry, {
-    id: crypto.randomUUID(),
-    at: createdAt,
-    actor: "website",
-    action: "inquiry.create",
-    detail: `${inquiry.collection}:${inquiry.id}:${inquiry.company}`,
-  })
+  try {
+    await repo.createInquiry(inquiry, {
+      id: crypto.randomUUID(),
+      at: createdAt,
+      actor: "website",
+      action: "inquiry.create",
+      detail: `${inquiry.collection}:${inquiry.id}:${inquiry.company}`,
+    })
+  } catch {
+    return { ok: false, code: "db_error" }
+  }
 
-  await repo.setNotification(inquiry, await ctx.notify(inquiry))
+  if (ctx.consentGranted && ctx.sessionId) {
+    try {
+      await repo.recordVisitorConversion(
+        ctx.sessionId,
+        inquiry.formType,
+        inquiry.id,
+        `/${inquiry.locale}`,
+        inquiry.locale,
+        createdAt,
+      )
+    } catch {
+      // Do not fail inquiry if analytics conversion update fails
+    }
+  }
+
+  try {
+    await repo.setNotification(inquiry, await ctx.notify(inquiry))
+  } catch {
+    // Notification status update is secondary to inquiry creation
+  }
   return { ok: true, id: inquiry.id }
 }

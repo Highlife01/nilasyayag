@@ -152,13 +152,18 @@ export function InquiryForm({
         ? form.stale
         : !state.ok && state.code === "rate"
           ? form.rate
-          : !state.ok && state.code === "invalid"
-            ? form.invalid
-            : ""
+          : !state.ok && state.code === "db_error"
+            ? isTr
+              ? "Sunucu veritabanına kayıt sırasında bir bağlantı hatası oluştu. Talebiniz kaydedilemedi; lütfen tekrar deneyiniz."
+              : "A server database error occurred while saving your request. Your inquiry was not saved; please try again."
+            : !state.ok && state.code === "invalid"
+              ? form.invalid
+              : ""
 
-  // Dedicated B2B Confirmation Screen upon successful submission
-  if (state.ok && state.done) {
-    const refCode = state.id ? `RFQ-${state.id.slice(0, 8).toUpperCase()}` : "RFQ-CONFIRMED"
+  // Dedicated B2B Confirmation Screen ONLY when server confirms database persistence with a valid ID
+  if (state.ok && state.done && state.id) {
+    const prefix = formType === "contact" ? "MSG" : "RFQ"
+    const refCode = `${prefix}-${state.id.slice(0, 8).toUpperCase()}`
     return (
       <div className="relative overflow-hidden rounded-3xl border border-emerald-200 bg-gradient-to-b from-white via-emerald-50/20 to-white p-8 text-center shadow-xl md:p-12">
         <div className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-emerald-400/10 blur-3xl" />
@@ -169,19 +174,25 @@ export function InquiryForm({
         </div>
 
         <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-emerald-300 bg-emerald-100/70 px-4 py-1.5 text-xs font-mono font-bold text-emerald-900">
-          <span>{isTr ? "Talep Referans No:" : "Inquiry Reference ID:"}</span>
+          <span>{isTr ? "Sunucu Kayıt Referans No:" : "Server Record Reference ID:"}</span>
           <span className="text-emerald-950 underline decoration-emerald-500/50">{refCode}</span>
         </div>
 
         <h3 className="font-display mt-4 text-3xl font-extrabold text-slate-900 md:text-4xl">
-          {isTr ? "Talebiniz Başarıyla Alındı" : "Inquiry Successfully Registered"}
+          {formType === "contact"
+            ? isTr
+              ? "Mesajınız Sunucuya Kaydedildi"
+              : "Message Saved to Server"
+            : isTr
+              ? "Talebiniz Başarıyla Alındı"
+              : "Inquiry Successfully Registered"}
         </h3>
 
         <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-600 md:text-base">
           {form.success ||
             (isTr
-              ? "Talebiniz Mersin Uluslararası Limanı (MIP) ihracat masamıza ulaştı. Satış temsilcimiz belirttiğiniz iletişim kanalları üzerinden resmi proforma fatura ve güncel SGS analiz föyü ile en kısa sürede dönüş sağlayacaktır."
-              : "Your procurement inquiry has reached our Mersin Port export desk. Our team will review your specifications and contact you with a formal proforma and laboratory COA.")}
+              ? "Talebiniz Mersin Uluslararası Limanı (MIP) ihracat masamıza ulaştı ve veritabanına kaydedildi. Satış temsilcimiz belirttiğiniz iletişim kanalları üzerinden en kısa sürede dönüş sağlayacaktır."
+              : "Your inquiry has reached our Mersin Port export desk and has been saved to our database. Our team will review your specifications and contact you shortly.")}
         </p>
 
         {/* 3 Steps Next Action Timeline */}
@@ -223,17 +234,15 @@ export function InquiryForm({
             className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 cursor-pointer"
           >
             <RotateCcw className="size-3.5 text-slate-500" />
-            <span>{isTr ? "Yeni Bir Talep Gönder" : "Submit Another Request"}</span>
+            <span>{isTr ? "Yeni Bir Mesaj / Talep Gönder" : "Submit Another Request"}</span>
           </button>
 
           <a
-            href="https://wa.me/905325000000"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="mailto:export@asiaoil.com.tr"
             className="inline-flex items-center gap-2 rounded-xl bg-emerald-800 px-6 py-3 text-xs font-bold text-white shadow-md shadow-emerald-950/15 transition hover:bg-emerald-900 cursor-pointer"
           >
             <MessageCircle className="size-4" />
-            <span>{isTr ? "WhatsApp İhracat Hattı" : "WhatsApp Export Desk"}</span>
+            <span>export@asiaoil.com.tr</span>
           </a>
         </div>
       </div>

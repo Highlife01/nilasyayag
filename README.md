@@ -75,3 +75,13 @@ npm run typecheck
 npm run lint
 npm run build
 ```
+
+## Firebase Maliyet Optimizasyonu & Zamanlayici Notu (13.10.2026)
+
+- **Deploy Gerekli mi?**: Hayir, zamanlayici (Cloud Scheduler) ayarlari Google Cloud uzerinde canli olarak guncellenmistir. Su an herhangi bir deploy yapilmasina gerek yoktur.
+- **DEPLOY.bat Hakkinda**: Bu klasordeki DEPLOY.bat yalnizca hosting:nilasyayag dagitimi yapar; bot veya zamanlayici ayarlarini etkilemez ve guvenle calistirilabilir.
+- **Ajans Online Bot Saatleri**:
+  - scheduledNewsBot: Gunde 3 kez (08:00, 13:00, 19:00 - Turkiye Saati)
+  - publishScheduledNews: Gunde 3 kez (08:15, 13:15, 19:15 - Turkiye Saati)
+  - scheduledSocialDigest: Gunde 1 kez (20:00 - Turkiye Saati)
+- **Maliyet Durumu**: Ayda ~13.680 tetiklemeden ayda ~210 tetiklemeye (%98,5 tasarruf) dusurulmus olup, Google Cloud'un aylik 2.000.000 ucretsiz cagri kotasi icinde kaldigi icin ek fatura cikarmaz.

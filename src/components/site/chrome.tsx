@@ -1,5 +1,6 @@
-import type { CSSProperties, ReactNode } from "react"
-import { ArrowUpRight, Globe, Menu, Phone, Mail, Ship, ShieldCheck, CheckCircle2 } from "lucide-react"
+import type { ReactNode } from "react"
+import Image from "next/image"
+import { Globe, Menu, Mail, Ship, ShieldCheck } from "lucide-react"
 import { ARTICLE_IDS, articleIdBySlug, getDict } from "@/content/index"
 import type { Dict } from "@/content/types"
 import { LOCALE_META, PUBLISHED_LOCALES, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
@@ -12,14 +13,14 @@ const MORE: StaticPage[] = ["privateLabel", "quality", "faq", "contact", "privac
 export const BRAND_NAME = "Asia Oil"
 const BRAND_TAGLINE = "EDIBLE OILS · TÜRKİYE"
 
-/** Modern high-tech brand mark */
+/** Official Asia Oil emblem mark */
 export function Mark({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`grid size-10 place-items-center rounded-xl bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-800 font-display text-lg font-black text-white shadow-md shadow-emerald-700/25 group-hover:scale-105 transition-transform duration-200 ${className}`}
+      className={`relative grid size-11 place-items-center rounded-full overflow-hidden shadow-md ring-1 ring-amber-400/40 group-hover:scale-105 transition-transform duration-200 ${className}`}
       aria-hidden="true"
     >
-      A
+      <Image src="/icon.png" alt="" width={44} height={44} className="size-full object-cover" />
     </span>
   )
 }
@@ -57,6 +58,8 @@ export function SiteFrame({
 }) {
   const home = pathFor(locale, "home")
   const articleId = articleSlug ? articleIdBySlug(locale, articleSlug) : null
+  const currentPath = pathFor(locale, page, articleSlug)
+  const verifiedWhatsapp = (settings.whatsapp || "").replace(/[^0-9]/g, "")
 
   return (
     <div className="min-h-full bg-white text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900">
@@ -86,25 +89,27 @@ export function SiteFrame({
             </span>
           </div>
 
-          {/* Right: Direct Desk Info & WhatsApp & Language */}
+          {/* Right: Direct Desk Info & Language */}
           <div className="flex items-center gap-4 sm:gap-5 text-xs">
             <a
-              href="mailto:export@asiaoil.com.tr"
+              href={`mailto:${settings.publicEmail || "export@asiaoil.com.tr"}`}
               className="hidden md:flex items-center gap-1.5 hover:text-amber-300 transition"
             >
               <Mail className="size-3.5 text-amber-400" />
-              <span>export@asiaoil.com.tr</span>
+              <span>{settings.publicEmail || "export@asiaoil.com.tr"}</span>
             </a>
 
-            <a
-              href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20information"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:flex items-center gap-1.5 text-emerald-300 hover:text-emerald-200 font-semibold transition"
-            >
-              <span className="size-1.5 rounded-full bg-emerald-400" />
-              <span>WhatsApp Desk</span>
-            </a>
+            {verifiedWhatsapp ? (
+              <a
+                href={`https://wa.me/${verifiedWhatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:flex items-center gap-1.5 text-emerald-300 hover:text-emerald-200 font-semibold transition"
+              >
+                <span className="size-1.5 rounded-full bg-emerald-400" />
+                <span>WhatsApp Desk</span>
+              </a>
+            ) : null}
 
             {/* Language Dropdown */}
             <details className="relative [&_summary::-webkit-details-marker]:hidden">
@@ -235,6 +240,45 @@ export function SiteFrame({
 
       {/* Main Page Content */}
       <main id="content">{children}</main>
+
+      {/* First-Party Cookie & Analytics Consent Banner */}
+      {!consent ? (
+        <div
+          role="region"
+          aria-label={locale === "tr" ? "Çerez ve Analitik İzni" : "Cookie & Analytics Consent"}
+          className="fixed bottom-0 inset-x-0 z-50 border-t border-emerald-900/40 bg-[#0b1c14]/95 backdrop-blur-md text-[#f7f1e3] px-5 py-4 shadow-2xl"
+        >
+          <div className="mx-auto flex max-w-7xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3 text-xs leading-relaxed">
+              <ShieldCheck className="size-5 text-emerald-400 shrink-0 mt-0.5" />
+              <p className="max-w-3xl text-[#f7f1e3]/90">
+                {locale === "tr"
+                  ? "Sitemizde localStorage veya cihaz parmak izi kullanılmaz. Yalnızca açık izninizle birinci taraf analitik çerez (ziyaret ve sayfa istatistikleri) kullanılır. İzin reddedildiğinde sitemiz tam fonksiyonla çalışmaya devam eder."
+                  : "We do not use localStorage or device fingerprinting. First-party analytics cookies are only enabled with your explicit consent. The site remains fully functional if declined."}
+              </p>
+            </div>
+            <form action="/api/consent" method="POST" className="flex items-center gap-2.5 shrink-0">
+              <input type="hidden" name="next" value={currentPath} />
+              <button
+                type="submit"
+                name="choice"
+                value="necessary"
+                className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-xs font-semibold text-white hover:bg-white/15 transition cursor-pointer"
+              >
+                {locale === "tr" ? "Yalnızca Zorunlu (Reddet)" : "Necessary Only (Decline)"}
+              </button>
+              <button
+                type="submit"
+                name="choice"
+                value="all"
+                className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-emerald-500 transition cursor-pointer"
+              >
+                {locale === "tr" ? "Analitik İzni Ver" : "Allow Analytics"}
+              </button>
+            </form>
+          </div>
+        </div>
+      ) : null}
 
       {/* Modern High-Prestige Corporate Footer */}
       <footer className="bg-[#0b1c14] text-[#f7f1e3] border-t border-emerald-950/30">

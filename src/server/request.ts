@@ -12,10 +12,15 @@ export function clientIp(headers: Headers) {
 
 export function sameOrigin(headers: Headers) {
   const origin = headers.get("origin")
-  const host = headers.get("x-forwarded-host") || headers.get("host")
-  if (!origin || !host) return false
+  if (!origin) return false
   try {
-    return new URL(origin).host === host
+    const originHost = new URL(origin).host.toLowerCase()
+    const candidates = [headers.get("x-forwarded-host"), headers.get("host")]
+      .filter(Boolean)
+      .flatMap((h) => String(h).split(","))
+      .map((h) => h.trim().toLowerCase())
+      .filter(Boolean)
+    return candidates.includes(originHost)
   } catch {
     return false
   }

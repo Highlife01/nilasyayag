@@ -76,7 +76,7 @@ export async function requireUser(action?: Action) {
   return user
 }
 
-export async function authenticate(email: string, password: string, _otp?: string) {
+export async function authenticate(email: string, password: string) {
   const normalized = email.trim().toLowerCase()
   const repo = await getRepo()
   const control = await repo.getControl()

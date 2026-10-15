@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { pathFor, type Locale } from "@/lib/i18n/config"
-import { Package, ShieldCheck, Box, Layers, ArrowUpRight, Check, Sparkles } from "lucide-react"
+import { Package, Box, ArrowUpRight, Check, Sparkles } from "lucide-react"
 
 interface PackagingCategory {
   id: "retail" | "horeca" | "bulk"

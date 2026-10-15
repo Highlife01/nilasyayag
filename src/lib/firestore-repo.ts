@@ -35,7 +35,7 @@ function getAdmin() {
 
 const LEADS = ["rfq_requests", "contact_submissions"] as const
 const CONTROL = "control/state"
-const SETTINGS_TTL = 60_000
+const SETTINGS_TTL = 300_000
 
 function database(): Firestore {
   const { app, firestore } = getAdmin()

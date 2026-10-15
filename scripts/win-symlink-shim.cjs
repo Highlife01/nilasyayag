@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // Windows non-admin symlink fallback shim for Next.js standalone + Firebase Frameworks deploy
 const fs = require("node:fs")
 const fsp = require("node:fs/promises")
@@ -13,7 +14,7 @@ function resolveTarget(target, linkPath) {
   return path.resolve(path.dirname(String(linkPath)), strTarget)
 }
 
-function fallbackCopySync(target, linkPath, type) {
+function fallbackCopySync(target, linkPath) {
   const resolved = resolveTarget(target, linkPath)
   const stat = fs.statSync(resolved)
   if (stat.isDirectory()) {
@@ -25,13 +26,13 @@ function fallbackCopySync(target, linkPath, type) {
 
 fs.symlinkSync = function patchedSymlinkSync(target, linkPath, type) {
   if (String(linkPath).includes(".firebase")) {
-    return fallbackCopySync(target, linkPath, type)
+    return fallbackCopySync(target, linkPath)
   }
   try {
     return origSymlinkSync(target, linkPath, type)
   } catch (err) {
     if (err && (err.code === "EPERM" || err.code === "ENOSYS")) {
-      return fallbackCopySync(target, linkPath, type)
+      return fallbackCopySync(target, linkPath)
     }
     throw err
   }

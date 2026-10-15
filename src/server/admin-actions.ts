@@ -15,7 +15,6 @@ export async function loginAction(_prev: { error: string }, formData: FormData):
   const headerList = await headers()
   const email = String(formData.get("email") || "").trim().toLowerCase().slice(0, 160)
   const password = String(formData.get("password") || "")
-  const otp = String(formData.get("otp") || "")
   const isTest = headerList.get("x-nilasya-test") === "1"
 
   let repo
@@ -76,7 +75,7 @@ export async function loginAction(_prev: { error: string }, formData: FormData):
     return { error: "rate" }
   }
 
-  const result = await authenticate(email, password, otp)
+  const result = await authenticate(email, password)
   if (!result.ok) {
     await recordAttempt("failed", result.reason)
     return { error: result.reason }

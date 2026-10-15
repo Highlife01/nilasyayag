@@ -1,13 +1,11 @@
 import Image from "next/image"
 import type { CSSProperties } from "react"
-import { ArrowRight, ArrowUpRight, Plus, Phone, Ship, CheckCircle2, ShieldCheck, Sparkles, Mail, ChevronDown } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Phone, Ship, CheckCircle2, ShieldCheck, Sparkles, Mail, ChevronDown } from "lucide-react"
 import { ARTICLE_IDS } from "@/content/index"
 import type { Dict, PageCopy } from "@/content/types"
 import { pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
 import { still, type Frame } from "@/lib/media"
 import { InquiryForm, type InitialInquiryValues } from "@/components/site/inquiry-form"
-import { Showcase } from "@/components/site/hero"
-import { Spotlight } from "@/components/site/motion"
 import { QuoteCalculator } from "@/components/site/quote-calculator"
 import { HeroBanner } from "@/components/site/hero-banner"
 import { StatsStrip } from "@/components/site/stats-strip"
@@ -16,11 +14,9 @@ import { ProductionPipeline } from "@/components/site/production-pipeline"
 import { PackagingMatrix } from "@/components/site/packaging-matrix"
 import { CertificationsStrip } from "@/components/site/certifications-strip"
 import { WhyUsSection } from "@/components/site/why-us"
-import { BRAND_NAME, Mark, Wordmark } from "@/components/site/chrome"
 import type { Settings } from "@/lib/model"
 
 const container = "mx-auto max-w-7xl px-5 md:px-10"
-const goldButton = "btn-shine group inline-flex h-14 items-center gap-3 bg-gold-light text-sm font-medium tracking-wide text-ink transition hover:bg-[#f0dba6]"
 const vars = (values: Record<string, string>) => values as CSSProperties
 
 /** Headline split into words; each word slides up from a mask with a stagger. */
@@ -32,21 +28,6 @@ function Words({ text, start = 0, step = 0.055 }: { text: string; start?: number
   ))
 }
 
-function Blobs() {
-  return (
-    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-      <span className="float absolute -left-[10%] top-[10%] size-[44vw] rounded-full bg-[radial-gradient(circle,rgba(226,173,58,0.18),transparent_65%)] blur-3xl" />
-      <span className="float-slow absolute -right-[12%] bottom-[-10%] size-[50vw] rounded-full bg-[radial-gradient(circle,rgba(143,166,91,0.16),transparent_65%)] blur-3xl" />
-    </div>
-  )
-}
-
-function splitTitle(title: string) {
-  const at = title.indexOf(",")
-  if (at < 0) return [title, ""] as const
-  return [title.slice(0, at + 1), title.slice(at + 1).trim()] as const
-}
-
 function Kicker({ children, tone = "dark" }: { children: string; tone?: "dark" | "light" }) {
   return (
     <p className={`flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest ${tone === "light" ? "text-amber-300" : "text-emerald-800"}`}>
@@ -56,7 +37,7 @@ function Kicker({ children, tone = "dark" }: { children: string; tone?: "dark" |
   )
 }
 
-export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict; frames?: Frame[] }) {
+export function HomeView({ locale, dict }: { locale: Locale; dict: Dict; frames?: Frame[] }) {
   return (
     <>
       {/* Immersive Full-Bleed 5-Slide Hero Section with Controller & Marquee */}
@@ -207,47 +188,6 @@ export function HomeView({ locale, dict, frames }: { locale: Locale; dict: Dict;
 
       <Closing locale={locale} dict={dict} />
     </>
-  )
-}
-
-function Collection({
-  href,
-  image,
-  index,
-  title,
-  text,
-  cta,
-  tint,
-  accent,
-}: {
-  href: string
-  image: string
-  index: string
-  title: string
-  text: string
-  cta: string
-  tint: string
-  accent: string
-}) {
-  return (
-    <a href={href} className="reveal-clip group relative isolate flex min-h-[30rem] flex-1 overflow-hidden rounded-3xl border border-slate-200/60 text-white shadow-md transition-[flex-grow] duration-700 ease-out md:hover:flex-[1.35]">
-      <Image src={image} alt="" fill className="-z-20 object-cover transition duration-[1600ms] ease-out group-hover:scale-110" sizes="(min-width: 768px) 60vw, 100vw" />
-      <div className={`absolute inset-0 -z-10 bg-gradient-to-t ${tint} to-transparent transition-opacity duration-700 group-hover:opacity-90`} />
-      <div className="absolute inset-x-0 top-0 -z-10 h-36 bg-gradient-to-b from-black/55 to-transparent" />
-      <div className="flex w-full flex-col justify-between p-8 md:p-12">
-        <span className={`font-mono text-2xl font-extrabold ${accent} opacity-90 transition duration-700 group-hover:translate-x-2 rtl:group-hover:-translate-x-2`}>{index}</span>
-        <div>
-          <h3 className="font-display text-4xl font-extrabold leading-tight transition duration-700 group-hover:-translate-y-2 md:text-5xl">{title}</h3>
-          <p className="mt-3.5 max-w-sm text-sm leading-relaxed text-white/85 transition duration-700 group-hover:-translate-y-1">{text}</p>
-          <span className={`mt-7 inline-flex items-center gap-3 text-sm font-bold tracking-wide ${accent}`}>
-            <span>{cta}</span>
-            <span className="grid size-9 place-items-center rounded-full bg-white/20 backdrop-blur-md text-white transition duration-500 group-hover:bg-white group-hover:text-slate-950">
-              <ArrowUpRight className="size-4 rtl:-scale-x-100" aria-hidden="true" />
-            </span>
-          </span>
-        </div>
-      </div>
-    </a>
   )
 }
 
@@ -446,7 +386,7 @@ export function StandardPage({
         </section>
       ) : null}
       {!form ? <CopyBody copy={copy} /> : null}
-      {page === "sunflower" || page === "olive" ? <Spec dict={dict} family={page === "sunflower" ? dict.nav.sunflower : dict.nav.olive} page={page} locale={locale} /> : null}
+      {page === "sunflower" || page === "olive" ? <Spec family={page === "sunflower" ? dict.nav.sunflower : dict.nav.olive} page={page} locale={locale} /> : null}
       {commercial ? (
         <section className="bg-gradient-to-b from-slate-900 via-[#071d14] to-slate-950 py-20 text-white border-t border-emerald-950/40">
           <div className={container}>
@@ -512,7 +452,7 @@ function QuoteBand({ locale, dict, product }: { locale: Locale; dict: Dict; prod
   )
 }
 
-function Spec({ dict, family, page, locale }: { dict: Dict; family: string; page?: string; locale?: Locale }) {
+function Spec({ family, page, locale }: { family: string; page?: string; locale?: Locale }) {
   const isTr = locale === "tr"
   const isOlive = page === "olive"
 

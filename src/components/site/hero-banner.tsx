@@ -179,29 +179,37 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
     <section className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden bg-white text-slate-950 select-none border-b-2 border-slate-300">
       {/* Background Image Carousel with Vibrant Presentation & High-Contrast Left Mask */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {slides.map((slide, idx) => (
-          <div
-            key={slide.id}
-            aria-hidden={idx !== active}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              idx === active ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <Image
-              src={slide.src}
-              alt={slide.alt}
-              fill
-              priority={idx === 0}
-              sizes="100vw"
-              className={`object-cover object-center transform transition-transform duration-[9000ms] ${
-                idx === active ? "scale-105" : "scale-100"
+        {slides.map((slide, idx) => {
+          const shouldRenderImage = idx === active || idx === (active + 1) % count
+          return (
+            <div
+              key={slide.id}
+              aria-hidden={idx !== active}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                idx === active ? "opacity-100" : "opacity-0"
               }`}
-            />
-            {/* High-Contrast Readability Gradient: Pure solid white on left for razor-sharp typography, fully saturated photo on right */}
-            <div className="absolute inset-0 bg-gradient-to-r from-white via-white/90 via-55% to-white/10" />
-            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent via-60% to-white/30" />
-          </div>
-        ))}
+            >
+              {shouldRenderImage ? (
+                <Image
+                  src={slide.src}
+                  alt={slide.alt}
+                  fill
+                  priority={idx === 0}
+                  fetchPriority={idx === 0 ? "high" : "low"}
+                  loading={idx === 0 ? "eager" : "lazy"}
+                  quality={78}
+                  sizes="100vw"
+                  className={`object-cover object-center transform transition-transform duration-[9000ms] ${
+                    idx === active ? "scale-105" : "scale-100"
+                  }`}
+                />
+              ) : null}
+              {/* High-Contrast Readability Gradient: Pure solid white on left for razor-sharp typography, fully saturated photo on right */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white via-white/90 via-55% to-white/10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent via-60% to-white/30" />
+            </div>
+          )
+        })}
       </div>
 
       {/* Engineering Blueprint Grid Overlay */}

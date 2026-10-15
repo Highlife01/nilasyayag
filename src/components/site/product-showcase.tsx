@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { pathFor, type Locale } from "@/lib/i18n/config"
-import { Droplet, Award, ArrowUpRight, Check, Sparkles, ShieldCheck, Flame, Scale } from "lucide-react"
+import { Droplet, ArrowUpRight, Check, Sparkles, ShieldCheck } from "lucide-react"
 
 interface Product {
   id: string

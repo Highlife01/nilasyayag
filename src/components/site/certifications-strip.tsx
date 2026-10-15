@@ -1,5 +1,5 @@
 import type { Locale } from "@/lib/i18n/config"
-import { ShieldCheck, Award, FileCheck2, CheckCircle2, Globe } from "lucide-react"
+import { ShieldCheck, Award, CheckCircle2 } from "lucide-react"
 
 interface Certificate {
   code: string

@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
-import { cookies } from "next/headers"
 import { notFound } from "next/navigation"
 import { articleIdBySlug, getDict } from "@/content/index"
 import { SiteFrame } from "@/components/site/chrome"
@@ -11,7 +10,6 @@ import { emptyControl } from "@/lib/model"
 import { getRepo } from "@/server/runtime"
 import { siteUrl } from "@/lib/site"
 import { VisitBeacon } from "@/components/site/visit-beacon"
-import { parseSessionBag } from "@/lib/cookies-packed"
 
 import { buildPageJsonLd, getKeywordsForPage, OG_LOCALES } from "@/lib/seo-schema"
 
@@ -138,12 +136,14 @@ export default async function LocalePage({
   const product = initialInquiry.product
   let settings = emptyControl().settings
   try {
-    settings = await (await getRepo()).getSettings()
+    const repo = await getRepo()
+    settings = await Promise.race([
+      repo.getSettings(),
+      new Promise<typeof settings>((_, reject) => setTimeout(() => reject(new Error("timeout")), 1200)),
+    ])
   } catch {
-    // Public site chrome uses default verified corporate settings if DB is temporarily unreachable
+    // Public site chrome uses default verified corporate settings if DB is temporarily slow or unreachable
   }
-  const jar = await cookies()
-  const consent = parseSessionBag(jar.get("__session")?.value, jar).consent
   const articleSlug = article ? dict.articles[article].slug : undefined
   const issuedAt = formIssuedAt()
   const canonicalUrl = siteUrl() + pathFor(locale, page, articleSlug)
@@ -157,9 +157,9 @@ export default async function LocalePage({
   })
 
   return (
-    <SiteFrame locale={locale} dict={dict} page={page} articleSlug={articleSlug} settings={settings} consent={consent}>
+    <SiteFrame locale={locale} dict={dict} page={page} articleSlug={articleSlug} settings={settings}>
       <Suspense fallback={null}>
-        <VisitBeacon consent={consent} />
+        <VisitBeacon />
       </Suspense>
       {page === "home" ? <HomeView locale={locale} dict={dict} frames={heroFrames()} /> : null}
       {page === "insights" && !article ? <ArticleIndex locale={locale} dict={dict} /> : null}

@@ -5,13 +5,24 @@ import { isLocale, LOCALE_META } from "@/lib/i18n/config"
 import { BRAND, siteUrl } from "@/lib/site"
 import "./globals.css"
 
-const sans = Manrope({ subsets: ["latin", "latin-ext", "cyrillic"], variable: "--font-outfit" })
+const sans = Manrope({
+  subsets: ["latin", "latin-ext", "cyrillic"],
+  display: "swap",
+  variable: "--font-outfit",
+})
 const display = Cormorant_Garamond({
   subsets: ["latin", "latin-ext", "cyrillic"],
   weight: ["500", "600", "700"],
+  display: "swap",
   variable: "--font-cormorant",
 })
-const arabic = Noto_Naskh_Arabic({ subsets: ["arabic"], weight: ["500", "600", "700"], variable: "--font-arabic" })
+const arabic = Noto_Naskh_Arabic({
+  subsets: ["arabic"],
+  weight: ["500", "600", "700"],
+  display: "swap",
+  preload: false,
+  variable: "--font-arabic",
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -50,8 +61,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const headerList = await headers()
   const raw = headerList.get("x-locale") || "en"
   const locale = isLocale(raw) ? raw : "en"
+  const fontVars = locale === "ar" ? `${sans.variable} ${display.variable} ${arabic.variable}` : `${sans.variable} ${display.variable}`
   return (
-    <html lang={LOCALE_META[locale].html} dir={LOCALE_META[locale].dir} className={`${sans.variable} ${display.variable} ${arabic.variable} h-full antialiased`}>
+    <html lang={LOCALE_META[locale].html} dir={LOCALE_META[locale].dir} className={`${fontVars} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   )

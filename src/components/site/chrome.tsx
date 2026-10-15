@@ -45,7 +45,6 @@ export function SiteFrame({
   page,
   articleSlug,
   settings,
-  consent,
   children,
 }: {
   locale: Locale
@@ -53,12 +52,10 @@ export function SiteFrame({
   page: StaticPage
   articleSlug?: string
   settings: Settings
-  consent: string | undefined
   children: ReactNode
 }) {
   const home = pathFor(locale, "home")
   const articleId = articleSlug ? articleIdBySlug(locale, articleSlug) : null
-  const currentPath = pathFor(locale, page, articleSlug)
   const verifiedWhatsapp = (settings.whatsapp || "").replace(/[^0-9]/g, "")
 
   return (

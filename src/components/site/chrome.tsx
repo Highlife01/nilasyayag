@@ -68,8 +68,8 @@ export function SiteFrame({
       </a>
 
       {/* Top Global Logistics & Quick Contact Utility Bar */}
-      <div className="border-b border-emerald-950/10 bg-[#092217] text-[#f7f1e3] text-xs py-2 px-5 md:px-10">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+      <div className="border-b border-emerald-950/10 bg-[#092217] text-[#f7f1e3] text-xs py-2 px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28">
+        <div className="mx-auto flex w-full items-center justify-between gap-4">
           {/* Left: Port Dispatch Status */}
           <div className="flex items-center gap-2 text-[#f7f1e3]/85 truncate">
             <span className="relative flex h-2 w-2 shrink-0">
@@ -137,7 +137,7 @@ export function SiteFrame({
 
       {/* Main Persistent Clean Sticky Header */}
       <HeaderShell className="site-header group sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md border-b-2 border-slate-300 transition-all duration-300">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-5 md:px-10">
+        <div className="mx-auto flex h-20 w-full items-center justify-between gap-6 px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28">
           {/* Logo */}
           <a href={home} className="group/brand flex items-center gap-3.5" aria-label={BRAND_NAME}>
             <Mark className="transition duration-300 group-hover/brand:scale-105" />

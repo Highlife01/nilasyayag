@@ -176,7 +176,7 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
   const current = slides[active]
 
   return (
-    <section className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden bg-white text-slate-950 select-none border-b-2 border-slate-300">
+    <section className="relative min-h-[calc(100dvh-7.25rem)] flex flex-col justify-between overflow-hidden bg-white text-slate-950 select-none border-b-2 border-slate-300">
       {/* Background Image Carousel with Vibrant Presentation & High-Contrast Left Mask */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {slides.map((slide, idx) => {
@@ -215,11 +215,11 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
       {/* Engineering Blueprint Grid Overlay */}
       <div className="hero-grid absolute inset-0 z-0 opacity-60 pointer-events-none" />
 
-      {/* Main Content Area */}
-      <div className="container-x relative z-10 pt-16 sm:pt-20 lg:pt-24 pb-12 flex-1 flex flex-col justify-center">
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      {/* Main Content Area — Full-Page Width & Vertically Centered in Viewport */}
+      <div className="w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28 relative z-10 py-8 sm:py-10 lg:py-12 flex-1 flex flex-col justify-center">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-center w-full">
           {/* Left Column: High-Impact Typography & Action Suite */}
-          <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+          <div className="lg:col-span-7 xl:col-span-8 space-y-5 xl:space-y-6">
             {/* High-Tech Glowing Status Radar Chip */}
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-emerald-950 border-2 border-emerald-500/60 text-emerald-200 text-xs font-black tracking-widest uppercase shadow-md backdrop-blur-md">
               <span className="relative flex h-2.5 w-2.5">
@@ -230,7 +230,7 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
             </div>
 
             {/* Majestic Ultra-Bold Headline with Ultra-High Contrast */}
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-[1.08] text-slate-950">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-[1.06] text-slate-950 max-w-5xl">
               <span>{current.titlePart1}</span>
               <span className="bg-gradient-to-r from-emerald-800 via-teal-800 to-emerald-950 bg-clip-text text-transparent underline decoration-emerald-500/30 decoration-4 underline-offset-8">
                 {current.titleHighlight}
@@ -238,7 +238,7 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
             </h1>
 
             {/* Clear, Authoritative B2B Paragraph with Maximum Readability */}
-            <p className="text-base sm:text-lg text-slate-900 leading-relaxed max-w-2xl font-semibold">
+            <p className="text-base sm:text-lg xl:text-xl text-slate-900 leading-relaxed max-w-3xl font-semibold">
               {current.description}
             </p>
 
@@ -258,7 +258,7 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
             </div>
 
             {/* High-Impact CTA Button Group */}
-            <div className="flex flex-wrap items-center gap-4 pt-3">
+            <div className="flex flex-wrap items-center gap-4 pt-2">
               <a
                 href={pathFor(locale, "quote")}
                 className="btn-shine px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-900 hover:from-emerald-600 hover:to-teal-600 text-white font-black text-sm tracking-wide shadow-2xl shadow-emerald-950/40 ring-4 ring-emerald-600/20 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2.5 cursor-pointer border border-emerald-400/30"
@@ -287,7 +287,7 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
             </div>
 
             {/* Quick Fast-Response High-Contrast Trust Bar */}
-            <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-900 pt-2">
+            <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-900 pt-1">
               <span className="flex items-center gap-1.5 text-emerald-900">
                 <Sparkles className="size-4 text-amber-500 fill-amber-500" />
                 <span>{isTr ? "2 Saatte Proforma Yanıtı" : "Proforma within 2 Hours"}</span>
@@ -323,10 +323,24 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
                     </span>
                   </div>
                 </div>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-950 px-2.5 py-1 text-[10px] font-black text-emerald-300">
-                  <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  VERIFIED
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => go(-1)}
+                    aria-label={labels.previous}
+                    className="size-8 rounded-full bg-slate-100 hover:bg-slate-950 hover:text-white border border-slate-300 text-slate-900 grid place-items-center transition cursor-pointer"
+                  >
+                    <ChevronLeft className="size-4 rtl:-scale-x-100" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => go(1)}
+                    aria-label={labels.next}
+                    className="size-8 rounded-full bg-slate-100 hover:bg-slate-950 hover:text-white border border-slate-300 text-slate-900 grid place-items-center transition cursor-pointer"
+                  >
+                    <ChevronRight className="size-4 rtl:-scale-x-100" />
+                  </button>
+                </div>
               </div>
 
               {/* 4-Field Specification Matrix with Solid High Contrast */}
@@ -359,31 +373,11 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
             </div>
           </div>
         </div>
-
-        {/* Floating Prev/Next Slide Arrows */}
-        <div className="hidden sm:flex items-center gap-3 absolute top-1/2 -translate-y-1/2 right-6 z-20">
-          <button
-            type="button"
-            onClick={() => go(-1)}
-            aria-label={labels.previous}
-            className="w-12 h-12 rounded-full bg-white hover:bg-slate-950 hover:text-white border-2 border-slate-400 text-slate-950 grid place-items-center shadow-xl backdrop-blur-md transition-all hover:scale-110 active:scale-90 cursor-pointer"
-          >
-            <ChevronLeft className="w-5 h-5 rtl:-scale-x-100" />
-          </button>
-          <button
-            type="button"
-            onClick={() => go(1)}
-            aria-label={labels.next}
-            className="w-12 h-12 rounded-full bg-white hover:bg-slate-950 hover:text-white border-2 border-slate-400 text-slate-950 grid place-items-center shadow-xl backdrop-blur-md transition-all hover:scale-110 active:scale-90 cursor-pointer"
-          >
-            <ChevronRight className="w-5 h-5 rtl:-scale-x-100" />
-          </button>
-        </div>
       </div>
 
-      {/* 5-Slide Interactive Controller Bar at Bottom */}
-      <div className="relative z-10 border-t-2 border-slate-300 bg-white/95 backdrop-blur-xl py-4 shadow-md">
-        <div className="container-x">
+      {/* 5-Slide Interactive Controller Bar at Bottom — Full-Page Width */}
+      <div className="relative z-10 border-t-2 border-slate-300 bg-white/95 backdrop-blur-xl py-3.5 shadow-md">
+        <div className="w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28">
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {slides.map((s, idx) => {
               const isSelected = active === idx
@@ -395,7 +389,7 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
                     setActive(idx)
                     setPlaying(false)
                   }}
-                  className={`relative text-left p-4 rounded-2xl transition-all duration-300 cursor-pointer ${
+                  className={`relative text-left p-3.5 rounded-2xl transition-all duration-300 cursor-pointer ${
                     idx === 4 ? "col-span-2 sm:col-span-1" : ""
                   } ${
                     isSelected
@@ -403,7 +397,7 @@ export function HeroBanner({ locale, labels }: HeroBannerProps) {
                       : "border-2 bg-white border-slate-300 hover:border-slate-500 shadow-sm"
                   }`}
                 >
-                  <div className="flex items-center justify-between text-xs font-mono font-bold mb-1.5">
+                  <div className="flex items-center justify-between text-xs font-mono font-bold mb-1">
                     <span className={`inline-flex items-center justify-center size-6 rounded-lg text-xs font-black ${
                       isSelected ? "bg-emerald-700 text-white" : "bg-slate-200 text-slate-900"
                     }`}>

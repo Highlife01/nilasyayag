@@ -2,11 +2,8 @@ import fs from "node:fs/promises"
 import path from "node:path"
 import sharp from "sharp"
 
-const sourcePath = process.argv[2]
-if (!sourcePath) {
-  console.error("Usage: node scripts/generate-favicon.mjs <source-image-path>")
-  process.exit(1)
-}
+const root = process.cwd()
+const sourcePath = process.argv[2] || path.join(root, "public", "media", "logo.png")
 
 function buildIcoFromPngs(pngBuffersWithSizes) {
   const count = pngBuffersWithSizes.length
@@ -35,15 +32,48 @@ function buildIcoFromPngs(pngBuffersWithSizes) {
   return Buffer.concat([header, ...dirEntries, ...pngBuffersWithSizes.map((item) => item.buffer)])
 }
 
-async function createCircularPng(inputBuffer, size) {
+async function createCircularPng(inputBuffer, size, sharpenSmall = false) {
   const r = size / 2
   const circleSvg = Buffer.from(
-    `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg"><circle cx="${r}" cy="${r}" r="${r - 0.5}" fill="white"/></svg>`,
+    `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg"><circle cx="${r}" cy="${r}" r="${r - 0.25}" fill="white"/></svg>`,
   )
-  return sharp(inputBuffer)
-    .resize(size, size, { fit: "cover", position: "centre" })
+  let pipeline = sharp(inputBuffer).resize(size, size, {
+    fit: "cover",
+    position: "centre",
+    kernel: sharp.kernel.lanczos3,
+  })
+  if (sharpenSmall) {
+    pipeline = pipeline.sharpen({ sigma: 0.85, m1: 1.0, m2: 2.0 })
+  }
+  return pipeline
     .ensureAlpha()
     .composite([{ input: circleSvg, blend: "dest-in" }])
+    .png({ compressionLevel: 9 })
+    .toBuffer()
+}
+
+async function createMaskablePng(circularLogoBuffer, size) {
+  // Maskable icons require an opaque background and ~82% inner safe zone
+  const innerSize = Math.round(size * 0.84)
+  const resizedLogo = await sharp(circularLogoBuffer)
+    .resize(innerSize, innerSize, { fit: "contain", kernel: sharp.kernel.lanczos3 })
+    .png()
+    .toBuffer()
+
+  const bgSvg = Buffer.from(
+    `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bg" cx="50%" cy="45%" r="65%">
+          <stop offset="0%" stop-color="#123c29"/>
+          <stop offset="100%" stop-color="#092217"/>
+        </radialGradient>
+      </defs>
+      <rect width="${size}" height="${size}" fill="url(#bg)"/>
+    </svg>`,
+  )
+
+  return sharp(bgSvg)
+    .composite([{ input: resizedLogo, gravity: "center" }])
     .png({ compressionLevel: 9 })
     .toBuffer()
 }
@@ -52,12 +82,15 @@ async function main() {
   const rawBuffer = await fs.readFile(sourcePath)
   const trimmed = await sharp(rawBuffer).trim({ threshold: 18 }).toBuffer()
 
-  const png16 = await createCircularPng(trimmed, 16)
-  const png32 = await createCircularPng(trimmed, 32)
-  const png48 = await createCircularPng(trimmed, 48)
-  const png180 = await createCircularPng(trimmed, 180)
-  const png192 = await createCircularPng(trimmed, 192)
-  const png512 = await createCircularPng(trimmed, 512)
+  const png16 = await createCircularPng(trimmed, 16, true)
+  const png32 = await createCircularPng(trimmed, 32, true)
+  const png48 = await createCircularPng(trimmed, 48, true)
+  const png192 = await createCircularPng(trimmed, 192, false)
+  const png512 = await createCircularPng(trimmed, 512, false)
+
+  const appleTouchPng = await createMaskablePng(png512, 180)
+  const maskable192 = await createMaskablePng(png512, 192)
+  const maskable512 = await createMaskablePng(png512, 512)
 
   const icoBuffer = buildIcoFromPngs([
     { size: 16, buffer: png16 },
@@ -65,24 +98,34 @@ async function main() {
     { size: 48, buffer: png48 },
   ])
 
-  const root = process.cwd()
+  const svgBase64 = png192.toString("base64")
+  const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <image width="192" height="192" href="data:image/png;base64,${svgBase64}"/>
+</svg>
+`
+
   await fs.mkdir(path.join(root, "public", "media"), { recursive: true })
 
   await Promise.all([
     fs.writeFile(path.join(root, "src", "app", "favicon.ico"), icoBuffer),
     fs.writeFile(path.join(root, "src", "app", "icon.png"), png512),
-    fs.writeFile(path.join(root, "src", "app", "apple-icon.png"), png180),
+    fs.writeFile(path.join(root, "src", "app", "apple-icon.png"), appleTouchPng),
     fs.writeFile(path.join(root, "public", "favicon.ico"), icoBuffer),
-    fs.writeFile(path.join(root, "public", "icon.png"), png192),
-    fs.writeFile(path.join(root, "public", "apple-icon.png"), png180),
+    fs.writeFile(path.join(root, "public", "favicon-16x16.png"), png16),
+    fs.writeFile(path.join(root, "public", "favicon-32x32.png"), png32),
+    fs.writeFile(path.join(root, "public", "favicon-48x48.png"), png48),
+    fs.writeFile(path.join(root, "public", "icon.png"), png512),
+    fs.writeFile(path.join(root, "public", "icon-192.png"), png192),
+    fs.writeFile(path.join(root, "public", "icon-512.png"), png512),
+    fs.writeFile(path.join(root, "public", "icon-maskable-192.png"), maskable192),
+    fs.writeFile(path.join(root, "public", "icon-maskable-512.png"), maskable512),
+    fs.writeFile(path.join(root, "public", "apple-icon.png"), appleTouchPng),
+    fs.writeFile(path.join(root, "public", "apple-touch-icon.png"), appleTouchPng),
+    fs.writeFile(path.join(root, "public", "icon.svg"), iconSvg, "utf8"),
     fs.writeFile(path.join(root, "public", "media", "logo.png"), png512),
   ])
 
-  for (const oldSvg of [path.join(root, "src", "app", "icon.svg"), path.join(root, "public", "icon.svg")]) {
-    await fs.unlink(oldSvg).catch(() => undefined)
-  }
-
-  console.log("Favicon and brand icons generated successfully.")
+  console.log("Favicon ve PWA ikon seti başarıyla oluşturuldu.")
 }
 
 main().catch((err) => {

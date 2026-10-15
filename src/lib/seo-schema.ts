@@ -172,7 +172,7 @@ interface BuildSchemaArgs {
 
 export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }: BuildSchemaArgs): Record<string, unknown>[] {
   const base = siteUrl()
-  const logoUrl = `${base}/icon.svg`
+  const logoUrl = `${base}/icon-512.png`
   const bannerImage = `${base}/media/hero/master-banner.webp`
 
   // 1. Corporation / Primary Organization Entity

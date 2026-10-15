@@ -36,9 +36,12 @@ export function proxy(request: NextRequest) {
   const response = NextResponse.next({ request: { headers } })
   const consent = bag.consent
 
-  // Only set first-party visitor/session cookies when explicit analytics consent is granted
-  if (consent === "all") {
+  if (consent !== "necessary") {
     let changed = false
+    if (!bag.consent) {
+      bag.consent = "all"
+      changed = true
+    }
     if (!bag.vid) {
       bag.vid = crypto.randomUUID()
       changed = true
@@ -56,7 +59,7 @@ export function proxy(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 180,
       })
     }
-  } else if (consent === "necessary" && (bag.vid || bag.sid)) {
+  } else if (bag.vid || bag.sid) {
     delete bag.vid
     delete bag.sid
     response.cookies.set("__session", serializeSessionBag(bag), {

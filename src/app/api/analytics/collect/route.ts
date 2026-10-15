@@ -29,11 +29,10 @@ export async function POST(request: Request) {
   const jar = await cookies()
   const bag = parseSessionBag(jar.get("__session")?.value, jar)
   const consent = bag.consent
-  // Respect privacy rule: do not run non-essential analytics tracking unless explicit consent is granted
-  if (consent !== "all") {
+  if (consent === "necessary") {
     return new NextResponse(null, {
       status: 204,
-      headers: { "x-analytics-status": "consent_required" },
+      headers: { "x-analytics-status": "consent_declined" },
     })
   }
 
@@ -59,7 +58,7 @@ export async function POST(request: Request) {
   }
 
   const headerList = await headers()
-  const vid = bag.vid || ""
+  const vid = bag.vid && /^[\w-]{8,64}$/.test(bag.vid) ? bag.vid : crypto.randomUUID()
   const existingSid = bag.sid || ""
   const sessionId = existingSid && /^[\w-]{8,64}$/.test(existingSid) ? existingSid : crypto.randomUUID()
 
@@ -164,8 +163,17 @@ export async function POST(request: Request) {
       "x-analytics-session": sessionId,
     },
   })
+  bag.consent = "all"
+  bag.vid = vid
   bag.sid = sessionId
   response.cookies.set("__session", serializeSessionBag(bag), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 180,
+  })
+  response.cookies.set("nilasya_vid", vid, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import Image from "next/image"
-import { Globe, Menu, Mail, Ship, ShieldCheck } from "lucide-react"
+import { Globe, Menu, Mail, Ship } from "lucide-react"
 import { ARTICLE_IDS, articleIdBySlug, getDict } from "@/content/index"
 import type { Dict } from "@/content/types"
 import { LOCALE_META, PUBLISHED_LOCALES, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
@@ -240,45 +240,6 @@ export function SiteFrame({
 
       {/* Main Page Content */}
       <main id="content">{children}</main>
-
-      {/* First-Party Cookie & Analytics Consent Banner */}
-      {!consent ? (
-        <div
-          role="region"
-          aria-label={locale === "tr" ? "Çerez ve Analitik İzni" : "Cookie & Analytics Consent"}
-          className="fixed bottom-0 inset-x-0 z-50 border-t border-emerald-900/40 bg-[#0b1c14]/95 backdrop-blur-md text-[#f7f1e3] px-5 py-4 shadow-2xl"
-        >
-          <div className="mx-auto flex max-w-7xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-start gap-3 text-xs leading-relaxed">
-              <ShieldCheck className="size-5 text-emerald-400 shrink-0 mt-0.5" />
-              <p className="max-w-3xl text-[#f7f1e3]/90">
-                {locale === "tr"
-                  ? "Sitemizde localStorage veya cihaz parmak izi kullanılmaz. Yalnızca açık izninizle birinci taraf analitik çerez (ziyaret ve sayfa istatistikleri) kullanılır. İzin reddedildiğinde sitemiz tam fonksiyonla çalışmaya devam eder."
-                  : "We do not use localStorage or device fingerprinting. First-party analytics cookies are only enabled with your explicit consent. The site remains fully functional if declined."}
-              </p>
-            </div>
-            <form action="/api/consent" method="POST" className="flex items-center gap-2.5 shrink-0">
-              <input type="hidden" name="next" value={currentPath} />
-              <button
-                type="submit"
-                name="choice"
-                value="necessary"
-                className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-xs font-semibold text-white hover:bg-white/15 transition cursor-pointer"
-              >
-                {locale === "tr" ? "Yalnızca Zorunlu (Reddet)" : "Necessary Only (Decline)"}
-              </button>
-              <button
-                type="submit"
-                name="choice"
-                value="all"
-                className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-emerald-500 transition cursor-pointer"
-              >
-                {locale === "tr" ? "Analitik İzni Ver" : "Allow Analytics"}
-              </button>
-            </form>
-          </div>
-        </div>
-      ) : null}
 
       {/* Modern High-Prestige Corporate Footer */}
       <footer className="bg-[#0b1c14] text-[#f7f1e3] border-t border-emerald-950/30">

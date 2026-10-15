@@ -13,8 +13,7 @@ export function VisitBeacon({ consent }: { consent?: string }) {
   const lastSentRef = useRef<{ key: string; at: number } | null>(null)
 
   useEffect(() => {
-    // Do not start non-essential analytics tracking without explicit consent
-    if (consent !== "all") return
+    if (consent === "necessary") return
 
     const utmSource = searchParams.get("utm_source") || ""
     const utmMedium = searchParams.get("utm_medium") || ""

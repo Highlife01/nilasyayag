@@ -29,7 +29,7 @@ export async function submitInquiryAction(_prev: FormState, formData: FormData):
 
   const jar = await cookies()
   const bag = parseSessionBag(jar.get("__session")?.value, jar)
-  const consentGranted = bag.consent === "all"
+  const consentGranted = bag.consent !== "necessary"
   const sessionId = consentGranted ? bag.sid : undefined
   const isTest = headerList.get("x-nilasya-test") === "1" || raw.isTest === "1"
 

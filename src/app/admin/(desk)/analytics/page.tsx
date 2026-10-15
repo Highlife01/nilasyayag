@@ -18,7 +18,6 @@ import {
   ShieldCheck,
   KeyRound,
   Clock,
-  Info,
   Compass,
   FileSpreadsheet,
   ChevronLeft,
@@ -247,35 +246,6 @@ export default async function AnalyticsPage({
             <RotateCcw className="h-3.5 w-3.5" />
             <span>Filtreleri Sıfırla</span>
           </Link>
-        </div>
-      </div>
-
-      {/* Accuracy & Methodology Notice Banner */}
-      <div className="rounded-2xl border border-amber-200/90 bg-amber-50/70 p-4 text-xs text-amber-950">
-        <div className="flex items-start gap-3">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
-          <div className="space-y-1 leading-relaxed">
-            <div className="font-bold text-amber-950">Ölçüm Doğruluğu, Konum ve Gizlilik Notu</div>
-            <p>
-              • <strong>Yaklaşık IP Konumu:</strong> Ülke ve bölge/şehir bilgisi sunucu tarafında doğrulanmış hosting/ağ
-              başlıklarından belirlenir. IP konumu yaklaşık olabilir; VPN, proxy veya kurumsal ağ yönlendirmeleri nedeniyle
-              gerçek konumdan farklı çıkabilir. Ham IP adresi veritabanında veya bu ekranda <strong>saklanmaz ve gösterilmez</strong>.
-            </p>
-            <p>
-              • <strong>Cihaz Modeli ve Tekil Ziyaretçi Sınırlamaları:</strong> Tarayıcı (özellikle iOS/iPhone Safari ve
-              güncel mobil tarayıcılar) kesin cihaz modelini paylaşmadığında ekran boyutundan tahmin yapılmaz ve{" "}
-              <code className="rounded bg-amber-100 px-1 py-0.5 font-mono">Model belirlenemedi</code> gösterilir. Tekil
-              ziyaretçi sayısı 1. taraf analitik çerez izni veren ziyaretçilerde{" "}
-              <code className="rounded bg-amber-100 px-1 py-0.5 font-mono">nilasya_vid</code> çereziyle, izin vermeyenlerde
-              oturum bazında ölçülür; çerez silindiğinde veya farklı tarayıcı kullanıldığında yeni ziyaretçi sayılır.
-            </p>
-            <p>
-              • <strong>Oturum Süresi ve Bot Ayrımı:</strong> Oturum süresi yalnızca ölçülen etkinlikler arasındaki farktan
-              hesaplanır; son etkinlikten sonraki süre uydurulmaz. Bot/tarayıcı otomasyonları ayrı sınıflandırılır (şu anki
-              görünümden hariç tutulan bot oturumu: <strong>{data.summary.botSessionsExcluded}</strong>, hariç tutulan test
-              oturumu: <strong>{data.summary.testSessionsExcluded}</strong>).
-            </p>
-          </div>
         </div>
       </div>
 

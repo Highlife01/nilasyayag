@@ -16,7 +16,7 @@ import { CertificationsStrip } from "@/components/site/certifications-strip"
 import { WhyUsSection } from "@/components/site/why-us"
 import type { Settings } from "@/lib/model"
 
-const container = "mx-auto max-w-7xl px-5 md:px-10"
+const container = "mx-auto w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28"
 const vars = (values: Record<string, string>) => values as CSSProperties
 
 /** Headline split into words; each word slides up from a mask with a stagger. */
@@ -195,23 +195,33 @@ function ArticleCard({ href, index, kicker, title, text, label }: { href: string
   return (
     <a
       href={href}
-      className="reveal group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-500 hover:shadow-xl md:p-10"
+      className="reveal group relative flex flex-col justify-between overflow-hidden rounded-3xl border-2 border-slate-200/90 bg-white p-8 shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:border-emerald-600 hover:shadow-2xl md:p-10"
       style={vars({ "--d": `${(index % 2) * 6}%` })}
     >
+      <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <div className="flex items-start justify-between gap-6">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800 border border-emerald-200">
-          <Sparkles className="size-3 text-emerald-600" />
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-950 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-wider text-emerald-200 border border-emerald-500/40 shadow-sm">
+          <Sparkles className="size-3 text-amber-400" />
           <span>{kicker}</span>
         </span>
-        <span className="font-mono text-xs font-bold text-slate-400">0{index + 1}</span>
+        <span className="font-mono inline-flex size-9 items-center justify-center rounded-xl bg-slate-100 text-xs font-black text-slate-700 transition group-hover:bg-emerald-700 group-hover:text-white">
+          0{index + 1}
+        </span>
       </div>
       <div>
-        <h3 className="font-display mt-7 text-2xl font-bold leading-snug text-slate-900 group-hover:text-emerald-800 transition md:text-3xl">{title}</h3>
-        <p className="mt-3 text-sm leading-relaxed text-slate-600">{text}</p>
-        <span className="mt-7 inline-flex items-center gap-2 text-xs font-bold text-emerald-700 group-hover:text-emerald-900">
-          <span>{label || "İncele"}</span>
-          <ArrowUpRight className="size-4 transition duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
-        </span>
+        <h3 className="font-display mt-7 text-2xl font-black leading-snug text-slate-950 group-hover:text-emerald-800 transition md:text-3xl">
+          {title}
+        </h3>
+        <p className="mt-3.5 text-sm md:text-base leading-relaxed text-slate-600 font-medium">{text}</p>
+        <div className="mt-8 pt-5 border-t border-slate-100 flex items-center justify-between">
+          <span className="inline-flex items-center gap-2 rounded-xl bg-slate-100 px-4 py-2 text-xs font-extrabold text-slate-900 transition group-hover:bg-emerald-700 group-hover:text-white">
+            <span>{label || "İncele"}</span>
+            <ArrowUpRight className="size-4 transition duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" aria-hidden="true" />
+          </span>
+          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
+            ASIA OIL DESK
+          </span>
+        </div>
       </div>
     </a>
   )
@@ -262,9 +272,9 @@ function Closing({ locale, dict }: { locale: Locale; dict: Dict }) {
 export function ArticleIndex({ locale, dict }: { locale: Locale; dict: Dict }) {
   return (
     <>
-      <PageIntro copy={dict.insights} image={still("port")} crumbs={crumbs(locale, dict, "insights")} />
-      <section className="bg-slate-50/70 py-20 md:py-28 border-t border-slate-200">
-        <div className={`${container} grid gap-6 md:grid-cols-2`}>
+      <PageIntro locale={locale} dict={dict} copy={dict.insights} image={still("port")} crumbs={crumbs(locale, dict, "insights")} />
+      <section className="relative bg-gradient-to-b from-slate-100/80 via-white to-slate-50 py-20 md:py-28 border-t border-slate-200">
+        <div className={`${container} grid gap-8 md:grid-cols-2`}>
           {ARTICLE_IDS.map((id, index) => (
             <ArticleCard key={id} href={pathFor(locale, "insights", dict.articles[id].slug)} index={index} kicker={dict.articles[id].kicker} title={dict.articles[id].title} text={dict.articles[id].description} label={dict.ui.read} />
           ))}
@@ -281,16 +291,28 @@ export function ArticleView({ locale, dict, id }: { locale: Locale; dict: Dict; 
   return (
     <>
       <PageIntro
+        locale={locale}
+        dict={dict}
         copy={article}
         image={still(id === "packaging" ? "warehouse" : id === "documents" ? "port" : "sunflower")}
         crumbs={[...crumbs(locale, dict, "insights"), { href: pathFor(locale, "insights", article.slug), label: article.title }]}
       />
-      <CopyBody copy={article} />
-      <section className="border-t border-slate-200 bg-slate-50/80 py-20">
-        <div className={`${container} grid gap-6 md:grid-cols-2`}>
-          {others.map((other, index) => (
-            <ArticleCard key={other} href={pathFor(locale, "insights", dict.articles[other].slug)} index={index} kicker={dict.articles[other].kicker} title={dict.articles[other].title} text={dict.articles[other].description} label={dict.ui.read} />
-          ))}
+      <CopyBody copy={article} locale={locale} dict={dict} />
+      <section className="border-t border-slate-200 bg-slate-100/70 py-20 md:py-24">
+        <div className={container}>
+          <div className="mb-10 flex items-center justify-between">
+            <div>
+              <Kicker>{dict.nav.insights}</Kicker>
+              <h2 className="font-display mt-2 text-2xl font-black text-slate-950 md:text-4xl">
+                {locale === "tr" ? "Diğer İhracat Rehberleri" : "Further Export Briefings"}
+              </h2>
+            </div>
+          </div>
+          <div className="grid gap-8 md:grid-cols-2">
+            {others.map((other, index) => (
+              <ArticleCard key={other} href={pathFor(locale, "insights", dict.articles[other].slug)} index={index} kicker={dict.articles[other].kicker} title={dict.articles[other].title} text={dict.articles[other].description} label={dict.ui.read} />
+            ))}
+          </div>
         </div>
       </section>
       <Closing locale={locale} dict={dict} />
@@ -322,60 +344,84 @@ export function StandardPage({
   const form = page === "quote" || page === "contact"
   return (
     <>
-      <PageIntro copy={copy} image={image} crumbs={crumbs(locale, dict, page)} />
+      <PageIntro locale={locale} dict={dict} copy={copy} image={image} crumbs={crumbs(locale, dict, page)} page={page} />
       {form ? (
-        <section className="bg-slate-50/80 py-20 md:py-28 border-t border-slate-200">
-          <div className={`${container} grid gap-12 lg:grid-cols-[minmax(0,4.2fr)_minmax(0,7.8fr)]`}>
-            <aside className="lg:sticky lg:top-32 lg:self-start space-y-6">
-              <div className="rounded-3xl border border-slate-200/90 bg-white p-8 shadow-sm">
-                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3.5 py-1 text-xs font-bold text-emerald-800 border border-emerald-200">
-                  <ShieldCheck className="size-3.5 text-emerald-600" />
+        <section className="relative bg-gradient-to-b from-slate-100/90 via-white to-slate-50 py-20 md:py-28 border-t border-slate-200">
+          <div className="hero-grid pointer-events-none absolute inset-0 opacity-40" />
+          <div className={`${container} relative z-10 grid gap-12 lg:grid-cols-[minmax(0,4.3fr)_minmax(0,7.7fr)]`}>
+            <aside className="lg:sticky lg:top-28 lg:self-start space-y-6">
+              {/* Executive Dark Desk Card */}
+              <div className="relative overflow-hidden rounded-3xl border-2 border-emerald-900/60 bg-gradient-to-br from-[#092217] via-[#061810] to-[#030d08] p-8 text-white shadow-2xl">
+                <div className="pointer-events-none absolute -right-12 -top-12 size-44 rounded-full bg-emerald-500/15 blur-2xl" />
+                <div className="inline-flex items-center gap-2 rounded-full bg-emerald-950/90 px-3.5 py-1.5 text-[11px] font-black uppercase tracking-wider text-emerald-300 border border-emerald-500/40">
+                  <ShieldCheck className="size-3.5 text-amber-400" />
                   <span>{locale === "tr" ? "B2B İhracat Masası" : "B2B Export Desk"}</span>
                 </div>
-                <h3 className="font-display mt-4 text-2xl font-bold text-slate-900">
+                <h3 className="font-display mt-5 text-2xl md:text-3xl font-black text-white">
                   {page === "quote" ? dict.nav.quote : dict.nav.contact}
                 </h3>
-                <p className="mt-2.5 text-sm text-slate-600 leading-relaxed">
+                <p className="mt-3 text-sm text-slate-300 leading-relaxed">
                   {dict.form.contactIntro || (locale === "tr"
                     ? "Talebiniz doğrudan Mersin Uluslararası Limanı (MIP) ihracat masamıza iletilir. İncelemenin ardından resmi proforma fatura ve laboratuvar spesifikasyon dosyası tarafınıza sunulur."
                     : "Your RFQ goes straight to our Mersin Port export desk. Proforma invoice and spec sheet provided upon review.")}
                 </p>
 
-                <div className="mt-6 space-y-3 pt-6 border-t border-slate-100 text-xs">
-                  <div className="flex items-center gap-2.5 text-slate-700">
-                    <Ship className="size-4 text-emerald-600 shrink-0" />
-                    <span>Mersin Port (MIP) & İzmir Seaport</span>
+                <div className="mt-6 space-y-3.5 pt-6 border-t border-white/10 text-xs">
+                  <div className="flex items-center gap-3 text-emerald-100 font-semibold">
+                    <span className="grid size-8 place-items-center rounded-xl bg-white/10 text-emerald-300 shrink-0">
+                      <Ship className="size-4" />
+                    </span>
+                    <div>
+                      <span className="block text-[10px] uppercase tracking-wider text-emerald-300/70">
+                        {locale === "tr" ? "Ana Çıkış Limanları" : "Primary Dispatch Ports"}
+                      </span>
+                      <span>Mersin Port (MIP) & İzmir Seaport</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2.5 text-slate-700">
-                    <Mail className="size-4 text-amber-500 shrink-0" />
-                    <a href={`mailto:${settings.publicEmail || "export@asiaoil.com.tr"}`} className="text-emerald-700 font-semibold hover:underline">
-                      {settings.publicEmail || "export@asiaoil.com.tr"}
-                    </a>
+                  <div className="flex items-center gap-3 text-emerald-100 font-semibold">
+                    <span className="grid size-8 place-items-center rounded-xl bg-white/10 text-amber-300 shrink-0">
+                      <Mail className="size-4" />
+                    </span>
+                    <div>
+                      <span className="block text-[10px] uppercase tracking-wider text-emerald-300/70">
+                        {locale === "tr" ? "Resmi İhracat E-Posta" : "Official Export Desk"}
+                      </span>
+                      <a href={`mailto:${settings.publicEmail || "export@asiaoil.com.tr"}`} className="text-amber-300 font-bold hover:underline">
+                        {settings.publicEmail || "export@asiaoil.com.tr"}
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* 4 Steps quick guidance */}
-              <div className="rounded-3xl border border-slate-200/90 bg-white p-7 shadow-sm">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  {locale === "tr" ? "İhracat Süreci" : "Quotation Steps"}
-                </h4>
-                <ol className="mt-4 space-y-4">
+              {/* 4 Steps Executive Timeline */}
+              <div className="rounded-3xl border-2 border-slate-200 bg-white p-7 shadow-lg">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-emerald-900">
+                    {locale === "tr" ? "4 Adımda İhracat Süreci" : "4-Step Quotation Workflow"}
+                  </h4>
+                  <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-black text-emerald-800 border border-emerald-200">
+                    FOB / CIF
+                  </span>
+                </div>
+                <ol className="mt-5 space-y-5">
                   {dict.home.steps.map((step, index) => (
-                    <li key={step.t} className="flex items-start gap-3">
-                      <span className="font-mono flex size-7 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-xs font-bold text-emerald-800">
+                    <li key={step.t} className="relative flex items-start gap-3.5">
+                      <span className="font-mono flex size-8 shrink-0 items-center justify-center rounded-xl bg-emerald-950 text-xs font-black text-emerald-300 shadow-sm">
                         0{index + 1}
                       </span>
                       <div>
-                        <span className="block text-sm font-bold text-slate-900">{step.t}</span>
-                        <span className="mt-0.5 block text-xs leading-relaxed text-slate-500">{step.d}</span>
+                        <span className="block text-sm font-black text-slate-950">{step.t}</span>
+                        <span className="mt-0.5 block text-xs leading-relaxed text-slate-600 font-medium">{step.d}</span>
                       </div>
                     </li>
                   ))}
                 </ol>
               </div>
             </aside>
-            <div className="rounded-3xl border border-slate-200 bg-white p-8 md:p-12 shadow-xl">
+
+            <div className="relative overflow-hidden rounded-3xl border-2 border-slate-200/90 bg-white p-8 md:p-12 shadow-2xl">
+              <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-emerald-700 via-teal-600 to-amber-500" />
               {page === "quote" ? (
                 <InquiryForm dict={dict} locale={locale} formType="rfq" product={product} initialValues={initialInquiry} issuedAt={issuedAt} />
               ) : (
@@ -385,7 +431,7 @@ export function StandardPage({
           </div>
         </section>
       ) : null}
-      {!form ? <CopyBody copy={copy} /> : null}
+      {!form ? <CopyBody copy={copy} locale={locale} dict={dict} page={page} /> : null}
       {page === "sunflower" || page === "olive" ? <Spec family={page === "sunflower" ? dict.nav.sunflower : dict.nav.olive} page={page} locale={locale} /> : null}
       {commercial ? (
         <section className="bg-gradient-to-b from-slate-900 via-[#071d14] to-slate-950 py-20 text-white border-t border-emerald-950/40">
@@ -395,28 +441,41 @@ export function StandardPage({
         </section>
       ) : null}
       {page === "faq" ? (
-        <section className="bg-slate-50/70 py-20 pb-28 border-t border-slate-200">
-          <div className="mx-auto max-w-4xl px-5 md:px-10">
-            <div className="mb-10 text-center">
-              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-800 border border-emerald-200">
-                <Sparkles className="size-3.5 text-emerald-600" />
+        <section className="relative bg-gradient-to-b from-white via-slate-50 to-slate-100/70 py-20 pb-28 border-t border-slate-200">
+          <div className="mx-auto max-w-5xl px-5 md:px-10">
+            <div className="mb-12 text-center">
+              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-950 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-emerald-200 border border-emerald-500/40 shadow-sm">
+                <Sparkles className="size-3.5 text-amber-400" />
                 <span>{locale === "tr" ? "Sıkça Sorulan Sorular" : "Frequently Asked Questions"}</span>
               </span>
-              <h2 className="font-display mt-4 text-3xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
+              <h2 className="font-display mt-4 text-3xl font-black tracking-tight text-slate-950 md:text-5xl">
                 {locale === "tr" ? "B2B İhracat ve Sipariş Rehberi" : "B2B Export & Ordering Guide"}
               </h2>
             </div>
             <div className="space-y-4">
-              {dict.faq.items.map((item) => (
-                <details key={item.q} className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-emerald-300 [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 transition hover:text-emerald-800">
-                    <span className="font-display text-xl font-bold leading-snug text-slate-900 group-hover:text-emerald-800 md:text-2xl">{item.q}</span>
-                    <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-slate-100 text-slate-600 transition duration-300 group-open:rotate-180 group-open:bg-emerald-100 group-open:text-emerald-800">
+              {dict.faq.items.map((item, idx) => (
+                <details
+                  key={item.q}
+                  open={idx === 0}
+                  className="group rounded-3xl border-2 border-slate-200 bg-white p-6 md:p-8 shadow-md transition-all hover:border-emerald-500 open:border-emerald-700 open:ring-4 open:ring-emerald-600/10 [&_summary::-webkit-details-marker]:hidden"
+                >
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 transition">
+                    <div className="flex items-center gap-4">
+                      <span className="font-mono inline-flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-xs font-black text-slate-700 transition group-open:bg-emerald-800 group-open:text-white">
+                        0{idx + 1}
+                      </span>
+                      <span className="font-display text-lg font-black leading-snug text-slate-950 group-hover:text-emerald-800 md:text-2xl">
+                        {item.q}
+                      </span>
+                    </div>
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-100 text-slate-700 transition duration-300 group-open:rotate-180 group-open:bg-emerald-800 group-open:text-white">
                       <ChevronDown className="size-4" aria-hidden="true" />
                     </span>
                   </summary>
                   <div className="acc">
-                    <p className="max-w-3xl pt-5 text-sm md:text-base leading-relaxed text-slate-600">{item.a}</p>
+                    <p className="max-w-4xl pt-5 pl-13 text-sm md:text-base leading-relaxed text-slate-700 font-medium">
+                      {item.a}
+                    </p>
                   </div>
                 </details>
               ))}
@@ -572,59 +631,107 @@ function Spec({ family, page, locale }: { family: string; page?: string; locale?
   ]
 
   return (
-    <section className="bg-slate-50/70 pb-24 border-t border-slate-200/80">
-      <div className="mx-auto max-w-5xl px-5 md:px-10">
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl md:p-12">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-6">
-            <div>
-              <Kicker>{family}</Kicker>
-              <h2 className="font-display mt-2 text-3xl font-extrabold text-slate-900 md:text-4xl">
-                {isTr ? "Laboratuvar ve Kimyasal Spesifikasyonlar" : "Laboratory & Chemical Specifications"}
-              </h2>
+    <section className="bg-slate-100/70 pb-24 pt-6 border-t border-slate-200/80">
+      <div className={container}>
+        <div className="overflow-hidden rounded-3xl border-2 border-slate-300 bg-white shadow-2xl">
+          {/* Accredited COA Dark Header Banner */}
+          <div className="bg-gradient-to-r from-[#092217] via-[#061810] to-[#0b291c] px-8 py-8 text-white md:px-12 md:py-10 border-b-2 border-emerald-900">
+            <div className="flex flex-wrap items-center justify-between gap-6">
+              <div>
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1 text-[11px] font-mono font-black uppercase tracking-widest text-amber-300 border border-white/15">
+                  <Sparkles className="size-3.5 text-amber-400" />
+                  <span>{family} • COA LAB SPEC</span>
+                </span>
+                <h2 className="font-display mt-3 text-2xl font-black text-white md:text-4xl">
+                  {isTr ? "Laboratuvar Analiz ve Kimyasal Spesifikasyon Föyü" : "Accredited Laboratory & Chemical Specification Sheet"}
+                </h2>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="inline-flex items-center gap-2 rounded-2xl bg-emerald-950/90 px-4 py-2.5 text-xs font-black text-emerald-300 border border-emerald-500/40 shadow-md">
+                  <ShieldCheck className="size-4 text-emerald-400" />
+                  <span>ISO 22000 &amp; {isOlive ? "IOC" : "Codex Stan 210"}</span>
+                </span>
+              </div>
             </div>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3.5 py-1 text-xs font-bold text-emerald-800 border border-emerald-200">
-              <ShieldCheck className="size-4 text-emerald-600" />
-              <span>ISO 22000 & IOC Akredite</span>
-            </span>
           </div>
 
-          <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/50">
-            <dl className="divide-y divide-slate-200/70">
-              {chemicalSpecs.map((item) => (
-                <div key={item.name} className={`grid gap-2 px-6 py-4.5 md:grid-cols-[18rem_1fr] md:gap-8 items-center ${item.highlight ? "bg-emerald-50/60" : ""}`}>
-                  <dt className="text-xs font-bold uppercase tracking-wider text-slate-600">{item.name}</dt>
-                  <dd className={`text-sm md:text-base font-semibold ${item.highlight ? "text-emerald-950 font-bold" : "text-slate-900"}`}>{item.value}</dd>
+          <div className="p-8 md:p-12">
+            <div className="overflow-hidden rounded-2xl border-2 border-slate-200 bg-white shadow-sm">
+              <dl className="divide-y divide-slate-200">
+                {chemicalSpecs.map((item) => (
+                  <div
+                    key={item.name}
+                    className={`grid gap-2 px-6 py-4.5 md:grid-cols-[20rem_1fr] md:gap-8 items-center transition hover:bg-slate-50 ${
+                      item.highlight ? "bg-emerald-50/70" : ""
+                    }`}
+                  >
+                    <dt className="flex items-center gap-2.5 text-xs font-black uppercase tracking-wider text-slate-700">
+                      <span className={`size-2 rounded-full ${item.highlight ? "bg-emerald-600" : "bg-slate-300"}`} />
+                      <span>{item.name}</span>
+                    </dt>
+                    <dd className={`text-sm md:text-base flex flex-wrap items-center justify-between gap-2 ${item.highlight ? "text-emerald-950 font-black" : "text-slate-900 font-semibold"}`}>
+                      <span>{item.value}</span>
+                      {item.highlight ? (
+                        <span className="rounded-full bg-emerald-800 px-2.5 py-0.5 text-[10px] font-mono font-black uppercase tracking-wider text-white">
+                          GARANTİLİ DEĞER
+                        </span>
+                      ) : null}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            {/* Packaging & Logistics Specs Table */}
+            <div className="mt-12">
+              <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-display text-xl font-black text-slate-950 md:text-2xl">
+                    {isTr ? "İhracat Ambalajlama & Konteyner Yükleme Matrisi" : "Export Packaging & Container Freight Matrix"}
+                  </h3>
+                  <p className="mt-1 text-xs md:text-sm font-medium text-slate-600">
+                    {isTr
+                      ? "Mersin (MIP) ve İzmir Limanı çıkışlı 20' DC, 40' HC ve Flexitank standart konteyner yükleme kapasiteleri."
+                      : "Standard 20' DC, 40' HC, and bulk Flexitank loading capacities from Mersin (MIP) and Izmir Seaport."}
+                  </p>
                 </div>
-              ))}
-            </dl>
-          </div>
+                {locale ? (
+                  <a
+                    href={`${pathFor(locale, "quote")}?product=${isOlive ? "olive" : "sunflower"}`}
+                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-800 px-5 py-2.5 text-xs font-black text-white shadow-md transition hover:bg-emerald-700"
+                  >
+                    <span>{isTr ? "Bu Spesifikasyonla Teklif İste" : "Request Spec Quotation"}</span>
+                    <ArrowRight className="size-3.5 rtl:-scale-x-100" />
+                  </a>
+                ) : null}
+              </div>
 
-          {/* Packaging & Logistics Specs Table */}
-          <div className="mt-12">
-            <h3 className="font-display text-xl font-bold text-slate-900 mb-4">
-              {isTr ? "İhracat Ambalajlama & Konteyner Kapasite Matrisi" : "Export Packaging & Container Freight Matrix"}
-            </h3>
-            <div className="overflow-x-auto rounded-2xl border border-slate-200">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-slate-100 text-xs uppercase font-bold text-slate-700">
-                  <tr>
-                    <th className="px-5 py-3.5">{isTr ? "Ambalaj Formatı" : "Packaging Format"}</th>
-                    <th className="px-5 py-3.5">{isTr ? "Koli İçi Adet" : "Carton Qty"}</th>
-                    <th className="px-5 py-3.5">{isTr ? "FCL Kapasitesi" : "FCL Loading Capacity"}</th>
-                    <th className="px-5 py-3.5">{isTr ? "Paletleme Standardı" : "Palletizing Standard"}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 bg-white">
-                  {packagingList.map((p) => (
-                    <tr key={p.format} className="hover:bg-slate-50/80 transition">
-                      <td className="px-5 py-3.5 font-bold text-slate-900">{p.format}</td>
-                      <td className="px-5 py-3.5 text-slate-600">{p.carton}</td>
-                      <td className="px-5 py-3.5 font-semibold text-emerald-800">{p.fcl}</td>
-                      <td className="px-5 py-3.5 text-slate-600">{p.pallets}</td>
+              <div className="overflow-x-auto rounded-2xl border-2 border-slate-200 shadow-sm">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-950 text-xs uppercase font-black tracking-wider text-white">
+                    <tr>
+                      <th className="px-6 py-4">{isTr ? "Ambalaj Formatı" : "Packaging Format"}</th>
+                      <th className="px-6 py-4">{isTr ? "Koli İçi Adet" : "Carton Qty"}</th>
+                      <th className="px-6 py-4">{isTr ? "FCL Kapasitesi" : "FCL Loading Capacity"}</th>
+                      <th className="px-6 py-4">{isTr ? "Paletleme Standardı" : "Palletizing Standard"}</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200 bg-white">
+                    {packagingList.map((p) => (
+                      <tr key={p.format} className="hover:bg-emerald-50/40 transition">
+                        <td className="px-6 py-4 font-black text-slate-950">{p.format}</td>
+                        <td className="px-6 py-4 font-semibold text-slate-700">{p.carton}</td>
+                        <td className="px-6 py-4">
+                          <span className="inline-flex items-center rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-1 font-mono text-xs font-black text-emerald-900">
+                            {p.fcl}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 font-medium text-slate-600">{p.pallets}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -633,48 +740,120 @@ function Spec({ family, page, locale }: { family: string; page?: string; locale?
   )
 }
 
-function CopyBody({ copy }: { copy: PageCopy }) {
+function CopyBody({ copy, locale, dict, page }: { copy: PageCopy; locale?: Locale; dict?: Dict; page?: StaticPage }) {
+  const isTr = locale === "tr"
+  const productParam = page === "olive" ? "olive" : page === "sunflower" ? "sunflower" : "both"
+
   return (
-    <section className="bg-slate-50/70 py-20 md:py-28 border-t border-slate-200">
-      <div className={`${container} grid gap-14 lg:grid-cols-[minmax(0,3.5fr)_minmax(0,8.5fr)]`}>
-        <nav className="hidden lg:sticky lg:top-32 lg:block lg:self-start" aria-label={copy.kicker}>
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <p className="text-xs font-bold uppercase tracking-wider text-emerald-800">{copy.kicker}</p>
-            <ol className="mt-5 space-y-3 text-sm">
+    <section className="relative bg-gradient-to-b from-slate-100/90 via-white to-slate-100/60 py-20 md:py-28 border-t border-slate-200">
+      <div className="hero-grid pointer-events-none absolute inset-0 opacity-35" />
+      <div className={`${container} relative z-10 grid gap-12 lg:grid-cols-[minmax(0,3.8fr)_minmax(0,8.2fr)]`}>
+        <aside className="hidden lg:sticky lg:top-28 lg:block lg:self-start space-y-6">
+          {/* Sticky Section Index Card */}
+          <nav className="overflow-hidden rounded-3xl border-2 border-slate-200/90 bg-white shadow-xl" aria-label={copy.kicker}>
+            <div className="bg-slate-950 px-6 py-4 text-white flex items-center justify-between">
+              <span className="text-[11px] font-mono font-black uppercase tracking-widest text-amber-400">
+                {copy.kicker}
+              </span>
+              <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+            <ol className="p-5 space-y-2 text-sm">
               {copy.sections.map((section, index) => (
                 <li key={section.h}>
                   <a
                     href={`#s-${index + 1}`}
-                    className="block text-slate-600 transition hover:text-emerald-800 font-medium hover:translate-x-1 duration-200"
+                    className="group flex items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-950 font-bold"
                   >
-                    {section.h}
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="font-mono inline-flex size-6 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-[11px] font-black text-slate-700 transition group-hover:bg-emerald-700 group-hover:text-white">
+                        0{index + 1}
+                      </span>
+                      <span className="truncate">{section.h}</span>
+                    </div>
+                    <ArrowRight className="size-3.5 shrink-0 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-700 rtl:-scale-x-100" />
                   </a>
                 </li>
               ))}
             </ol>
-          </div>
-        </nav>
-        <article className="space-y-10">
+          </nav>
+
+          {/* Direct B2B Export Desk Sticky Card */}
+          {locale && dict ? (
+            <div className="relative overflow-hidden rounded-3xl border-2 border-emerald-900/60 bg-gradient-to-br from-[#092217] via-[#061810] to-[#030d08] p-6 text-white shadow-xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[10px] font-mono font-black uppercase tracking-wider text-emerald-300">
+                <Ship className="size-3.5 text-amber-400" />
+                <span>MERSİN PORT (MIP) &amp; İZMİR</span>
+              </div>
+              <h3 className="font-display mt-3.5 text-lg font-black text-white leading-snug">
+                {isTr ? "Konteyner Bazlı Proforma & Numune Talebi" : "Request FCL Proforma & Lab Sample"}
+              </h3>
+              <p className="mt-2 text-xs leading-relaxed text-slate-300">
+                {isTr
+                  ? "FOB, CFR ve CIF teslim şekilleriyle 20' / 40' FCL ve Flexitank yüklemeleri için ihracat masamızdan 2 saat içinde fiyat alın."
+                  : "Receive a formal FOB/CIF proforma invoice and COA spec sheet from our export desk within 2 hours."}
+              </p>
+              <a
+                href={`${pathFor(locale, "quote")}?product=${productParam}`}
+                className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 text-xs font-black text-slate-950 shadow-lg transition hover:from-amber-400 hover:to-amber-500"
+              >
+                <span>{dict.ui.quote}</span>
+                <ArrowUpRight className="size-4 rtl:-scale-x-100" />
+              </a>
+            </div>
+          ) : null}
+        </aside>
+
+        <article className="space-y-8">
           {copy.sections.map((section, index) => (
             <section
               key={section.h}
               id={`s-${index + 1}`}
-              className="reveal scroll-mt-32 rounded-3xl border border-slate-200 bg-white p-8 md:p-12 shadow-sm"
+              className="reveal group relative overflow-hidden scroll-mt-32 rounded-3xl border-2 border-slate-200/90 bg-white p-8 md:p-12 shadow-lg transition hover:border-emerald-600/60 hover:shadow-xl"
             >
-              <span className="font-mono inline-flex size-8 items-center justify-center rounded-lg bg-emerald-100 text-xs font-bold text-emerald-800">
-                0{index + 1}
-              </span>
-              <h2 className="font-display mt-4 text-2xl font-bold tracking-tight text-slate-900 md:text-4xl">{section.h}</h2>
-              {section.p.map((paragraph, paragraphIndex) => (
-                <p key={paragraph} className={`mt-5 leading-relaxed text-slate-600 ${paragraphIndex === 0 ? "text-base md:text-lg text-slate-700 font-medium" : "text-sm md:text-base"}`}>
-                  {paragraph}
-                </p>
-              ))}
+              <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-emerald-700 via-teal-600 to-amber-500" />
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="inline-flex items-center gap-2.5">
+                  <span className="font-mono inline-flex size-9 items-center justify-center rounded-xl bg-emerald-950 text-xs font-black text-emerald-300 shadow-sm">
+                    0{index + 1}
+                  </span>
+                  <span className="text-[11px] font-mono font-black uppercase tracking-widest text-emerald-800">
+                    {copy.kicker}
+                  </span>
+                </div>
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-600">
+                  ISO 22000 • SGS VERIFIED
+                </span>
+              </div>
+
+              <h2 className="font-display mt-5 text-2xl font-black tracking-tight text-slate-950 md:text-4xl leading-tight">
+                {section.h}
+              </h2>
+
+              <div className="mt-5 space-y-4">
+                {section.p.map((paragraph, paragraphIndex) => (
+                  <p
+                    key={paragraph}
+                    className={`leading-relaxed ${
+                      paragraphIndex === 0
+                        ? "text-base md:text-lg text-slate-800 font-semibold"
+                        : "text-sm md:text-base text-slate-600 font-medium"
+                    }`}
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+
               {section.b ? (
-                <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+                <ul className="mt-8 grid gap-3.5 sm:grid-cols-2 pt-6 border-t border-slate-100">
                   {section.b.map((item) => (
-                    <li key={item} className="flex items-center gap-3 rounded-xl border border-slate-200/90 bg-slate-50/70 p-4 text-sm font-semibold text-slate-800">
-                      <CheckCircle2 className="size-4.5 text-emerald-600 shrink-0" aria-hidden="true" />
+                    <li
+                      key={item}
+                      className="flex items-center gap-3.5 rounded-2xl border-2 border-slate-200/80 bg-slate-50/80 p-4 text-sm font-extrabold text-slate-900 transition hover:border-emerald-500 hover:bg-emerald-50/40"
+                    >
+                      <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-emerald-700 text-white shadow-sm">
+                        <CheckCircle2 className="size-4" aria-hidden="true" />
+                      </span>
                       <span>{item}</span>
                     </li>
                   ))}
@@ -688,31 +867,154 @@ function CopyBody({ copy }: { copy: PageCopy }) {
   )
 }
 
-function PageIntro({ copy, image, crumbs }: { copy: PageCopy; image: string; crumbs: { href: string; label: string }[] }) {
+function PageIntro({
+  copy,
+  image,
+  crumbs,
+  locale,
+  dict,
+  page,
+}: {
+  copy: PageCopy
+  image: string
+  crumbs: { href: string; label: string }[]
+  locale?: Locale
+  dict?: Dict
+  page?: StaticPage
+}) {
+  const isTr = locale === "tr"
+  const productParam = page === "olive" ? "olive" : page === "sunflower" ? "sunflower" : "both"
+
   return (
-    <section className="relative isolate flex min-h-[44vh] md:min-h-[50vh] flex-col justify-center overflow-hidden bg-[#092217] text-white pt-28 pb-16">
+    <section className="relative isolate flex min-h-[54vh] lg:min-h-[60vh] flex-col justify-center overflow-hidden bg-[#061810] text-white py-16 md:py-24 border-b-2 border-emerald-900/60">
+      {/* Background High-Contrast Image & Multi-Layer Gradient */}
       <div className="hero-parallax absolute inset-0 -z-20">
-        <Image src={image} alt="" fill priority className="hero-zoom object-cover opacity-35" sizes="100vw" />
+        <Image src={image} alt="" fill priority quality={78} className="hero-zoom object-cover opacity-40" sizes="100vw" />
       </div>
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#061e14] via-[#092217]/80 to-[#04140e]/90" />
-      <div className={`${container} flex w-full flex-col justify-center`}>
-        <nav className="rise mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold tracking-wide text-emerald-200/80" aria-label="Breadcrumb">
-          {crumbs.map((crumb, index) => (
-            <span key={crumb.href} className="flex items-center gap-2">
-              {index > 0 ? <span className="text-emerald-400/50">/</span> : null}
-              <a href={crumb.href} className="transition hover:text-white" aria-current={index === crumbs.length - 1 ? "page" : undefined}>
-                {crumb.label}
-              </a>
-            </span>
-          ))}
-        </nav>
-        <div className="rise rise-1">
-          <Kicker tone="light">{copy.kicker}</Kicker>
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#04120c] via-[#061c13]/90 via-60% to-[#04120c]/65" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_20%_0%,rgba(16,185,129,0.20),transparent_70%)]" />
+      <div className="hero-grid pointer-events-none absolute inset-0 -z-10 opacity-20" />
+
+      <div className="w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Left Column: Breadcrumbs, Kicker, Headline, Lede & Trust Pills */}
+          <div className="lg:col-span-7 xl:col-span-8">
+            <nav
+              className="rise mb-6 inline-flex flex-wrap items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-xs font-bold tracking-wide text-emerald-200 backdrop-blur-md"
+              aria-label="Breadcrumb"
+            >
+              {crumbs.map((crumb, index) => (
+                <span key={crumb.href} className="flex items-center gap-2">
+                  {index > 0 ? <span className="text-emerald-400/60">/</span> : null}
+                  <a
+                    href={crumb.href}
+                    className={`transition hover:text-white ${index === crumbs.length - 1 ? "text-white font-extrabold" : "text-emerald-200/85"}`}
+                    aria-current={index === crumbs.length - 1 ? "page" : undefined}
+                  >
+                    {crumb.label}
+                  </a>
+                </span>
+              ))}
+            </nav>
+
+            <div className="rise rise-1">
+              <div className="inline-flex items-center gap-2.5 rounded-full bg-emerald-950/90 border border-emerald-400/40 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-amber-300 shadow-lg">
+                <span className="size-2 rounded-full bg-emerald-400 animate-ping" />
+                <span>{copy.kicker}</span>
+              </div>
+            </div>
+
+            <h1 className="font-display mt-5 max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl leading-[1.08]">
+              <Words text={copy.h1} start={0.15} />
+            </h1>
+
+            <p className="rise rise-3 mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-200 font-medium">
+              {copy.lede}
+            </p>
+
+            {/* Quick Authority Badges */}
+            <div className="mt-7 flex flex-wrap gap-2.5">
+              {[
+                "ISO 22000 & HACCP",
+                "Mersin Port (MIP) & İzmir FOB/CIF",
+                "SGS / Bureau Veritas Gözetimi",
+                "EUR.1 & COA Analiz Sertifikası",
+              ].map((badge) => (
+                <span
+                  key={badge}
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3.5 py-2 text-xs font-bold text-white backdrop-blur-md"
+                >
+                  <span className="size-1.5 rounded-full bg-amber-400" />
+                  <span>{badge}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Column: Glassmorphic Executive Export Desk Summary Card */}
+          <div className="hidden lg:block lg:col-span-5 xl:col-span-4">
+            <div className="rounded-3xl border border-white/20 bg-white/10 p-7 backdrop-blur-xl shadow-2xl">
+              <div className="flex items-center justify-between border-b border-white/15 pb-4">
+                <div className="flex items-center gap-3">
+                  <span className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 shadow-md">
+                    <Ship className="size-5" />
+                  </span>
+                  <div>
+                    <span className="block text-[10px] font-mono font-black uppercase tracking-widest text-amber-300">
+                      ASIA OIL EXPORT DESK
+                    </span>
+                    <span className="font-display text-base font-black text-white">
+                      {isTr ? "Doğrudan Fabrika & Liman Çıkışı" : "Direct Refinery & Port Dispatch"}
+                    </span>
+                  </div>
+                </div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-950/90 border border-emerald-400/40 px-2.5 py-1 text-[10px] font-black text-emerald-300">
+                  <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  LIVE
+                </span>
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-3.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-300/80">
+                    {isTr ? "Sevkiyat Limanı" : "Dispatch Port"}
+                  </span>
+                  <span className="mt-1 block font-mono font-black text-white">Mersin MIP / İzmir</span>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-3.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-300/80">
+                    {isTr ? "Teslim Şekli" : "Incoterms"}
+                  </span>
+                  <span className="mt-1 block font-mono font-black text-white">FOB • CFR • CIF</span>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-3.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-300/80">
+                    {isTr ? "Yükleme Tipi" : "Loading Mode"}
+                  </span>
+                  <span className="mt-1 block font-mono font-black text-white">20&apos; / 40&apos; / Flexitank</span>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-3.5">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-emerald-300/80">
+                    {isTr ? "Proforma Süresi" : "Response SLA"}
+                  </span>
+                  <span className="mt-1 block font-mono font-black text-amber-300">
+                    {isTr ? "≤ 2 Saat Yanıt" : "≤ 2 Hours SLA"}
+                  </span>
+                </div>
+              </div>
+
+              {locale && dict && page !== "quote" ? (
+                <a
+                  href={`${pathFor(locale, "quote")}?product=${productParam}`}
+                  className="btn-shine mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-xs font-black text-slate-950 shadow-xl transition hover:from-amber-400 hover:to-amber-500"
+                >
+                  <span>{dict.ui.quote}</span>
+                  <ArrowUpRight className="size-4 rtl:-scale-x-100" />
+                </a>
+              ) : null}
+            </div>
+          </div>
         </div>
-        <h1 className="font-display mt-4 max-w-4xl text-3xl font-extrabold tracking-tight text-white md:text-6xl">
-          <Words text={copy.h1} start={0.2} />
-        </h1>
-        <p className="rise rise-3 mt-5 max-w-2xl text-base md:text-lg leading-relaxed text-slate-200">{copy.lede}</p>
       </div>
     </section>
   )

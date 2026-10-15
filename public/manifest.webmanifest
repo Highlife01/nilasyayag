@@ -1,0 +1,96 @@
+{
+  "id": "/",
+  "name": "Asia Oil — Global B2B Edible Oil Export",
+  "short_name": "Asia Oil",
+  "description": "Asia Oil supplies premium refined sunflower oil (HS 1512.19) and certified olive oil (HS 1509.20) from Türkiye. B2B wholesale quotations, flexitanks, and private label bottling.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#092217",
+  "theme_color": "#092217",
+  "categories": ["business", "food", "shopping", "productivity"],
+  "lang": "en",
+  "dir": "auto",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Request Export Quote (RFQ)",
+      "short_name": "Quote / Teklif",
+      "description": "Submit a B2B bulk or private label edible oil quotation request",
+      "url": "/en/request-a-quote",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Refined Sunflower Oil",
+      "short_name": "Sunflower Oil",
+      "description": "HS 1512.19 Refined Winterized Deodorized Sunflower Oil specifications",
+      "url": "/en/products/sunflower-oil",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Olive Oil Portfolio",
+      "short_name": "Olive Oil",
+      "description": "HS 1509.20 Extra Virgin, Riviera, and Pomace Olive Oil specifications",
+      "url": "/en/products/olive-oil",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Teklif İste (TR)",
+      "short_name": "Teklif İste",
+      "description": "Toptan ayçiçek yağı ve zeytinyağı ihracat teklifi alın",
+      "url": "/tr/teklif-iste",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

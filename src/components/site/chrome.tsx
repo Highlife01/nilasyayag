@@ -59,7 +59,11 @@ export function SiteFrame({
   const verifiedWhatsapp = (settings.whatsapp || "").replace(/[^0-9]/g, "")
 
   return (
-    <div className="min-h-full bg-white text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900">
+    <div
+      dir={LOCALE_META[locale].dir}
+      lang={LOCALE_META[locale].html}
+      className="min-h-full bg-white text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900"
+    >
       <a
         href="#content"
         className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[60] focus:bg-emerald-800 focus:text-white focus:px-4 focus:py-2 focus:rounded-md"

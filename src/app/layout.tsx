@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Cormorant_Garamond, Manrope, Noto_Naskh_Arabic } from "next/font/google"
-import { headers } from "next/headers"
 import { PwaRegister } from "@/components/site/pwa-register"
-import { isLocale, LOCALE_META } from "@/lib/i18n/config"
 import { BRAND, siteUrl } from "@/lib/site"
 import "./globals.css"
 
@@ -86,13 +84,10 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const headerList = await headers()
-  const raw = headerList.get("x-locale") || "en"
-  const locale = isLocale(raw) ? raw : "en"
-  const fontVars = locale === "ar" ? `${sans.variable} ${display.variable} ${arabic.variable}` : `${sans.variable} ${display.variable}`
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const fontVars = `${sans.variable} ${display.variable} ${arabic.variable}`
   return (
-    <html lang={LOCALE_META[locale].html} dir={LOCALE_META[locale].dir} className={`${fontVars} h-full antialiased`}>
+    <html lang="tr" dir="ltr" className={`${fontVars} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
         {children}
         <PwaRegister />

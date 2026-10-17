@@ -7,7 +7,7 @@ import { ArticleIndex, ArticleView, HomeView, StandardPage } from "@/components/
 import { insightBase, isLocale, matchStatic, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
 import { heroFrames } from "@/lib/media"
 import { emptyControl } from "@/lib/model"
-import { getRepo } from "@/server/runtime"
+import { getCorporateSettings } from "@/server/runtime"
 import { siteUrl } from "@/lib/site"
 import { VisitBeacon } from "@/components/site/visit-beacon"
 
@@ -134,16 +134,7 @@ export default async function LocalePage({
     containerType: typeof query.containerType === "string" ? query.containerType : undefined,
   }
   const product = initialInquiry.product
-  let settings = emptyControl().settings
-  try {
-    const repo = await getRepo()
-    settings = await Promise.race([
-      repo.getSettings(),
-      new Promise<typeof settings>((_, reject) => setTimeout(() => reject(new Error("timeout")), 1200)),
-    ])
-  } catch {
-    // Public site chrome uses default verified corporate settings if DB is temporarily slow or unreachable
-  }
+  const settings = await getCorporateSettings()
   const articleSlug = article ? dict.articles[article].slug : undefined
   const issuedAt = formIssuedAt()
   const canonicalUrl = siteUrl() + pathFor(locale, page, articleSlug)

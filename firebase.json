@@ -51,11 +51,32 @@
             "value": "public, max-age=3600"
           }
         ]
+      },
+      {
+        "source": "/_next/static/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "/_next/image**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=86400, stale-while-revalidate=604800"
+          }
+        ]
       }
     ],
     "frameworksBackend": {
       "region": "europe-west1",
-      "memory": "1GiB"
+      "memory": "1GiB",
+      "minInstances": 1,
+      "maxInstances": 10,
+      "concurrency": 80
     }
   }
 }

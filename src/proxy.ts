@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { parseSessionBag, serializeSessionBag } from "@/lib/cookies-packed"
+import { parseSessionBag } from "@/lib/cookies-packed"
 import { isLocale, preferredLocale } from "@/lib/i18n/config"
 
 export function proxy(request: NextRequest) {
@@ -29,47 +29,17 @@ export function proxy(request: NextRequest) {
   const first = pathname.split("/").filter(Boolean)[0]
   if (!first || !isLocale(first)) {
     const locale = preferredLocale(request.headers.get("accept-language"))
-    return NextResponse.redirect(new URL(`/${locale}${pathname === "/" ? "" : pathname}`, request.url))
+    const redirectRes = NextResponse.redirect(new URL(`/${locale}${pathname === "/" ? "" : pathname}`, request.url))
+    redirectRes.headers.set("Cache-Control", "public, max-age=3600, s-maxage=86400")
+    redirectRes.headers.set("Vary", "Accept-Language")
+    return redirectRes
   }
 
   headers.set("x-locale", first)
   const response = NextResponse.next({ request: { headers } })
-  const consent = bag.consent
 
-  if (consent !== "necessary") {
-    let changed = false
-    if (!bag.consent) {
-      bag.consent = "all"
-      changed = true
-    }
-    if (!bag.vid) {
-      bag.vid = crypto.randomUUID()
-      changed = true
-    }
-    if (!bag.sid) {
-      bag.sid = crypto.randomUUID()
-      changed = true
-    }
-    if (changed) {
-      response.cookies.set("__session", serializeSessionBag(bag), {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 180,
-      })
-    }
-  } else if (bag.vid || bag.sid) {
-    delete bag.vid
-    delete bag.sid
-    response.cookies.set("__session", serializeSessionBag(bag), {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 180,
-    })
-  }
+  // Enable CDN Edge Caching for public pages (Firebase Hosting & Google CDN)
+  response.headers.set("Cache-Control", "public, max-age=120, s-maxage=3600, stale-while-revalidate=86400")
 
   return response
 }

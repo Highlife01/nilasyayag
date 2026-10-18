@@ -1,6 +1,6 @@
+import { getDict } from "@/content/index"
 import type { ArticleId, Dict } from "@/content/types"
-import type { Locale, StaticPage } from "@/lib/i18n/config"
-import { pathFor } from "@/lib/i18n/config"
+import { PUBLISHED_LOCALES, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
 import { siteUrl } from "@/lib/site"
 
 export const OG_LOCALES: Record<Locale, string> = {
@@ -12,6 +12,65 @@ export const OG_LOCALES: Record<Locale, string> = {
   fr: "fr_FR",
   es: "es_ES",
   it: "it_IT",
+}
+
+/**
+ * Worldwide regional hreflang mapping (ISO 639-1 + ISO 3166-1 alpha-2)
+ * Maps 45+ global country-language markets to the 8 published locales.
+ */
+export const REGIONAL_HREFLANG_CLUSTERS: Record<Locale, string[]> = {
+  tr: ["tr", "tr-TR", "tr-AZ", "tr-CY"],
+  en: [
+    "en",
+    "en-US",
+    "en-GB",
+    "en-CA",
+    "en-AU",
+    "en-AE",
+    "en-SA",
+    "en-IN",
+    "en-SG",
+    "en-ZA",
+    "en-NG",
+    "en-KE",
+    "en-GH",
+  ],
+  ar: [
+    "ar",
+    "ar-AE",
+    "ar-SA",
+    "ar-QA",
+    "ar-KW",
+    "ar-OM",
+    "ar-BH",
+    "ar-EG",
+    "ar-IQ",
+    "ar-JO",
+    "ar-MA",
+    "ar-DZ",
+    "ar-LY",
+  ],
+  ru: ["ru", "ru-RU", "ru-KZ", "ru-UZ", "ru-KG", "ru-BY", "ru-AZ", "ru-GE"],
+  de: ["de", "de-DE", "de-AT", "de-CH"],
+  fr: ["fr", "fr-FR", "fr-BE", "fr-CH", "fr-CA", "fr-MA", "fr-SN", "fr-CI", "fr-DZ", "fr-TN"],
+  es: ["es", "es-ES", "es-MX", "es-CO", "es-CL", "es-AR", "es-PE"],
+  it: ["it", "it-IT", "it-CH"],
+}
+
+export function buildHreflangAlternates(page: StaticPage, articleId?: ArticleId | null): Record<string, string> {
+  const base = siteUrl()
+  const languages: Record<string, string> = {
+    "x-default": base + pathFor("en", page, articleId ? getDict("en").articles[articleId].slug : undefined),
+  }
+
+  for (const code of PUBLISHED_LOCALES) {
+    const url = base + pathFor(code, page, articleId ? getDict(code).articles[articleId].slug : undefined)
+    for (const hreflang of REGIONAL_HREFLANG_CLUSTERS[code]) {
+      languages[hreflang] = url
+    }
+  }
+
+  return languages
 }
 
 export const GEO_COORDINATES = {
@@ -39,6 +98,74 @@ export const GEO_COORDINATES = {
   },
 }
 
+const HOME_SEO_TITLES: Record<Locale, string> = {
+  tr: "Rafine Ayçiçek Yağı & Natürel Sızma Zeytinyağı İhracatçısı | Toptan, Flexitank & Private Label",
+  en: "Refined Sunflower Oil & Extra Virgin Olive Oil Exporter Türkiye | Bulk Flexitank & Private Label",
+  ar: "تصدير زيت دوار الشمس المكرر وزيت الزيتون البكر الممتاز من تركيا | جملة وفليكسيتانك وعلامة خاصة",
+  ru: "Экспорт рафинированного подсолнечного и оливкового масла из Турции | Оптом, Флекситанк и СТМ",
+  de: "Raffiniertes Sonnenblumenöl & Natives Olivenöl Extra Export Türkei | Großhandel, Flexitank & Private Label",
+  fr: "Exportateur d'Huile de Tournesol Raffinée & Huile d'Olive Vierge Extra Turquie | Vrac Flexitank & MDD",
+  es: "Exportador de Aceite de Girasol Refinado y Aceite de Oliva Virgen Extra Turquía | Granel Flexitank y Marca Blanca",
+  it: "Esportatore di Olio di Girasole Raffinato e Olio Extravergine di Oliva Turchia | Sfuso Flexitank e Private Label",
+}
+
+const HOME_SEO_DESCRIPTIONS: Record<Locale, string> = {
+  tr: "Asia Oil: Türkiye'den 60+ ülkeye rafine ayçiçek yağı (HS 1512.19, FFA <%0.10) ve soğuk sıkım natürel sızma zeytinyağı (HS 1509.20) ihracatı. Mersin Limanı (MIP) & İzmir çıkışlı FOB/CIF konteyner, 24.000L flexitank ve Private Label (OEM) dolum.",
+  en: "Asia Oil exports premium refined sunflower oil (HS 1512.19, FFA <0.10%) and cold-pressed extra virgin olive oil (HS 1509.20) from Mersin Port (MIP) & İzmir, Türkiye to 60+ countries. FOB/CIF FCL containers, 24,000L flexitanks & Private Label OEM bottling.",
+  ar: "آسيا أويل (Asia Oil) لتصدير زيت دوار الشمس المكرر (HS 1512.19) وزيت الزيتون البكر الممتاز المعصور على البارد (HS 1509.20) من ميناء مرسين وإزمير في تركيا إلى أكثر من 60 دولة. شحن FOB/CIF بالحاويات وصهاريج فليكسيتانك 24,000 لتر والتعبئة بالعلامة الخاصة.",
+  ru: "Asia Oil — прямой турецкий экспортер рафинированного подсолнечного масла (HS 1512.19, FFA <0.10%) и оливкового масла Extra Virgin (HS 1509.20). Поставки FOB/CIF из портов Мерсин и Измир в 60+ стран: ПЭТ, жестяная банка 18л, флекситанки 24 000л и Private Label.",
+  de: "Asia Oil exportiert erstklassiges raffiniertes Sonnenblumenöl (HS 1512.19, FFA <0,10%) und kaltgepresstes Natives Olivenöl Extra (HS 1509.20) ab Hafen Mersin (MIP) & Izmir, Türkei in über 60 Länder. FOB/CIF Container, 24.000L Flexitanks & Private Label OEM.",
+  fr: "Asia Oil exporte de l'huile de tournesol raffinée (HS 1512.19, FFA <0,10%) et de l'huile d'olive vierge extra pressée à froid (HS 1509.20) depuis les ports de Mersin (MIP) et Izmir, Turquie vers 60+ pays. Conteneurs FOB/CIF, flexitanks 24 000L et marque privée MDD.",
+  es: "Asia Oil exporta aceite de girasol refinado (HS 1512.19, FFA <0,10%) y aceite de oliva virgen extra prensado en frío (HS 1509.20) desde los puertos de Mersin (MIP) e Izmir, Turquía a más de 60 países. Contenedores FOB/CIF, flexitanques de 24.000L y marca privada OEM.",
+  it: "Asia Oil esporta olio di girasole raffinato (HS 1512.19, FFA <0,10%) e olio extravergine di oliva spremuto a freddo (HS 1509.20) dai porti di Mersin (MIP) e Smirne, Turchia in oltre 60 paesi. Container FOB/CIF, flexitank da 24.000L e imbottigliamento Private Label OEM.",
+}
+
+export function getSeoTitleForPage(
+  locale: Locale,
+  page: StaticPage,
+  dict: Dict,
+  articleId?: ArticleId | null
+): string {
+  if (articleId && dict.articles[articleId]) {
+    return dict.articles[articleId].title
+  }
+  if (page === "home") {
+    return HOME_SEO_TITLES[locale] || HOME_SEO_TITLES.en
+  }
+  const copy =
+    page === "insights"
+      ? dict.insights
+      : page === "faq"
+      ? dict.faq
+      : page === "privacy"
+      ? dict.privacy
+      : dict.pages[page]
+  return copy?.title || HOME_SEO_TITLES[locale]
+}
+
+export function getSeoDescriptionForPage(
+  locale: Locale,
+  page: StaticPage,
+  dict: Dict,
+  articleId?: ArticleId | null
+): string {
+  if (articleId && dict.articles[articleId]) {
+    return dict.articles[articleId].description
+  }
+  if (page === "home") {
+    return HOME_SEO_DESCRIPTIONS[locale] || HOME_SEO_DESCRIPTIONS.en
+  }
+  const copy =
+    page === "insights"
+      ? dict.insights
+      : page === "faq"
+      ? dict.faq
+      : page === "privacy"
+      ? dict.privacy
+      : dict.pages[page]
+  return copy?.description || HOME_SEO_DESCRIPTIONS[locale]
+}
+
 export function getKeywordsForPage(locale: Locale, page: StaticPage, articleId?: ArticleId | null): string[] {
   const commonByLocale: Record<Locale, string[]> = {
     tr: [
@@ -46,72 +173,95 @@ export function getKeywordsForPage(locale: Locale, page: StaticPage, articleId?:
       "ayçiçek yağı ihracatı",
       "rafine ayçiçek yağı toptan",
       "zeytinyağı ihracatçısı türkiye",
+      "natürel sızma zeytinyağı ihracatı",
       "fob mersin ayçiçek yağı",
+      "mersin uluslararası limanı yağ ihracatı",
       "cif bitkisel yağ ihracatı",
       "özel marka fason dolum yağı",
+      "private label sıvı yağ üreticisi",
       "flexitank dökme yağ ihracat",
       "yemeklik yağ toptan türkiye",
+      "18 litre teneke ayçiçek yağı",
+      "mısırözü yağı ihracatı",
+      "kanola yağı toptan",
+      "GTİP 1512.19",
+      "GTİP 1509.20",
     ],
     en: [
       "Asia Oil",
       "sunflower oil export turkey",
-      "refined sunflower oil bulk",
-      "extra virgin olive oil wholesale",
+      "refined sunflower oil bulk supplier",
+      "extra virgin olive oil wholesale exporter",
       "fob mersin edible oils",
-      "cif bulk oil shipping",
-      "private label cooking oil",
-      "flexitank edible oil supplier",
-      "turkish food commodity exporter",
-      "hs 151219 sunflower oil",
-      "hs 150920 olive oil",
+      "cif bulk cooking oil shipping",
+      "private label cooking oil manufacturer",
+      "flexitank 24000l edible oil supplier",
+      "turkish vegetable oil refinery exporter",
+      "hs 1512.19 refined sunflower oil",
+      "hs 1509.20 extra virgin olive oil",
+      "hs 1515.29 refined corn oil",
+      "hs 1514.19 canola frying oil",
+      "18L tin cooking oil export",
+      "codex stan 210 sunflower oil",
+      "ioc certified olive oil turkey",
     ],
     ar: [
-      "زيت دوار الشمس تركيا",
-      "تصدير زيت الطعام بالجملة",
-      "زيت زيتون بكر ممتاز",
-      "ميناء مرسين تصدير الزيوت",
-      "زيت نباتي مكرر فليكسي تانك",
-      "العلامة الخاصة لزيوت الطعام",
+      "Asia Oil",
+      "تصدير زيت دوار الشمس من تركيا",
+      "زيت دوار الشمس المكرر بالجملة",
+      "زيت زيتون بكر ممتاز تركي",
+      "ميناء مرسين تصدير الزيوت النباتية",
+      "زيت طعام فليكسي تانك 24000 لتر",
+      "تصنيع زيت الطعام بالعلامة الخاصة",
+      "زيت ذرة مكرر للتصدير",
+      "مورد زيوت نباتية FOB مرسين CIF جبل علي جدة",
     ],
     ru: [
+      "Asia Oil",
       "экспорт подсолнечного масла из турции",
-      "рафинированное подсолнечное масло оптом",
-      "оливковое масло экстра вирджин",
-      "флекситанк наливное масло",
-      "контрактный розлив сзмс",
-      "fob мерсин растительное масло",
+      "рафинированное дезодорированное подсолнечное масло оптом",
+      "оливковое масло экстра вирджин турция",
+      "флекситанк 24000л наливное масло",
+      "контрактный розлив масла стм private label",
+      "fob мерсин cif растительное масло",
+      "кукурузное и рапсовое масло оптом",
     ],
     de: [
+      "Asia Oil",
       "sonnenblumenöl export türkei",
       "raffiniertes sonnenblumenöl großhandel",
-      "natives olivenöl extra",
-      "flexitank speiseöl lieferant",
-      "private label speiseöl",
-      "lebensmittelgroßhandel türkei",
+      "natives olivenöl extra großhandel türkei",
+      "flexitank 24000l speiseöl lieferant",
+      "private label speiseöl hersteller",
+      "fob mersin cif rotterdam hamburg speiseöl",
+      "hs 151219 sonnenblumenöl",
     ],
     fr: [
+      "Asia Oil",
       "huile de tournesol export turquie",
       "huile de tournesol raffinée en gros",
-      "huile d olive vierge extra",
-      "fournisseur huile flexitank",
-      "marque de distributeur huile alimentaire",
-      "exportateur agroalimentaire turquie",
+      "huile d olive vierge extra grossiste turquie",
+      "fournisseur huile alimentaire flexitank 24000l",
+      "marque de distributeur mdd huile alimentaire",
+      "exportateur huile végétale fob mersin cif afrique europe",
     ],
     es: [
+      "Asia Oil",
       "exportacion aceite de girasol turquia",
       "aceite de girasol refinado al por mayor",
-      "aceite de oliva virgen extra",
-      "proveedor de aceite en flexitanque",
-      "marca privada aceite comestible",
-      "fob mersin aceite de girasol",
+      "aceite de oliva virgen extra mayorista",
+      "proveedor de aceite comestible en flexitanque",
+      "marca blanca privada aceite vegetal",
+      "fob mersin cif aceite de girasol",
     ],
     it: [
+      "Asia Oil",
       "esportazione olio di girasole turchia",
       "olio di girasole raffinato all ingrosso",
-      "olio extravergine di oliva",
-      "fornitore olio alimentare flexitank",
-      "private label olio commestibile",
-      "cif porto spedizione oli vegetali",
+      "olio extravergine di oliva ingrosso turchia",
+      "fornitore olio alimentare flexitank 24000l",
+      "private label olio vegetale commestibile",
+      "fob mersin cif genova trieste oli vegetali",
     ],
   }
 
@@ -120,42 +270,58 @@ export function getKeywordsForPage(locale: Locale, page: StaticPage, articleId?:
   if (page === "sunflower") {
     return [
       ...baseKeywords,
-      "Refined Sunflower Seed Oil",
-      "HS Code 1512.19",
+      "Refined Winterized Deodorized Sunflower Seed Oil (RBDW)",
+      "HS Code 1512.19.90.00",
       "FFA < 0.10%",
-      "Peroxide < 1.0 meq",
-      "Deodorized sunflower oil",
+      "Peroxide < 1.0 meq O2/kg",
+      "Smoke Point 232C",
+      "Codex Stan 210-1999",
     ]
   }
 
   if (page === "olive") {
     return [
       ...baseKeywords,
-      "Extra Virgin Olive Oil",
+      "Extra Virgin Olive Oil (EVOO)",
+      "Riviera Olive Oil Export",
       "Cold Extracted <= 27C",
-      "HS Code 1509.20",
-      "Acidity < 0.8%",
-      "Aegean harvest olive oil",
+      "HS Code 1509.20.00.00",
+      "Oleic Acidity <= 0.8%",
+      "Polyphenols 350+ mg/kg",
+      "IOC Trade Standard",
     ]
   }
 
-  if (page === "wholesale") {
+  if (page === "wholesale" || page === "trade") {
     return [
       ...baseKeywords,
       "B2B bulk edible oils",
-      "20ft container edible oils",
-      "flexitank 24000 liters",
-      "ocean freight container oils",
+      "20ft FCL container edible oils",
+      "40ft High Cube palletized cooking oil",
+      "flexitank 24000 liters EVOH barrier",
+      "Incoterms 2020 FOB Mersin CFR CIF",
+      "SGS Bureau Veritas pre-shipment inspection",
+      "EUR.1 movement certificate edible oil",
+    ]
+  }
+
+  if (page === "privateLabel") {
+    return [
+      ...baseKeywords,
+      "Private Label OEM Edible Oil",
+      "Custom PET Bottle & Lithographed Tin",
+      "Multilingual Food Label Compliance EU GCC FDA",
+      "EAN-13 GS1 Barcode Retail Packaging",
     ]
   }
 
   if (articleId) {
     return [
       ...baseKeywords,
-      "Trade Guide",
-      "B2B Export Intelligence",
-      "Incoterms 2020",
-      "Edible Oil Specifications",
+      "B2B Edible Oil Trade Guide",
+      "Commodity Export Intelligence",
+      "Incoterms 2020 Maritime Freight",
+      "Edible Oil COA Specifications",
     ]
   }
 
@@ -174,29 +340,167 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
   const base = siteUrl()
   const logoUrl = `${base}/icon-512.png`
   const bannerImage = `${base}/media/hero/master-banner.webp`
+  const sunflowerImage = `${base}/media/stills/sunflower.webp`
+  const oliveImage = `${base}/media/stills/olive.webp`
+  const warehouseImage = `${base}/media/stills/warehouse.webp`
 
-  // 1. Corporation / Primary Organization Entity
+  const pageTitle = getSeoTitleForPage(locale, page, dict, articleId)
+  const pageDescription = getSeoDescriptionForPage(locale, page, dict, articleId)
+
+  // Core Product Entities reusable across Home, Wholesale, and Product pages
+  const sunflowerProductNode = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": `${base}/${locale}/#product-sunflower`,
+    name: locale === "tr" ? "Rafine Ayçiçek Yağı (HS 1512.19 · İhracat Standardı)" : "Refined Sunflower Oil (HS 1512.19 · Export Grade)",
+    description: dict.pages.sunflower.description,
+    image: [sunflowerImage, bannerImage],
+    brand: { "@id": `${base}/#corporation` },
+    manufacturer: { "@id": `${base}/#corporation` },
+    category: "Food, Beverages & Tobacco > Food Items > Cooking & Baking Ingredients > Cooking Oils > Sunflower Oil",
+    sku: "AO-SUN-RBDW-151219",
+    mpn: "HS-1512.19.90.00",
+    gtin13: "8690000151219",
+    countryOfOrigin: { "@type": "Country", name: "TR" },
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "USD",
+      lowPrice: "1050",
+      highPrice: "1350",
+      offerCount: "9",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        priceType: "https://schema.org/ListPrice",
+        priceCurrency: "USD",
+        price: "1150",
+        unitCode: "TNE",
+        unitText: "Metric Tonne (FOB Mersin)",
+      },
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+      url: `${base}${pathFor(locale, "sunflower")}`,
+      seller: { "@id": `${base}/#corporation` },
+      eligibleRegion: { "@type": "Place", name: "Worldwide" },
+    },
+    additionalProperty: [
+      { "@type": "PropertyValue", name: "Harmonized System Code (HS Code)", value: "1512.19.90.00" },
+      { "@type": "PropertyValue", name: "Free Fatty Acids (FFA as Oleic)", value: "<= 0.10%" },
+      { "@type": "PropertyValue", name: "Peroxide Value (Ex-Factory)", value: "<= 1.0 meq O2/kg" },
+      { "@type": "PropertyValue", name: "Moisture & Volatile Matter", value: "<= 0.05%" },
+      { "@type": "PropertyValue", name: "Smoke Point", value: ">= 232 °C" },
+      { "@type": "PropertyValue", name: "Color (Lovibond 5 1/4 inch)", value: "<= 1.0 Red / 10 Yellow" },
+      { "@type": "PropertyValue", name: "Standard", value: "Codex Alimentarius STAN 210-1999" },
+      { "@type": "PropertyValue", name: "Packaging Formats", value: "0.5L, 1L, 2L, 5L PET; 5L, 10L, 18L Tin; 24,000L Flexitank" },
+    ],
+  }
+
+  const oliveProductNode = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": `${base}/${locale}/#product-olive`,
+    name: locale === "tr" ? "Natürel Sızma Zeytinyağı (HS 1509.20 · Soğuk Sıkım)" : "Extra Virgin Olive Oil (HS 1509.20 · Cold Pressed)",
+    description: dict.pages.olive.description,
+    image: [oliveImage, bannerImage],
+    brand: { "@id": `${base}/#corporation` },
+    manufacturer: { "@id": `${base}/#corporation` },
+    category: "Food, Beverages & Tobacco > Food Items > Cooking & Baking Ingredients > Cooking Oils > Olive Oil",
+    sku: "AO-OLV-EVOO-150920",
+    mpn: "HS-1509.20.00.00",
+    gtin13: "8690000150920",
+    countryOfOrigin: { "@type": "Country", name: "TR" },
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "EUR",
+      lowPrice: "6200",
+      highPrice: "7900",
+      offerCount: "6",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        priceType: "https://schema.org/ListPrice",
+        priceCurrency: "EUR",
+        price: "6800",
+        unitCode: "TNE",
+        unitText: "Metric Tonne (FOB Mersin / İzmir)",
+      },
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+      url: `${base}${pathFor(locale, "olive")}`,
+      seller: { "@id": `${base}/#corporation` },
+      eligibleRegion: { "@type": "Place", name: "Worldwide" },
+    },
+    additionalProperty: [
+      { "@type": "PropertyValue", name: "Harmonized System Code (HS Code)", value: "1509.20.00.00" },
+      { "@type": "PropertyValue", name: "Free Acidity (as Oleic Acid)", value: "<= 0.80% (Premium Reserve <= 0.40%)" },
+      { "@type": "PropertyValue", name: "Extraction Method", value: "Mechanical Cold Extraction <= 27°C" },
+      { "@type": "PropertyValue", name: "Peroxide Value", value: "<= 15.0 meq O2/kg" },
+      { "@type": "PropertyValue", name: "Polyphenols", value: ">= 350 mg/kg" },
+      { "@type": "PropertyValue", name: "UV Absorbance (K232 / K270)", value: "K232 <= 2.50 / K270 <= 0.22 / Delta K <= 0.01" },
+      { "@type": "PropertyValue", name: "Standard", value: "International Olive Council (IOC) & EU Reg 2022/2104" },
+      { "@type": "PropertyValue", name: "Packaging Formats", value: "250ml, 500ml, 1L Marasca Glass; 5L Tin; 200L Drum; 1,000L IBC" },
+    ],
+  }
+
+  // 1. Corporation / Global Export Manufacturer Entity
   const corporationSchema = {
     "@context": "https://schema.org",
-    "@type": "Corporation",
+    "@type": ["Corporation", "Organization"],
     "@id": `${base}/#corporation`,
     name: "Asia Oil",
-    legalName: "Asia Oil",
-    alternateName: ["Nilasya Agro Foods", "Asia Yağ", "Asia Oil Global Export Desk"],
+    legalName: "Asia Oil Türkiye",
+    alternateName: ["Asia Oil", "Asia Oil Türkiye", "Asia Yağ", "Asia Oil Global Export Desk"],
     url: base,
-    logo: logoUrl,
-    image: bannerImage,
+    logo: {
+      "@type": "ImageObject",
+      "@id": `${base}/#logo`,
+      url: logoUrl,
+      width: 512,
+      height: 512,
+      caption: "Asia Oil — Edible Oils Türkiye",
+    },
+    image: [bannerImage, sunflowerImage, oliveImage, warehouseImage],
     email: "export@asiaoil.com.tr",
     telephone: "+905325000000",
-    description: dict.metaDescription,
+    description: pageDescription,
+    foundingLocation: {
+      "@type": "Place",
+      name: "Mersin & İzmir, Türkiye",
+    },
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Mersin International Port Export Zone & İzmir Agro Hub",
+      streetAddress: "Mersin International Port (MIP) Free Trade & Export Zone",
       addressLocality: "Mersin",
-      addressRegion: "Akdeniz & Ege",
+      addressRegion: "Akdeniz",
       postalCode: "33000",
       addressCountry: "TR",
     },
+    location: [
+      {
+        "@type": "Place",
+        name: GEO_COORDINATES.mersin.name,
+        address: {
+          "@type": "PostalAddress",
+          ...GEO_COORDINATES.mersin.address,
+        },
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: GEO_COORDINATES.mersin.latitude,
+          longitude: GEO_COORDINATES.mersin.longitude,
+        },
+      },
+      {
+        "@type": "Place",
+        name: GEO_COORDINATES.izmir.name,
+        address: {
+          "@type": "PostalAddress",
+          ...GEO_COORDINATES.izmir.address,
+        },
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: GEO_COORDINATES.izmir.latitude,
+          longitude: GEO_COORDINATES.izmir.longitude,
+        },
+      },
+    ],
     geo: {
       "@type": "GeoCoordinates",
       latitude: GEO_COORDINATES.mersin.latitude,
@@ -204,41 +508,68 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
     },
     areaServed: [
       { "@type": "AdministrativeArea", name: "Worldwide" },
-      { "@type": "AdministrativeArea", name: "European Union" },
-      { "@type": "AdministrativeArea", name: "Middle East (GCC)" },
-      { "@type": "AdministrativeArea", name: "North America" },
-      { "@type": "AdministrativeArea", name: "Africa" },
-      { "@type": "AdministrativeArea", name: "Central Asia" },
-      { "@type": "AdministrativeArea", name: "United Kingdom" },
+      { "@type": "AdministrativeArea", name: "European Union (EU-27)" },
+      { "@type": "AdministrativeArea", name: "Middle East & GCC" },
+      { "@type": "AdministrativeArea", name: "North & Sub-Saharan Africa" },
+      { "@type": "AdministrativeArea", name: "North & South America" },
+      { "@type": "AdministrativeArea", name: "Central Asia & CIS" },
+      { "@type": "AdministrativeArea", name: "Asia-Pacific" },
+      { "@type": "Country", name: "TR" },
+      { "@type": "Country", name: "US" },
+      { "@type": "Country", name: "GB" },
+      { "@type": "Country", name: "DE" },
+      { "@type": "Country", name: "FR" },
+      { "@type": "Country", name: "IT" },
+      { "@type": "Country", name: "ES" },
+      { "@type": "Country", name: "NL" },
+      { "@type": "Country", name: "AE" },
+      { "@type": "Country", name: "SA" },
+      { "@type": "Country", name: "QA" },
+      { "@type": "Country", name: "KW" },
+      { "@type": "Country", name: "IQ" },
+      { "@type": "Country", name: "EG" },
+      { "@type": "Country", name: "MA" },
+      { "@type": "Country", name: "SN" },
+      { "@type": "Country", name: "NG" },
+      { "@type": "Country", name: "KE" },
+      { "@type": "Country", name: "KZ" },
+      { "@type": "Country", name: "UZ" },
     ],
     knowsAbout: [
-      "Refined Sunflower Oil (HS 1512.19)",
-      "Extra Virgin Olive Oil (HS 1509.20)",
-      "Bulk Flexitank Ocean Freight Logistics (24,000L)",
+      "Refined Sunflower Oil Export (HS 1512.19)",
+      "Extra Virgin Olive Oil Cold Extraction (HS 1509.20)",
+      "Refined Corn Oil Export (HS 1515.29)",
+      "Canola & Industrial Frying Oil (HS 1514.19)",
+      "Bulk Flexitank Ocean Freight Logistics (24,000L EVOH)",
       "FOB Mersin & CIF Port International Shipping (Incoterms 2020)",
-      "Private Label (OEM) Edible Oil Bottling",
-      "Codex Alimentarius & IOC Food Standards",
+      "Private Label (OEM) Edible Oil Bottling & Multilingual Labeling",
+      "Codex Alimentarius STAN 210 & International Olive Council (IOC) Standards",
     ],
     hasCredential: [
       { "@type": "EducationalOccupationalCredential", name: "ISO 22000:2018 Food Safety Management System" },
       { "@type": "EducationalOccupationalCredential", name: "ISO 9001:2015 Quality Management System" },
       { "@type": "EducationalOccupationalCredential", name: "HACCP Food Safety Certification" },
-      { "@type": "EducationalOccupationalCredential", name: "Halal Certified Production Lot Inspection" },
+      { "@type": "EducationalOccupationalCredential", name: "Halal Certified Production (SMIIC / OIC)" },
       { "@type": "EducationalOccupationalCredential", name: "Kosher Compliance Verification" },
-      { "@type": "EducationalOccupationalCredential", name: "EUR.1 & Certificate of Origin Issuance" },
+      { "@type": "EducationalOccupationalCredential", name: "EUR.1 Movement Certificate & Certificate of Origin" },
     ],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Asia Oil Global B2B Edible Oils Export Catalog",
+      itemListElement: [
+        { "@type": "Offer", itemOffered: { "@id": `${base}/${locale}/#product-sunflower` } },
+        { "@type": "Offer", itemOffered: { "@id": `${base}/${locale}/#product-olive` } },
+      ],
+    },
     contactPoint: [
       {
         "@type": "ContactPoint",
         telephone: "+905325000000",
-        contactType: "sales and export desk",
+        contactType: "sales and international export desk",
         email: "export@asiaoil.com.tr",
         areaServed: "Worldwide",
-        availableLanguage: ["Turkish", "English", "Arabic", "Russian", "German", "French", "Spanish", "Italian"],
+        availableLanguage: ["tr", "en", "ar", "ru", "de", "fr", "es", "it"],
       },
-    ],
-    sameAs: [
-      "https://github.com/Highlife01/nilasyayag",
     ],
   }
 
@@ -247,7 +578,7 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": `${base}/#website`,
-    name: "Asia Oil",
+    name: "Asia Oil — Global B2B Edible Oil Export",
     url: base,
     publisher: { "@id": `${base}/#corporation` },
     inLanguage: ["tr", "en", "ar", "ru", "de", "fr", "es", "it"],
@@ -258,7 +589,37 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
     },
   }
 
-  // 3. Dynamic BreadcrumbList Schema
+  // 3. WebPage Schema with SpeakableSpecification (GEO & Voice Search readiness)
+  const webPageType =
+    page === "about"
+      ? "AboutPage"
+      : page === "contact" || page === "quote"
+      ? "ContactPage"
+      : page === "insights" && !articleId
+      ? "CollectionPage"
+      : "WebPage"
+
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": webPageType,
+    "@id": `${canonicalUrl}#webpage`,
+    url: canonicalUrl,
+    name: pageTitle,
+    description: pageDescription,
+    inLanguage: locale,
+    isPartOf: { "@id": `${base}/#website` },
+    about: { "@id": `${base}/#corporation` },
+    primaryImageOfPage: {
+      "@type": "ImageObject",
+      url: page === "sunflower" ? sunflowerImage : page === "olive" ? oliveImage : bannerImage,
+    },
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", "h2", ".geo-summary"],
+    },
+  }
+
+  // 4. Dynamic BreadcrumbList Schema
   const breadcrumbItems: { name: string; url: string }[] = [
     { name: dict.nav.home, url: `${base}/${locale}` },
   ]
@@ -274,15 +635,16 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
         url: canonicalUrl,
       })
     } else {
-      const pageTitle = page === "faq"
-        ? dict.nav.faq
-        : page === "privacy"
-        ? dict.nav.privacy
-        : page === "insights"
-        ? dict.nav.insights
-        : dict.pages[page]?.title || page
+      const label =
+        page === "faq"
+          ? dict.nav.faq
+          : page === "privacy"
+          ? dict.nav.privacy
+          : page === "insights"
+          ? dict.nav.insights
+          : dict.pages[page]?.title || page
       breadcrumbItems.push({
-        name: pageTitle,
+        name: label,
         url: canonicalUrl,
       })
     }
@@ -291,6 +653,7 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
+    "@id": `${canonicalUrl}#breadcrumb`,
     itemListElement: breadcrumbItems.map((item, index) => ({
       "@type": "ListItem",
       position: index + 1,
@@ -299,9 +662,91 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
     })),
   }
 
-  const schemas: Record<string, unknown>[] = [corporationSchema, websiteSchema, breadcrumbSchema]
+  const schemas: Record<string, unknown>[] = [corporationSchema, websiteSchema, webPageSchema, breadcrumbSchema]
 
-  // 4. FAQPage Schema (when on FAQ page, or inject on Home)
+  // 5. Product & ItemList Schemas
+  if (page === "home" || page === "wholesale") {
+    schemas.push(sunflowerProductNode, oliveProductNode, {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "@id": `${canonicalUrl}#catalog`,
+      name: locale === "tr" ? "Asia Oil İhracat Ürün Portföyü" : "Asia Oil Global Export Product Line",
+      numberOfItems: 4,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, item: { "@id": `${base}/${locale}/#product-sunflower` } },
+        { "@type": "ListItem", position: 2, item: { "@id": `${base}/${locale}/#product-olive` } },
+        {
+          "@type": "ListItem",
+          position: 3,
+          item: {
+            "@type": "Product",
+            name: locale === "tr" ? "Rafine Mısırözü Yağı (HS 1515.29)" : "Refined Corn Oil (HS 1515.29)",
+            sku: "AO-CRN-RBDW-151529",
+            mpn: "HS-1515.29",
+            brand: { "@id": `${base}/#corporation` },
+            description: "High-smoke-point (235°C) refined corn oil rich in natural plant phytosterols for retail and foodservice export.",
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 4,
+          item: {
+            "@type": "Product",
+            name: locale === "tr" ? "Kanola & Endüstriyel HoReCa Kızartma Yağı (HS 1514.19)" : "Canola & Industrial Frying Oil (HS 1514.19)",
+            sku: "AO-CAN-IND-151419",
+            mpn: "HS-1514.19",
+            brand: { "@id": `${base}/#corporation` },
+            description: "Zero trans-fat high-stability canola and industrial culinary frying oil for HoReCa and food manufacturing.",
+          },
+        },
+      ],
+    })
+  } else if (page === "sunflower") {
+    schemas.push(sunflowerProductNode)
+  } else if (page === "olive") {
+    schemas.push(oliveProductNode)
+  }
+
+  // 6. B2B Service Schema for Private Label, Trade & Wholesale
+  if (page === "privateLabel" || page === "trade" || page === "wholesale") {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "@id": `${canonicalUrl}#service`,
+      name:
+        page === "privateLabel"
+          ? "Private Label (OEM) Edible Oil Bottling & Multilingual Packaging"
+          : "International B2B Edible Oil Export & Flexitank Maritime Logistics (FOB / CIF)",
+      provider: { "@id": `${base}/#corporation` },
+      areaServed: { "@type": "AdministrativeArea", name: "Worldwide" },
+      serviceType: "International B2B Commodity Export & Private Label Manufacturing",
+      availableChannel: {
+        "@type": "ServiceChannel",
+        serviceUrl: `${base}${pathFor(locale, "quote")}`,
+        servicePhone: "+905325000000",
+      },
+    })
+  }
+
+  // 7. HowTo Schema for 4-Step B2B Export Quotation Workflow
+  if (page === "home" || page === "trade" || page === "quote") {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "@id": `${canonicalUrl}#howto-export`,
+      name: dict.home.processTitle,
+      description: dict.metaDescription,
+      step: dict.home.steps.map((s, idx) => ({
+        "@type": "HowToStep",
+        position: idx + 1,
+        name: s.t,
+        text: s.d,
+        url: `${base}${pathFor(locale, "quote")}`,
+      })),
+    })
+  }
+
+  // 8. FAQPage Schema (when on FAQ page or Home)
   if (page === "faq" || page === "home") {
     const faqItems = dict.faq.items || []
     if (faqItems.length > 0) {
@@ -321,90 +766,7 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
     }
   }
 
-  // 5. Product Schema (when on sunflower, olive, or wholesale)
-  if (page === "sunflower") {
-    schemas.push({
-      "@context": "https://schema.org",
-      "@type": "Product",
-      "@id": `${canonicalUrl}#product`,
-      name: locale === "tr" ? "Rafine Ayçiçek Yağı (İhracat Standardı)" : "Refined Sunflower Oil (Export Standard)",
-      description: dict.pages.sunflower.description,
-      image: `${base}/media/hero/1.webp`,
-      brand: { "@id": `${base}/#corporation` },
-      category: "Food > Edible Oils > Sunflower Seed Oil",
-      sku: "AO-SUN-REF-151219",
-      mpn: "HS-1512.19",
-      countryOfOrigin: "TR",
-      offers: {
-        "@type": "AggregateOffer",
-        priceCurrency: "USD",
-        price: "1150",
-        lowPrice: "1050",
-        highPrice: "1350",
-        priceSpecification: {
-          "@type": "UnitPriceSpecification",
-          priceType: "https://schema.org/ListPrice",
-          unitCode: "TNE",
-        },
-        availability: "https://schema.org/InStock",
-        itemCondition: "https://schema.org/NewCondition",
-        url: canonicalUrl,
-        seller: { "@id": `${base}/#corporation` },
-        eligibleRegion: [
-          { "@type": "AdministrativeArea", name: "Worldwide" },
-        ],
-      },
-      additionalProperty: [
-        { "@type": "PropertyValue", name: "Harmonized System Code", value: "HS 1512.19" },
-        { "@type": "PropertyValue", name: "Free Fatty Acids (as Oleic)", value: "<= 0.10%" },
-        { "@type": "PropertyValue", name: "Peroxide Value", value: "<= 1.0 meq O2/kg" },
-        { "@type": "PropertyValue", name: "Smoke Point", value: "> 225 °C" },
-        { "@type": "PropertyValue", name: "Color (Lovibond)", value: "Max 1.5 Red / 15 Yellow" },
-      ],
-    })
-  } else if (page === "olive") {
-    schemas.push({
-      "@context": "https://schema.org",
-      "@type": "Product",
-      "@id": `${canonicalUrl}#product`,
-      name: locale === "tr" ? "Natürel Sızma Zeytinyağı (Soğuk Sıkım)" : "Extra Virgin Olive Oil (Cold Extracted)",
-      description: dict.pages.olive.description,
-      image: `${base}/media/hero/2.webp`,
-      brand: { "@id": `${base}/#corporation` },
-      category: "Food > Edible Oils > Olive Oil",
-      sku: "AO-OLV-EVOO-150920",
-      mpn: "HS-1509.20",
-      countryOfOrigin: "TR",
-      offers: {
-        "@type": "AggregateOffer",
-        priceCurrency: "EUR",
-        price: "6800",
-        lowPrice: "6200",
-        highPrice: "7900",
-        priceSpecification: {
-          "@type": "UnitPriceSpecification",
-          priceType: "https://schema.org/ListPrice",
-          unitCode: "TNE",
-        },
-        availability: "https://schema.org/InStock",
-        itemCondition: "https://schema.org/NewCondition",
-        url: canonicalUrl,
-        seller: { "@id": `${base}/#corporation` },
-        eligibleRegion: [
-          { "@type": "AdministrativeArea", name: "Worldwide" },
-        ],
-      },
-      additionalProperty: [
-        { "@type": "PropertyValue", name: "Harmonized System Code", value: "HS 1509.20" },
-        { "@type": "PropertyValue", name: "Free Acidity (as Oleic)", value: "<= 0.80%" },
-        { "@type": "PropertyValue", name: "Extraction Method", value: "Cold Extracted <= 27°C" },
-        { "@type": "PropertyValue", name: "Peroxide Value", value: "<= 15.0 meq O2/kg" },
-        { "@type": "PropertyValue", name: "Standard", value: "International Olive Council (IOC)" },
-      ],
-    })
-  }
-
-  // 6. TechArticle / Article Schema (when reading an insight article)
+  // 9. TechArticle Schema (when reading an insight article)
   if (articleId && dict.articles[articleId]) {
     const article = dict.articles[articleId]
     schemas.push({
@@ -413,7 +775,7 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
       "@id": `${canonicalUrl}#article`,
       headline: article.title,
       description: article.description,
-      image: bannerImage,
+      image: [bannerImage, warehouseImage],
       inLanguage: locale,
       mainEntityOfPage: canonicalUrl,
       datePublished: "2025-01-15T08:00:00+03:00",
@@ -424,33 +786,14 @@ export function buildPageJsonLd({ locale, dict, page, articleId, canonicalUrl }:
         url: base,
       },
       publisher: {
-        "@type": "Corporation",
-        name: "Asia Oil",
-        logo: { "@type": "ImageObject", url: logoUrl },
+        "@id": `${base}/#corporation`,
       },
       articleSection: "B2B Commodity Export & Logistics",
       keywords: getKeywordsForPage(locale, "insights", articleId).join(", "),
-    })
-  }
-
-  // 7. AboutPage / ContactPage Schema
-  if (page === "about") {
-    schemas.push({
-      "@context": "https://schema.org",
-      "@type": "AboutPage",
-      "@id": `${canonicalUrl}#about`,
-      name: dict.pages.about.title,
-      description: dict.pages.about.description,
-      mainEntity: { "@id": `${base}/#corporation` },
-    })
-  } else if (page === "contact") {
-    schemas.push({
-      "@context": "https://schema.org",
-      "@type": "ContactPage",
-      "@id": `${canonicalUrl}#contact`,
-      name: dict.pages.contact.title,
-      description: dict.pages.contact.description,
-      mainEntity: { "@id": `${base}/#corporation` },
+      speakable: {
+        "@type": "SpeakableSpecification",
+        cssSelector: ["h1", "h2", "p"],
+      },
     })
   }
 

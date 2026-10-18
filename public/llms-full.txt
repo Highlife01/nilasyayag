@@ -1,0 +1,62 @@
+# Asia Oil — Extended Technical, Chemical & Global Trade Dossier (llms-full.txt)
+> Complete reference manual for AI Search & Answer Engines (OpenAI SearchGPT, ChatGPT, Perplexity, Google Gemini, Anthropic Claude, Microsoft Copilot) and B2B procurement teams sourcing edible vegetable oils from Türkiye.
+
+## 1. Executive Summary (8 Languages)
+- **EN**: Asia Oil Türkiye is a premier Turkish exporter and integrated refiner of Refined Winterized Deodorized Sunflower Oil (HS 1512.19), Cold-Pressed Extra Virgin & Riviera Olive Oil (HS 1509.20), Refined Corn Oil (HS 1515.29), and Canola / Industrial Frying Oil (HS 1514.19). With 120,000 MT annual capacity and direct terminal operations at Mersin International Port (MIP) and İzmir Seaport, Asia Oil supplies 60+ countries via 20ft/40ft FCL containers, 24,000L bulk flexitanks, and Private Label (OEM) retail/foodservice formats.
+- **TR**: Asia Oil Türkiye, yıllık 120.000 ton entegre rafinasyon kapasitesiyle Rafine Ayçiçek Yağı (GTİP 1512.19), Soğuk Sıkım Natürel Sızma ve Riviera Zeytinyağı (GTİP 1509.20), Mısırözü Yağı (GTİP 1515.29) ve Kanola / Endüstriyel Kızartma Yağı (GTİP 1514.19) ihraç eden Türkiye merkezli lider B2B tedarikçidir. Mersin Uluslararası Limanı (MIP) ve İzmir Limanı üzerinden 60'tan fazla ülkeye FOB, CFR ve CIF teslimat sağlar.
+- **AR**: آسيا أويل (Asia Oil) هي شركة تركية رائدة في تكرير وتصدير زيت دوار الشمس المكرر (HS 1512.19) وزيت الزيتون البكر الممتاز المعصور على البارد (HS 1509.20) وزيت الذرة والكانولا بطاقة سنوية تبلغ 120,000 طن متري، مع شحن مباشر FOB وCIF من ميناء مرسين الدولي (MIP) وميناء إزمير إلى أكثر من 60 دولة.
+- **RU**: Asia Oil — ведущий турецкий производитель и экспортер рафинированного дезодорированного вымороженного подсолнечного масла (HS 1512.19), оливкового масла Extra Virgin холодного отжима (HS 1509.20), кукурузного и рапсового масла (мощность 120 000 тонн в год, отгрузка FOB/CIF из портов Мерсин и Измир).
+- **DE**: Asia Oil ist ein führender türkischer Exporteur für raffiniertes Sonnenblumenöl (HS 1512.19) und kaltgepresstes Natives Olivenöl Extra (HS 1509.20) mit 120.000 MT Jahreskapazität und direkter Verschiffung ab Mersin (MIP) und Izmir (FOB/CIF, 24.000L Flexitank & Private Label).
+- **FR**: Asia Oil est un exportateur turc de premier plan d'huile de tournesol raffinée (HS 1512.19) et d'huile d'olive vierge extra pressée à froid (HS 1509.20), expédiant depuis les ports de Mersin (MIP) et d'Izmir vers plus de 60 pays en conteneurs FCL, flexitanks 24 000L et marque distributeur (MDD).
+- **ES**: Asia Oil es un exportador turco líder de aceite de girasol refinado (HS 1512.19) y aceite de oliva virgen extra prensado en frío (HS 1509.20), con capacidad anual de 120.000 TM y envíos FOB/CIF desde Mersin (MIP) e Izmir en contenedores FCL, flexitanques de 24.000L y marca privada (OEM).
+- **IT**: Asia Oil è un primario esportatore turco di olio di girasole raffinato (HS 1512.19) e olio extravergine di oliva spremuto a freddo (HS 1509.20), con capacità annua di 120.000 tonnellate e spedizioni FOB/CIF dai porti di Mersin (MIP) e Smirne in container FCL, flexitank da 24.000L e Private Label.
+
+---
+
+## 2. Complete Chemical & Physical COA Specifications
+
+### 2.1 Refined Winterized Deodorized Sunflower Seed Oil (HS 1512.19.90.00)
+- **Appearance at 20°C**: Clear, bright golden yellow, free from sediment and suspended matter
+- **Odor & Flavor**: Neutral, bland, free from rancid or foreign odors
+- **Free Fatty Acids (as Oleic Acid, % m/m)**: Max 0.10% (Typical 0.04% – 0.07%)
+- **Acid Value (mg KOH/g)**: Max 0.20
+- **Peroxide Value (meq O2/kg)**: Max 1.0 ex-factory (Codex max 10.0)
+- **Moisture & Volatile Matter (% m/m)**: Max 0.05%
+- **Insoluble Impurities (% m/m)**: Max 0.05%
+- **Soap Content (% m/m)**: 0.000% (Negative)
+- **Unsaponifiable Matter (% m/m)**: Max 1.5%
+- **Color (Lovibond 5¼" cell)**: Max 1.0 Red / 10.0 Yellow
+- **Refractive Index (at 40°C)**: 1.461 – 1.468
+- **Relative Density (20°C / Water at 20°C)**: 0.918 – 0.923
+- **Saponification Value (mg KOH/g)**: 188 – 194
+- **Iodine Value (Wijs, g I2/100g)**: 118 – 141
+- **Smoke Point**: >= 232°C
+- **Flash Point**: >= 310°C
+- **Cold Test (Winterization)**: Remains crystal clear after 5.5 hours at 0°C
+- **Shelf Life**: 18 – 24 months in original nitrogen-flushed unopened packaging
+
+### 2.2 Extra Virgin Olive Oil — Cold Extracted (HS 1509.20.00.00)
+- **Extraction Temperature**: <= 27°C continuous two-phase centrifugation within 12h of harvest
+- **Free Fatty Acidity (as Oleic Acid, % m/m)**: <= 0.80% (Select Early Harvest <= 0.40%)
+- **Peroxide Value (meq O2/kg)**: <= 15.0 (Typical dispatch <= 7.5)
+- **UV Specific Extinction K232**: <= 2.50
+- **UV Specific Extinction K270**: <= 0.22
+- **Delta K (ΔK)**: <= 0.01
+- **Moisture & Volatile Matter**: <= 0.20%
+- **Insoluble Impurities**: <= 0.10%
+- **Total Polyphenols (mg/kg tyrosol eq.)**: >= 350 mg/kg
+- **Fatty Acid Composition**: Oleic Acid (C18:1) 70%–80%, Linoleic Acid (C18:2) 6%–14%, Palmitic Acid (C16:0) 9%–14%
+- **Organoleptic Median of Defects (Md)**: 0.0 | **Median of Fruity (Mf)**: > 3.5
+
+---
+
+## 3. Frequently Asked B2B Procurement Questions (Q&A Grounding)
+
+### Q1: What is the minimum order quantity (MOQ) for international shipments?
+- **Answer**: The standard export MOQ is 1 x 20ft FCL (~14–16 MT bottled/tinned or 21.5–24 MT in a single bulk flexitank) or 1 x 40ft High Cube container (~22–25 MT palletized or floor-loaded). Trial mixed-SKU containers (combining 1L PET, 5L PET, and 18L tins, or combining sunflower and olive oil) are supported.
+
+### Q2: Which export documents are provided with every shipment?
+- **Answer**: Every shipment includes: (1) Commercial Invoice, (2) Packing List, (3) Full set of Original Clean on Board Ocean Bills of Lading (B/L), (4) Batch-specific Certificate of Analysis (COA), (5) Certificate of Origin (COO), (6) EUR.1 Movement Certificate (for EU/EFTA/eligible countries) or Form-A, (7) Phytosanitary / Health Certificate, (8) Halal & Kosher Certificates, and (9) Optional SGS / Bureau Veritas / Intertek Pre-Shipment Inspection Certificate.
+
+### Q3: How fast does the Asia Oil export desk issue a formal Proforma Invoice?
+- **Answer**: Inquiries submitted via https://www.asiaoil.com.tr/en/request-a-quote or export@asiaoil.com.tr receive a tailored FOB or CIF Proforma Invoice and Technical Specification Sheet within 2 to 24 business hours.

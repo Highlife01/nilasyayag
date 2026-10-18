@@ -6,6 +6,17 @@ const root = path.resolve(import.meta.dirname, "..")
 
 const PUBLISHED_LOCALES = ["tr", "en", "ar", "ru", "de", "fr", "es", "it"]
 
+const REGIONAL_HREFLANG_CLUSTERS = {
+  tr: ["tr", "tr-TR", "tr-AZ", "tr-CY"],
+  en: ["en", "en-US", "en-GB", "en-CA", "en-AU", "en-AE", "en-SA", "en-IN", "en-SG", "en-ZA", "en-NG", "en-KE", "en-GH"],
+  ar: ["ar", "ar-AE", "ar-SA", "ar-QA", "ar-KW", "ar-OM", "ar-BH", "ar-EG", "ar-IQ", "ar-JO", "ar-MA", "ar-DZ", "ar-LY"],
+  ru: ["ru", "ru-RU", "ru-KZ", "ru-UZ", "ru-KG", "ru-BY", "ru-AZ", "ru-GE"],
+  de: ["de", "de-DE", "de-AT", "de-CH"],
+  fr: ["fr", "fr-FR", "fr-BE", "fr-CH", "fr-CA", "fr-MA", "fr-SN", "fr-CI", "fr-DZ", "fr-TN"],
+  es: ["es", "es-ES", "es-MX", "es-CO", "es-CL", "es-AR", "es-PE"],
+  it: ["it", "it-IT", "it-CH"],
+}
+
 const STATIC_PAGES = [
   "home",
   "sunflower",
@@ -137,54 +148,55 @@ const SLUGS = {
   },
 }
 
+// Verified exact article slugs matching src/content/*.ts
 const ARTICLE_SLUGS = {
   tr: {
-    quotation: "fob-mersin-cif-fiyat-teklifi-nasil-alinir",
-    packaging: "ihracat-icin-en-uygun-yag-ambalaji-hangisi",
-    documents: "bitkisel-yag-ihracatinda-zorunlu-belgeler",
-    distributor: "turk-yagi-icin-bolgesel-distributorluk-avantajlari",
+    quotation: "toplu-aycicek-yagi-teklifi",
+    packaging: "ambalaj-secenekleri",
+    documents: "ithalat-belgeleri",
+    distributor: "distributor-hazirligi",
   },
   en: {
-    quotation: "how-to-request-fob-cif-edible-oil-quotation",
-    packaging: "best-edible-oil-packaging-for-export",
-    documents: "mandatory-documents-for-edible-oil-export",
-    distributor: "benefits-of-becoming-an-asia-oil-regional-distributor",
+    quotation: "how-to-request-a-bulk-sunflower-oil-quotation",
+    packaging: "packaging-options-for-edible-oil-buyers",
+    documents: "documents-for-edible-oil-imports",
+    distributor: "preparing-a-distribution-inquiry",
   },
   ar: {
-    quotation: "how-to-request-fob-cif-edible-oil-quotation",
-    packaging: "best-edible-oil-packaging-for-export",
-    documents: "mandatory-documents-for-edible-oil-export",
-    distributor: "benefits-of-becoming-an-asia-oil-regional-distributor",
+    quotation: "talab-ard-zayt-dawwar-al-shams",
+    packaging: "khiyarat-al-tabea",
+    documents: "wathaiq-istiraad-al-zayt",
+    distributor: "tahdir-talab-tawzee",
   },
   ru: {
-    quotation: "kak-zaprosit-ceny-fob-cif-rastitelnoe-maslo",
-    packaging: "luchshaya-upakovka-masla-dlya-eksporta",
-    documents: "dokumenty-dlya-eksporta-rastitelnogo-masla",
-    distributor: "preimushchestva-distribyutorstva-asia-oil",
+    quotation: "kak-zaprosit-podsolnechnoe-maslo",
+    packaging: "fasovka-pishchevogo-masla",
+    documents: "dokumenty-dlya-importa-masla",
+    distributor: "podgotovka-distributora",
   },
   de: {
-    quotation: "fob-cif-preisanfrage-speiseoel",
-    packaging: "die-beste-verpackung-fuer-den-speiseoelexport",
-    documents: "erforderliche-dokumente-fuer-den-speiseoelexport",
-    distributor: "vorteile-einer-regionalen-vertriebspartnerschaft",
+    quotation: "sonnenblumenoel-angebot-anfragen",
+    packaging: "verpackung-fuer-speiseoel",
+    documents: "dokumente-fuer-speiseoelimporte",
+    distributor: "vertriebsanfrage-vorbereiten",
   },
   fr: {
-    quotation: "comment-demander-un-devis-fob-cif-huile-alimentaire",
-    packaging: "quel-emballage-choisir-pour-l-exportation-d-huile",
-    documents: "documents-obligatoires-pour-l-exportation-d-huile",
-    distributor: "avantages-de-devenir-distributeur-regional",
+    quotation: "comment-demander-un-devis-huile-de-tournesol",
+    packaging: "conditionnement-huile-alimentaire",
+    documents: "documents-import-huile-alimentaire",
+    distributor: "preparer-une-demande-de-distribution",
   },
   es: {
-    quotation: "como-solicitar-cotizacion-fob-cif-aceite-comestible",
-    packaging: "mejor-empaque-para-la-exportacion-de-aceite",
-    documents: "documentos-obligatorios-para-la-exportacion-de-aceite",
-    distributor: "ventajas-de-ser-distribuidor-regional-asia-oil",
+    quotation: "como-pedir-cotizacion-de-girasol",
+    packaging: "envases-de-aceite-comestible",
+    documents: "documentos-para-importar-aceite",
+    distributor: "preparar-una-consulta-de-distribucion",
   },
   it: {
-    quotation: "come-richiedere-un-preventivo-fob-cif-olio-alimentare",
-    packaging: "miglior-imballaggio-per-l-esportazione-di-olio",
-    documents: "documenti-obbligatori-per-l-esportazione-di-olio",
-    distributor: "vantaggi-di-diventare-distributore-regionale",
+    quotation: "come-chiedere-offerta-olio-di-girasole",
+    packaging: "confezioni-olio-alimentare",
+    documents: "documenti-importazione-olio",
+    distributor: "preparare-una-richiesta-di-distribuzione",
   },
 }
 
@@ -209,11 +221,31 @@ function getChangeFreq(page) {
   return "yearly"
 }
 
+function getImagesForPage(page) {
+  if (page === "sunflower") {
+    return [`${BASE_URL}/media/stills/sunflower.webp`, `${BASE_URL}/media/hero/master-banner.webp`]
+  }
+  if (page === "olive") {
+    return [`${BASE_URL}/media/stills/olive.webp`, `${BASE_URL}/media/hero/master-banner.webp`]
+  }
+  if (page === "home") {
+    return [
+      `${BASE_URL}/media/hero/master-banner.webp`,
+      `${BASE_URL}/media/stills/sunflower.webp`,
+      `${BASE_URL}/media/stills/olive.webp`,
+      `${BASE_URL}/media/hero/banner-signature.webp`,
+      `${BASE_URL}/media/stills/warehouse.webp`,
+    ]
+  }
+  return [`${BASE_URL}/media/hero/master-banner.webp`]
+}
+
 const today = new Date().toISOString().split("T")[0]
 
 let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 `
 
 // 1. Static Pages for each locale
@@ -226,10 +258,16 @@ for (const locale of PUBLISHED_LOCALES) {
     xml += `    <changefreq>${getChangeFreq(page)}</changefreq>\n`
     xml += `    <priority>${getPriority(page)}</priority>\n`
 
-    // Alternates for all locales
+    for (const imgUrl of getImagesForPage(page)) {
+      xml += `    <image:image><image:loc>${imgUrl}</image:loc></image:image>\n`
+    }
+
+    // Alternates for all base and regional hreflang clusters
     for (const altLocale of PUBLISHED_LOCALES) {
       const altUrl = `${BASE_URL}${pathFor(altLocale, page)}`
-      xml += `    <xhtml:link rel="alternate" hreflang="${altLocale}" href="${altUrl}" />\n`
+      for (const code of REGIONAL_HREFLANG_CLUSTERS[altLocale]) {
+        xml += `    <xhtml:link rel="alternate" hreflang="${code}" href="${altUrl}" />\n`
+      }
     }
     const xDefaultUrl = `${BASE_URL}${pathFor("en", page)}`
     xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${xDefaultUrl}" />\n`
@@ -245,11 +283,14 @@ for (const locale of PUBLISHED_LOCALES) {
     xml += `    <lastmod>${today}</lastmod>\n`
     xml += `    <changefreq>weekly</changefreq>\n`
     xml += `    <priority>0.8</priority>\n`
+    xml += `    <image:image><image:loc>${BASE_URL}/media/hero/master-banner.webp</image:loc></image:image>\n`
 
     for (const altLocale of PUBLISHED_LOCALES) {
       const altSlug = ARTICLE_SLUGS[altLocale][articleKey]
       const altUrl = `${BASE_URL}${pathFor(altLocale, "insights", altSlug)}`
-      xml += `    <xhtml:link rel="alternate" hreflang="${altLocale}" href="${altUrl}" />\n`
+      for (const code of REGIONAL_HREFLANG_CLUSTERS[altLocale]) {
+        xml += `    <xhtml:link rel="alternate" hreflang="${code}" href="${altUrl}" />\n`
+      }
     }
     const xDefaultSlug = ARTICLE_SLUGS.en[articleKey]
     const xDefaultUrl = `${BASE_URL}${pathFor("en", "insights", xDefaultSlug)}`
@@ -263,74 +304,3 @@ xml += `</urlset>\n`
 const sitemapPath = path.join(root, "public", "sitemap.xml")
 writeFileSync(sitemapPath, xml, "utf8")
 console.log(`Generated: ${sitemapPath} (${xml.length} bytes)`)
-
-// Generate robots.txt
-const robotsTxt = `# Asia Oil (Nilasya Agro Foods) - Robots Configuration
-# Global B2B Export & Technical GEO Dossier
-
-User-agent: *
-Allow: /
-Allow: /llms.txt
-Disallow: /admin
-Disallow: /admin/
-Disallow: /api
-Disallow: /api/
-
-# OpenAI ChatGPT & SearchGPT
-User-agent: GPTBot
-User-agent: OAI-SearchBot
-Allow: /
-Allow: /llms.txt
-Disallow: /admin
-Disallow: /api
-
-# Anthropic Claude
-User-agent: ClaudeBot
-User-agent: anthropic-ai
-Allow: /
-Allow: /llms.txt
-Disallow: /admin
-Disallow: /api
-
-# Perplexity AI
-User-agent: PerplexityBot
-Allow: /
-Allow: /llms.txt
-Disallow: /admin
-Disallow: /api
-
-# Google Gemini & Google-Extended
-User-agent: Google-Extended
-User-agent: Googlebot
-Allow: /
-Allow: /llms.txt
-Disallow: /admin
-Disallow: /api
-
-# Apple Intelligence
-User-agent: Applebot
-User-agent: Applebot-Extended
-Allow: /
-Allow: /llms.txt
-Disallow: /admin
-Disallow: /api
-
-# Meta, Amazon, Cohere & Other AI Crawlers
-User-agent: meta-externalagent
-User-agent: Amazonbot
-User-agent: Diffbot
-User-agent: cohere-ai
-User-agent: CCBot
-Allow: /
-Allow: /llms.txt
-Disallow: /admin
-Disallow: /api
-
-# Sitemaps & Host
-Sitemap: ${BASE_URL}/sitemap.xml
-Host: ${BASE_URL}
-`
-
-const robotsPath = path.join(root, "public", "robots.txt")
-writeFileSync(robotsPath, robotsTxt, "utf8")
-console.log(`Generated: ${robotsPath}`)

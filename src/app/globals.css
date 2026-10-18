@@ -146,7 +146,9 @@
 }
 
 html[lang="ar"] body,
-html[lang="ar"] .font-display {
+html[lang="ar"] .font-display,
+[lang="ar"],
+[lang="ar"] .font-display {
   font-family: var(--font-arabic), "Noto Naskh Arabic", sans-serif;
 }
 

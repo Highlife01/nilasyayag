@@ -154,8 +154,8 @@ const STATS: StatItem[] = [
 
 export function StatsStrip({ locale }: { locale: Locale }) {
   return (
-    <section className="relative z-20 -mt-10 mx-auto max-w-7xl px-5 md:px-10">
-      <div className="rounded-3xl border-2 border-slate-300 bg-white p-6 shadow-2xl md:p-8">
+    <section className="relative z-20 py-10 md:py-14 mx-auto max-w-7xl px-5 md:px-10">
+      <div className="rounded-3xl border-2 border-slate-300 bg-white p-6 shadow-xl md:p-8">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5 lg:gap-6">
           {STATS.map((stat, i) => {
             const Icon = stat.icon

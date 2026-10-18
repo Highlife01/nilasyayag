@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
 import { ARTICLE_IDS, getDict } from "@/content/index"
 import { PUBLISHED_LOCALES, STATIC_PAGES, pathFor, type StaticPage } from "@/lib/i18n/config"
+import { buildHreflangAlternates } from "@/lib/seo-schema"
 import { siteUrl } from "@/lib/site"
 
 function getPagePriority(page: StaticPage): number {
@@ -51,41 +52,50 @@ function getPageChangeFrequency(page: StaticPage): "daily" | "weekly" | "monthly
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const base = siteUrl()
   const now = new Date()
   const urls: MetadataRoute.Sitemap = []
 
   for (const locale of PUBLISHED_LOCALES) {
     // 1. Static Pages
     for (const page of STATIC_PAGES) {
-      const languages: Record<string, string> = {}
-      for (const code of PUBLISHED_LOCALES) {
-        languages[code] = siteUrl() + pathFor(code, page)
-      }
-      languages["x-default"] = siteUrl() + pathFor("en", page)
+      const languages = buildHreflangAlternates(page, null)
+      const images =
+        page === "sunflower"
+          ? [`${base}/media/stills/sunflower.webp`, `${base}/media/hero/master-banner.webp`]
+          : page === "olive"
+          ? [`${base}/media/stills/olive.webp`, `${base}/media/hero/master-banner.webp`]
+          : page === "home"
+          ? [
+              `${base}/media/hero/master-banner.webp`,
+              `${base}/media/stills/sunflower.webp`,
+              `${base}/media/stills/olive.webp`,
+              `${base}/media/hero/banner-signature.webp`,
+              `${base}/media/stills/warehouse.webp`,
+            ]
+          : [`${base}/media/hero/master-banner.webp`]
 
       urls.push({
-        url: siteUrl() + pathFor(locale, page),
+        url: base + pathFor(locale, page),
         lastModified: now,
         changeFrequency: getPageChangeFrequency(page),
         priority: getPagePriority(page),
         alternates: { languages },
+        images,
       })
     }
 
     // 2. Technical Insights Articles
     for (const id of ARTICLE_IDS) {
-      const languages: Record<string, string> = {}
-      for (const code of PUBLISHED_LOCALES) {
-        languages[code] = siteUrl() + pathFor(code, "insights", getDict(code).articles[id].slug)
-      }
-      languages["x-default"] = siteUrl() + pathFor("en", "insights", getDict("en").articles[id].slug)
+      const languages = buildHreflangAlternates("insights", id)
 
       urls.push({
-        url: siteUrl() + pathFor(locale, "insights", getDict(locale).articles[id].slug),
+        url: base + pathFor(locale, "insights", getDict(locale).articles[id].slug),
         lastModified: now,
         changeFrequency: "weekly",
         priority: 0.8,
         alternates: { languages },
+        images: [`${base}/media/hero/master-banner.webp`],
       })
     }
   }

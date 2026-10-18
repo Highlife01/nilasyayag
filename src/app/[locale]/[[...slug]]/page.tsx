@@ -6,12 +6,18 @@ import { SiteFrame } from "@/components/site/chrome"
 import { ArticleIndex, ArticleView, HomeView, StandardPage } from "@/components/site/views"
 import { insightBase, isLocale, matchStatic, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
 import { heroFrames } from "@/lib/media"
-import { emptyControl } from "@/lib/model"
 import { getCorporateSettings } from "@/server/runtime"
 import { siteUrl } from "@/lib/site"
 import { VisitBeacon } from "@/components/site/visit-beacon"
 
-import { buildPageJsonLd, getKeywordsForPage, OG_LOCALES } from "@/lib/seo-schema"
+import {
+  buildHreflangAlternates,
+  buildPageJsonLd,
+  getKeywordsForPage,
+  getSeoDescriptionForPage,
+  getSeoTitleForPage,
+  OG_LOCALES,
+} from "@/lib/seo-schema"
 
 type Params = { locale: string; slug?: string[] }
 
@@ -23,20 +29,21 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const resolved = await resolve(params)
   if (!resolved) return {}
   const { locale, dict, page, article } = resolved
-  const copy = article ? dict.articles[article] : page === "home" ? null : page === "insights" ? dict.insights : page === "faq" ? dict.faq : page === "privacy" ? dict.privacy : dict.pages[page]
-  const title = page === "home" ? dict.nav.home : copy?.title || dict.nav.home
-  const description = page === "home" ? dict.metaDescription : copy?.description || dict.metaDescription
+  const title = getSeoTitleForPage(locale, page, dict, article)
+  const description = getSeoDescriptionForPage(locale, page, dict, article)
   const canonical = siteUrl() + pathFor(locale, page, article ? dict.articles[article].slug : undefined)
-  const languages: Record<string, string> = { "x-default": siteUrl() + pathFor("en", page, article ? getDict("en").articles[article].slug : undefined) }
-  for (const code of ["tr", "en", "ar", "ru", "de", "fr", "es", "it"] as Locale[]) {
-    languages[code] = siteUrl() + pathFor(code, page, article ? getDict(code).articles[article].slug : undefined)
-  }
+  const languages = buildHreflangAlternates(page, article)
   const ogLocale = OG_LOCALES[locale] || "en_US"
   const alternateOgLocales = (["tr", "en", "ar", "ru", "de", "fr", "es", "it"] as Locale[])
     .filter((l) => l !== locale)
     .map((l) => OG_LOCALES[l])
   const keywords = getKeywordsForPage(locale, page, article)
-  const ogImage = `${siteUrl()}/media/hero/master-banner.webp`
+  const ogImage =
+    page === "sunflower"
+      ? `${siteUrl()}/media/stills/sunflower.webp`
+      : page === "olive"
+      ? `${siteUrl()}/media/stills/olive.webp`
+      : `${siteUrl()}/media/hero/master-banner.webp`
 
   return {
     title,
@@ -55,7 +62,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
         {
           url: ogImage,
           width: 2400,
-          height: 1260,
+          height: 1344,
           alt: `${title} - Asia Oil Global Export`,
           type: "image/webp",
         },
@@ -87,12 +94,17 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       },
     },
     other: {
-      "geo.region": "TR-33",
-      "geo.placename": "Mersin, Akdeniz, Türkiye",
+      "geo.region": "TR-33;TR-35",
+      "geo.placename": "Mersin International Port (MIP) & İzmir Seaport, Türkiye",
       "geo.position": "36.7950;34.6400",
       "ICBM": "36.7950, 34.6400",
       "geo.country": "TR",
       "DC.title": title,
+      "DC.description": description,
+      "DC.language": locale,
+      "DC.coverage": "Worldwide",
+      "llms-dossier": `${siteUrl()}/llms.txt`,
+      "llms-full-dossier": `${siteUrl()}/llms-full.txt`,
       "format-detection": "telephone=yes, address=yes, email=yes",
     },
   }

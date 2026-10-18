@@ -14,6 +14,7 @@ import { ProductionPipeline } from "@/components/site/production-pipeline"
 import { PackagingMatrix } from "@/components/site/packaging-matrix"
 import { CertificationsStrip } from "@/components/site/certifications-strip"
 import { WhyUsSection } from "@/components/site/why-us"
+import { GlobalTradeCorridors } from "@/components/site/global-trade-corridors"
 import type { Settings } from "@/lib/model"
 
 const container = "mx-auto w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28"
@@ -40,7 +41,7 @@ function Kicker({ children, tone = "dark" }: { children: string; tone?: "dark" |
 export function HomeView({ locale, dict }: { locale: Locale; dict: Dict; frames?: Frame[] }) {
   return (
     <>
-      {/* Immersive Full-Bleed 5-Slide Hero Section with Controller & Marquee */}
+      {/* Immersive Full-Visibility 5-Slide Hero Section with Controller & Marquee */}
       <HeroBanner
         locale={locale}
         labels={{
@@ -93,6 +94,9 @@ export function HomeView({ locale, dict }: { locale: Locale; dict: Dict; frames?
 
       {/* International Accreditations & Quality Certifications */}
       <CertificationsStrip locale={locale} />
+
+      {/* 6-Continent Global Maritime Trade Corridors & Discharge Ports */}
+      <GlobalTradeCorridors locale={locale} />
 
       {/* Corporate Principles & Trade Assurance */}
       <section className="bg-white py-24 md:py-32 border-t border-slate-200">

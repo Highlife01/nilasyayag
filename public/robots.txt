@@ -1,9 +1,12 @@
-# Asia Oil (Nilasya Agro Foods) - Robots Configuration
-# Global B2B Export & Technical GEO Dossier
+# Asia Oil Türkiye (https://www.asiaoil.com.tr) - Global SEO & GEO Robots Configuration
+# Official Machine-Readable Directives for Global Search & AI Answer Engines
+# Dossiers: https://www.asiaoil.com.tr/llms.txt | https://www.asiaoil.com.tr/llms-full.txt
 
 User-agent: *
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
 Disallow: /admin
 Disallow: /admin/
 Disallow: /api
@@ -12,50 +15,73 @@ Disallow: /api/
 # OpenAI ChatGPT & SearchGPT
 User-agent: GPTBot
 User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
 Disallow: /admin
 Disallow: /api
 
 # Anthropic Claude
 User-agent: ClaudeBot
+User-agent: Claude-Web
 User-agent: anthropic-ai
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
 Disallow: /admin
 Disallow: /api
 
 # Perplexity AI
 User-agent: PerplexityBot
+User-agent: Perplexity-User
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
 Disallow: /admin
 Disallow: /api
 
-# Google Gemini & Google-Extended
+# Google Gemini, AI Overviews & Googlebot
 User-agent: Google-Extended
 User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: GoogleOther
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
 Disallow: /admin
 Disallow: /api
 
-# Apple Intelligence
+# Microsoft Bing, Copilot, Yandex, Baidu & DuckDuckGo
+User-agent: Bingbot
+User-agent: YandexBot
+User-agent: Baiduspider
+User-agent: DuckDuckBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api
+
+# Apple Intelligence & Siri
 User-agent: Applebot
 User-agent: Applebot-Extended
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
 Disallow: /admin
 Disallow: /api
 
-# Meta, Amazon, Cohere & Other AI Crawlers
+# Meta, Amazon, Cohere, You.com & Enterprise AI Crawlers
 User-agent: meta-externalagent
 User-agent: Amazonbot
 User-agent: Diffbot
 User-agent: cohere-ai
+User-agent: YouBot
 User-agent: CCBot
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
 Disallow: /admin
 Disallow: /api
 

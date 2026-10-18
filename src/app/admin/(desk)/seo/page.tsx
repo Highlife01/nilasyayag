@@ -61,11 +61,12 @@ export default async function SeoAdminPage() {
   ]
 
   const aiBots = [
-    { name: "OpenAI GPTBot & SearchGPT", agent: "GPTBot, OAI-SearchBot", status: "İzin Verildi (200 OK)", use: "ChatGPT arama motoru ve canlı alıntı yanıtlama" },
-    { name: "Anthropic Claude", agent: "ClaudeBot, anthropic-ai", status: "İzin Verildi (200 OK)", use: "Claude modelleri için ihracat teknik spesifikasyon tarama" },
-    { name: "Perplexity AI Search", agent: "PerplexityBot", status: "İzin Verildi (200 OK)", use: "Gerçek zamanlı B2B arama ve ihracatçı kaynak eşleştirme" },
-    { name: "Google Gemini & Extended", agent: "Google-Extended, Googlebot", status: "İzin Verildi (200 OK)", use: "Google AI Overviews ve semantik arama dizini" },
-    { name: "Apple Intelligence", agent: "Applebot, Applebot-Extended", status: "İzin Verildi (200 OK)", use: "Apple Siri & kurumsal yapay zekâ entegrasyonu" },
+    { name: "OpenAI GPTBot, SearchGPT & ChatGPT-User", agent: "GPTBot, OAI-SearchBot, ChatGPT-User", status: "İzin Verildi (200 OK)", use: "ChatGPT arama motoru ve canlı B2B alıntı yanıtlama" },
+    { name: "Anthropic Claude & Claude-Web", agent: "ClaudeBot, Claude-Web, anthropic-ai", status: "İzin Verildi (200 OK)", use: "Claude modelleri için ihracat teknik spesifikasyon tarama" },
+    { name: "Perplexity AI Search", agent: "PerplexityBot, Perplexity-User", status: "İzin Verildi (200 OK)", use: "Gerçek zamanlı B2B arama ve ihracatçı kaynak eşleştirme" },
+    { name: "Google Gemini, AI Overviews & Googlebot", agent: "Google-Extended, Googlebot, Googlebot-Image", status: "İzin Verildi (200 OK)", use: "Google AI Overviews, Görsel ve semantik arama dizini" },
+    { name: "Microsoft Bing, Copilot, Yandex & Baidu", agent: "Bingbot, YandexBot, Baiduspider, DuckDuckBot", status: "İzin Verildi (200 OK)", use: "Küresel arama motorları ve Copilot kurumsal dizini" },
+    { name: "Apple Intelligence & Siri", agent: "Applebot, Applebot-Extended", status: "İzin Verildi (200 OK)", use: "Apple Siri & kurumsal yapay zekâ entegrasyonu" },
   ]
 
   return (
@@ -79,7 +80,7 @@ export default async function SeoAdminPage() {
           SEO & GEO Kontrol Merkezi
         </h1>
         <p className="mt-1 text-sm text-slate-500">
-          Google, Bing ve LLM arama motorları (ChatGPT, SearchGPT, Gemini, Perplexity) için semantik içerik ve teknik indeksleme durumu
+          Google, Bing, Yandex, Baidu ve LLM arama motorları (ChatGPT, SearchGPT, Gemini, Perplexity, Claude) için küresel semantik indeksleme durumu
         </p>
       </div>
 
@@ -87,11 +88,11 @@ export default async function SeoAdminPage() {
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs font-bold uppercase tracking-wider">Hreflang & Diller</span>
+            <span className="text-xs font-bold uppercase tracking-wider">Küresel Hreflang</span>
             <CheckCircle2 className="h-4 w-4 text-emerald-600" />
           </div>
-          <p className="font-display text-3xl font-bold text-slate-900 mt-2">8 Dil + x-default</p>
-          <p className="text-xs text-slate-500 mt-1">Karşılıklı hreflang etiketleri devrede</p>
+          <p className="font-display text-3xl font-bold text-slate-900 mt-2">8 Dil · 55+ Bölge</p>
+          <p className="text-xs text-slate-500 mt-1">AB, Körfez, ABD, Afrika, BDT ülke kodları aktif</p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -99,13 +100,13 @@ export default async function SeoAdminPage() {
             <span className="text-xs font-bold uppercase tracking-wider">Schema.org JSON-LD</span>
             <Layers className="h-4 w-4 text-emerald-600" />
           </div>
-          <p className="font-display text-3xl font-bold text-slate-900 mt-2">8 Şema Tipi</p>
-          <p className="text-xs text-slate-500 mt-1">Corporation, Product, FAQ, Article, Breadcrumb</p>
+          <p className="font-display text-3xl font-bold text-slate-900 mt-2">10 Şema Tipi</p>
+          <p className="text-xs text-slate-500 mt-1">Corporation, Product, OfferCatalog, HowTo, Speakable, FAQ</p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs font-bold uppercase tracking-wider">XML Sitemap</span>
+            <span className="text-xs font-bold uppercase tracking-wider">XML & Görsel Sitemap</span>
             <FileCode className="h-4 w-4 text-blue-600" />
           </div>
           <div className="mt-2">
@@ -119,26 +120,36 @@ export default async function SeoAdminPage() {
               <ExternalLink className="h-3 w-3" />
             </a>
           </div>
-          <p className="text-xs text-slate-500 mt-1">158 KB+ tam çok dilli XML dizini</p>
+          <p className="text-xs text-slate-500 mt-1">55+ bölgesel hreflang ve görsel dizini</p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs font-bold uppercase tracking-wider">GEO LLM Dossier</span>
+            <span className="text-xs font-bold uppercase tracking-wider">GEO LLM Dossiers</span>
             <Sparkles className="h-4 w-4 text-purple-600" />
           </div>
-          <div className="mt-2">
+          <div className="mt-2 flex items-center gap-3">
             <a
               href={`${base}/llms.txt`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 font-display text-2xl font-bold text-slate-900 hover:text-purple-600 transition"
+              className="inline-flex items-center gap-1 font-display text-xl font-bold text-slate-900 hover:text-purple-600 transition"
             >
               <span>llms.txt</span>
               <ExternalLink className="h-3 w-3" />
             </a>
+            <span className="text-slate-300">·</span>
+            <a
+              href={`${base}/llms-full.txt`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 font-display text-xl font-bold text-slate-900 hover:text-purple-600 transition"
+            >
+              <span>llms-full.txt</span>
+              <ExternalLink className="h-3 w-3" />
+            </a>
           </div>
-          <p className="text-xs text-slate-500 mt-1">Yapay zekâ yanıt motorları için doğrulanmış dosya</p>
+          <p className="text-xs text-slate-500 mt-1">Yapay zekâ yanıt motorları için tam teknik dosya</p>
         </div>
       </div>
 

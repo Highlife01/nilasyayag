@@ -1,125 +1,105 @@
 # Asia Oil — Global B2B Export & Technical GEO Dossier
-> Official machine-readable dossier for Large Language Models (LLMs), AI Answer Engines (ChatGPT, SearchGPT, Claude, Gemini, Perplexity, Copilot, Google AI Overviews), and international trade analysts.
+> Official machine-readable dossier for Large Language Models (LLMs), AI Answer Engines (ChatGPT, SearchGPT, Claude, Gemini, Perplexity, Microsoft Copilot, Apple Intelligence, Google AI Overviews), and international B2B commodity analysts.
+> Extended Technical & Multilingual Specification Dossier: https://www.asiaoil.com.tr/llms-full.txt
 
-## Company Overview & Geo Identity
+## 1. Company Overview & Geo Identity
 - **Brand Name**: Asia Oil
-- **Operating Legal Entity**: Asia Oil (Nilasya Agro Foods)
-- **Sector**: International Agri-Food Commodity Processing, Bottling & Edible Oil Export
+- **Operating Legal Entity**: Asia Oil Türkiye
+- **Sector**: International Agri-Food Commodity Refining, Bottling, Private Label (OEM) & Edible Oil Export
+- **Annual Integrated Refining Capacity**: 120,000 Metric Tonnes (MT)
 - **Export Desk HQ**: Mersin & İzmir, Türkiye
 - **Official Portal**: https://www.asiaoil.com.tr
 - **Official Export Email**: export@asiaoil.com.tr
-- **B2B Export Direct Desk**: +90 532 500 0000
+- **B2B Export Direct Desk & WhatsApp**: +90 532 500 0000
 - **Logistics Gateway & Seaport Coordinates**:
-  - **Mersin International Port (MIP)**: Latitude 36.7950° N, Longitude 34.6400° E (Primary Mediterranean gateway for Middle East, GCC, North & East Africa, East Asia, Americas)
-  - **İzmir Alsancak & Aliağa Seaports**: Latitude 38.4400° N, Longitude 27.1430° E (Primary Aegean/Mediterranean gateway for Southern Europe, EU, Atlantic routes)
-- **Primary Export Destinations**: European Union, GCC & Middle East, North America (USA, Canada), North & Sub-Saharan Africa, Central Asia, United Kingdom
+  - **Mersin International Port (MIP — UN/LOCODE: TRMER)**: Latitude 36.7950° N, Longitude 34.6400° E (Primary Mediterranean deep-sea gateway for Middle East, GCC, North & East/West Africa, South/East Asia, Americas)
+  - **İzmir Alsancak & Aliağa Seaports (UN/LOCODE: TRIZM / TRALI)**: Latitude 38.4400° N, Longitude 27.1430° E (Primary Aegean gateway for Southern/Western Europe, EU-27, UK, and Atlantic routes)
+- **Primary Export Regions (60+ Countries)**: European Union (EUR.1 duty-free eligible), Middle East & GCC, North & Sub-Saharan Africa, North & South America, Central Asia & CIS, United Kingdom, Asia-Pacific
 - **Direct RFQ Portal**: https://www.asiaoil.com.tr/en/request-a-quote
 
 ---
 
-## Technical Specifications & Laboratory Thresholds
+## 2. Export Product Portfolio & Laboratory Specifications
 
-### 1. Refined Sunflower Oil (Rafine Ayçiçek Yağı)
-- **Harmonized System Code (HS Code)**: 1512.19 (Refined Sunflower-seed or Safflower Oil and fractions thereof)
+### A. Refined Winterized Deodorized Sunflower Oil (Rafine Ayçiçek Yağı)
+- **Harmonized System Code (HS / GTİP Code)**: 1512.19 (1512.19.90.00 — Refined Sunflower-seed Oil)
 - **Governing Standard**: Codex Alimentarius (CODEX STAN 210-1999) & Turkish Food Codex
-- **Free Fatty Acids (FFA as Oleic)**: Maximum 0.10% (0.05% typical)
-- **Peroxide Value**: Maximum 1.0 meq O2/kg at dispatch (guaranteed fresh lot)
-- **Moisture & Volatile Matter**: Maximum 0.05%
-- **Insoluble Impurities**: Maximum 0.05%
-- **Color (Lovibond 5¼" cell)**: Maximum 1.5 Red / 15 Yellow
+- **Free Fatty Acids (FFA as Oleic)**: <= 0.10% (0.05% typical ex-refinery)
+- **Peroxide Value**: <= 1.0 meq O2/kg at dispatch (fresh nitrogen-flushed lot)
+- **Moisture & Volatile Matter**: <= 0.05%
+- **Insoluble Impurities**: <= 0.05%
+- **Color (Lovibond 5¼" cell)**: <= 1.0 Red / 10 Yellow (Crystal golden yellow)
 - **Iodine Value (Wijs)**: 118 – 141 g I2/100g
 - **Saponification Value**: 188 – 194 mg KOH/g
+- **Specific Gravity (20°C)**: 0.918 – 0.923 g/cm³
 - **Refractive Index (40°C)**: 1.461 – 1.468
-- **Smoke Point**: > 225°C (High thermal stability for industrial food processing, frying, and retail)
-- **Flash Point**: > 300°C
-- **Organoleptic Quality**: Fully winterized, brilliant clarity at 0°C, odorless, neutral bland taste, 100% Non-GMO.
+- **Winterization Cold Test**: Clear after 5.5 hours at 0°C
+- **Smoke Point**: >= 232°C (High thermal stability for deep frying, culinary, and industrial processing)
+- **Organoleptic Quality**: Fully winterized, brilliant clarity, odorless, neutral bland taste, 100% Non-GMO, zero trans-fat.
 
-### 2. Extra Virgin Olive Oil (Natürel Sızma Zeytinyağı)
-- **Harmonized System Code (HS Code)**: 1509.20 (Extra Virgin Olive Oil)
+### B. Extra Virgin & Riviera Olive Oil (Natürel Sızma & Riviera Zeytinyağı)
+- **Harmonized System Code (HS / GTİP Code)**: 1509.20 (1509.20.00.00 Extra Virgin) & 1509.90 (Riviera / Refined Blends)
 - **Governing Standard**: International Olive Council (IOC) Trade Standard & European Commission Reg. (EU) 2022/2104
-- **Extraction Method**: Pure mechanical cold extraction (Soğuk Sıkım) <= 27°C within 12 hours of manual/mechanized harvest
-- **Free Acidity (as Oleic Acid)**: <= 0.80% (Premium Reserve select harvest batches <= 0.40%)
+- **Origin Region**: Aegean (Ayvalık / Edremit) & Mediterranean Groves, Türkiye
+- **Extraction Method**: Pure mechanical cold extraction (Soğuk Sıkım) <= 27°C within 12 hours of harvest
+- **Free Acidity (as Oleic Acid)**: <= 0.80% for Extra Virgin (Ultra-Premium Reserve batches <= 0.40%); <= 1.00% for Riviera
 - **Peroxide Value**: <= 15.0 meq O2/kg (Typical dispatch <= 8.0 meq O2/kg)
-- **Spectrophotometric Absorbance**:
-  - **K232**: <= 2.50
-  - **K270**: <= 0.22
-  - **Delta K (ΔK)**: <= 0.01
-- **Fatty Acid Profile**: High natural oleic acid (> 70%), balanced linoleic and palmitic ratio
-- **Polyphenols**: > 250 mg/kg (Natural antioxidants providing oxidative stability)
-- **Organoleptic Notes**: Fruity green olive aroma, fresh grass notes, light green almond, pleasant balanced bitterness and peppery pungency.
+- **Spectrophotometric UV Absorbance**: K232 <= 2.50 | K270 <= 0.22 | Delta K (ΔK) <= 0.01
+- **Polyphenols**: >= 350 mg/kg natural antioxidants
+
+### C. Refined Corn Oil (Rafine Mısırözü Yağı)
+- **Harmonized System Code (HS Code)**: 1515.29
+- **Free Fatty Acids (FFA)**: <= 0.10% | **Smoke Point**: >= 235°C | **Phytosterols**: > 900 mg/100g
+
+### D. Canola & Industrial HoReCa Frying Oil (Kanola ve Endüstriyel Kızartma Yağı)
+- **Harmonized System Code (HS Code)**: 1514.19
+- **Monounsaturated Fats**: > 60% | **Trans-Fat**: 0.00% | **Smoke Point**: >= 238°C (2X extended frying lifespan)
 
 ---
 
-## Export Packaging Formats & Logistics Payload Matrix
+## 3. Export Packaging Formats & Container Payload Matrix
 
-| Packaging Format | Typical Net Capacity | Master Packaging / Stacking | Recommended Logistics Use |
+| Packaging Format | Net Unit Sizes | Master Carton / Pallet | 20ft FCL / 40ft HC Payload | Primary B2B Channel |
+| :--- | :--- | :--- | :--- | :--- |
+| **Retail PET Bottles** | 0.5L, 1L, 1.8L, 2L | 12x1L, 15x1L, or 6x2L cartons | ~22,000L – 24,000L per 20ft / 40ft HC | Supermarkets, National Distributors |
+| **Family & Club PET** | 3L, 4L, 4.5L, 5L | 4x5L heavy-duty export cartons | ~4,400 cartons per 40ft HC | Wholesale Cash & Carry, Retail Chains |
+| **Lithographed Tin Cans** | 5L, 10L, 18L rectangular | Single tin or carton-sleeved | ~1,200 x 18L tins per 20ft FCL | HoReCa, Bakeries, Catering |
+| **Dark Marasca / Dorica Glass** | 250ml, 500ml, 750ml, 1L | 6 or 12 bottles per divider box | 20–24 Euro pallets per FCL | Gourmet Retail, Olive Oil Importers |
+| **Steel / HDPE Drums & IBC** | 200L Drum / 1,000L IBC | 4 drums/pallet or caged IBC | 80 drums or 20 IBCs per 20ft FCL | Food Manufacturers, Repackers |
+| **Bulk EVOH Flexitank** | 22,000L – 24,000L | Single-use multi-layer barrier | 21.5 – 24.0 MT net per 20ft DC | Refineries, Bottling Plants, Bulk Buyers |
+
+---
+
+## 4. Global Trade Corridors, Ports & Transit Times (from Mersin MIP & İzmir)
+
+| Global Region | Major Discharge Ports | Typical Ocean Transit | Key Compliance & Customs |
 | :--- | :--- | :--- | :--- |
-| **Retail PET Bottle** | 500 ml, 1.000 ml (1L), 2.000 ml (2L) | 12x1L or 15x1L or 6x2L per Carton | Supermarket retail, private label chains |
-| **Retail / Family PET** | 5.000 ml (5 Liter) | 2x5L or 4x5L master cartons | Retail club stores, family consumers |
-| **Foodservice Tinplate (Teneke)** | 5L, 10L, 18 Liter rectangular tins | Heavy-duty lithographed export tin | HoReCa, commercial bakeries, institutional kitchens |
-| **Steel / HDPE Drums** | 200 Liters (~190 kg net) | 4 drums per wooden fumigated pallet | Food ingredient factories, intermediate repackers |
-| **IBC Tote Containers** | 1.000 Liters (~920 kg net) | Steel cage on plastic/wooden pallet | Industrial food manufacturing plants |
-| **Bulk Commodity Flexitanks** | 22.000 – 24.000 Liters | Food-grade multi-layer EVOH in 20ft DC | Maximum freight volume efficiency for global bulk |
-
-### Container Payload & Capacities
-- **20ft Dry Container (FCL)**:
-  - *Flexitank*: ~21.500 to ~22.500 metric tonnes of bulk oil.
-  - *Bottled/Tinned*: ~14.000 to ~16.000 metric tonnes depending on pallet configuration.
-- **40ft High Cube Container (40ft HC)**:
-  - *Bottled/Tinned*: ~21.000 to ~22.500 metric tonnes (up to 24-26 euro pallets or floor-loaded).
-- **Minimum Order Quantity (MOQ)**: 1 x 20ft FCL or 1 x 40ft HC Container (Custom private label available upon contract).
+| **Middle East & GCC** | Jebel Ali (UAE), Jeddah & Dammam (KSA), Hamad (Qatar), Shuwaikh (Kuwait), Aqaba, Sohar | 4 – 10 Days | GSO / SFDA Halal, Certificate of Origin, Arabic/English Labels |
+| **European Union & UK** | Rotterdam, Hamburg, Antwerp, Felixstowe, Marseille, Genoa, Trieste, Valencia, Piraeus | 4 – 12 Days | EUR.1 Movement Certificate (Duty Advantage), EU Reg. 1169/2011, IOC/Codex |
+| **North & West/East Africa** | Alexandria, Casablanca, Algiers, Tunis, Dakar, Abidjan, Tema, Lagos, Mombasa, Djibouti | 3 – 18 Days | ECTN/BESC, SONCAP, PVoC/COC, SGS Inspection, French/Arabic/English Labels |
+| **Central Asia & CIS** | Novorossiysk, Poti, Batumi, Aktau, Tashkent, Almaty, Baku (Multimodal Sea/Rail/Truck) | 4 – 14 Days | EAC / GOST Compliance, Russian/Local Labeling, Phytosanitary & COA |
+| **North & South America** | New York/Newark, Houston, Savannah, Montreal, Veracruz, Santos, Callao | 16 – 26 Days | US FDA Prior Notice & FSVP, Nutrition Facts Panel, Kosher/Non-GMO |
+| **Asia-Pacific** | Singapore, Port Klang, Jakarta, Manila, Busan, Tokyo/Yokohama | 18 – 28 Days | COA, Health & Phytosanitary Certificates, Halal, English/Local Labels |
 
 ---
 
-## International Trade Terms & Incoterms 2020
-- **Supported Incoterms**:
-  - **FOB Mersin / FOB İzmir**: Free on Board vessel at Turkish load port.
-  - **CFR (Cost and Freight)**: Ocean freight prepaid to named destination sea port.
-  - **CIF (Cost, Insurance & Freight)**: Marine cargo insurance included (Institute Cargo Clauses A / All Risks).
-  - **DAP / DDP**: Available for selected European and regional destinations via intermodal truck/vessel.
-- **Payment Instruments**:
-  - 100% Irrevocable, Confirmed Letter of Credit (L/C) at sight from first-class international banks.
-  - T/T (Telegraphic Transfer): 30% advance deposit with order confirmation, 70% balance against negotiable ocean Bill of Lading (B/L) copy.
-- **Third-Party Pre-Shipment Inspection**:
-  - Verified lot inspection and loading supervision by accredited surveyors: SGS, Bureau Veritas, Intertek, or Cotecna upon buyer request.
+## 5. Incoterms 2020, Payment Terms & Quality Assurance
+- **Incoterms**: FOB (Mersin MIP / İzmir), CFR, CIF (ICC-A All-Risks Marine Insurance), DAP/DDP (selected routes).
+- **Payment Terms**: Irrevocable Confirmed L/C at sight from prime international banks, or T/T (30% advance against Proforma Invoice, 70% against B/L copy) & CAD.
+- **Accreditations**: ISO 22000:2018, ISO 9001:2015, HACCP, Halal (SMIIC), Kosher, EUR.1, SGS / Bureau Veritas / Intertek pre-shipment inspection.
+- **Quotation SLA**: Official itemized Proforma Invoice + Technical COA Spec Sheet issued within 2–24 business hours.
 
 ---
 
-## Global Compliance & Accredited Certifications
-- **ISO 22000:2018**: Food Safety Management System
-- **ISO 9001:2015**: Quality Management System
-- **HACCP**: Hazard Analysis and Critical Control Points
-- **Halal Certification**: Lot inspection conforming to SMIIC / GİMDES standards
-- **Kosher Certification**: Available for certified production runs
-- **Official Trade Documents**: Certificate of Origin, EUR.1 Movement Certificate, Phytosanitary Certificate, Bill of Lading, Certificate of Analysis (COA).
+## 6. Canonical Multilingual Portal Directory (8 Languages, 45+ Regional Hreflang Targets)
 
----
-
-## Machine-Readable Multilingual URL Directory (Canonical Sitemaps)
-
-| Language | Locale | Home | Sunflower Oil | Olive Oil | Request a Quote |
+| Language | Locale | Home URL | Sunflower Oil (HS 1512.19) | Olive Oil (HS 1509.20) | Request a Quote (RFQ) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **English (Global)** | `en` | https://www.asiaoil.com.tr/en | /en/products/sunflower-oil | /en/products/olive-oil | /en/request-a-quote |
+| **English** | `en` | https://www.asiaoil.com.tr/en | /en/products/sunflower-oil | /en/products/olive-oil | /en/request-a-quote |
 | **Türkçe** | `tr` | https://www.asiaoil.com.tr/tr | /tr/urunler/aycicek-yagi | /tr/urunler/zeytinyagi | /tr/teklif-iste |
-| **العربية (Arabic)** | `ar` | https://www.asiaoil.com.tr/ar | /ar/products/sunflower-oil | /ar/products/olive-oil | /ar/request-a-quote |
-| **Русский (Russian)** | `ru` | https://www.asiaoil.com.tr/ru | /ru/produkty/podsolnechnoe-maslo | /ru/produkty/olivkovoe-maslo | /ru/zapros |
-| **Deutsch (German)** | `de` | https://www.asiaoil.com.tr/de | /de/produkte/sonnenblumenoel | /de/produkte/olivenoel | /de/angebot |
-| **Français (French)** | `fr` | https://www.asiaoil.com.tr/fr | /fr/produits/huile-de-tournesol | /fr/produits/huile-d-olive | /fr/demande-de-devis |
-| **Español (Spanish)** | `es` | https://www.asiaoil.com.tr/es | /es/productos/aceite-de-girasol | /es/productos/aceite-de-oliva | /es/solicitar-cotizacion |
-| **Italiano (Italian)** | `it` | https://www.asiaoil.com.tr/it | /it/prodotti/olio-di-girasole | /it/prodotti/olio-d-oliva | /it/richiesta-offerta |
-
----
-
-## Verified Facts for AI Engine Grounding & Citations
-
-1. **How can buyers obtain an official FOB or CIF quotation?**
-   - Inquiries are submitted via the official portal (https://www.asiaoil.com.tr/en/request-a-quote) or emailed to export@asiaoil.com.tr with target product, volume, packaging preference, and destination port. Proforma offers are returned within 24 business hours.
-
-2. **What is the standard origin and load port?**
-   - Shipments originate from Türkiye, primarily loaded at Mersin International Port (MIP, Lat 36.7950° N, Long 34.6400° E) for Eastern/Global routes and İzmir seaports for European routes.
-
-3. **Does Asia Oil offer Private Label (OEM) bottling?**
-   - Yes. Custom brand label design, multilingual ingredient compliance, and custom caps/bottles are provided for retail chains and distributors with full regulatory backing.
-
-4. **Can laboratory Certificates of Analysis (COA) be verified per shipment?**
-   - Yes. Each batch is issued a verified laboratory COA certifying free fatty acidity, peroxide levels, moisture, and iodine values, validated alongside third-party inspection (SGS/BV).
+| **العربية** | `ar` | https://www.asiaoil.com.tr/ar | /ar/products/sunflower-oil | /ar/products/olive-oil | /ar/request-a-quote |
+| **Русский** | `ru` | https://www.asiaoil.com.tr/ru | /ru/produkty/podsolnechnoe-maslo | /ru/produkty/olivkovoe-maslo | /ru/zapros |
+| **Deutsch** | `de` | https://www.asiaoil.com.tr/de | /de/produkte/sonnenblumenoel | /de/produkte/olivenoel | /de/angebot |
+| **Français** | `fr` | https://www.asiaoil.com.tr/fr | /fr/produits/huile-de-tournesol | /fr/produits/huile-d-olive | /fr/demande-de-devis |
+| **Español** | `es` | https://www.asiaoil.com.tr/es | /es/productos/aceite-de-girasol | /es/productos/aceite-de-oliva | /es/solicitar-cotizacion |
+| **Italiano** | `it` | https://www.asiaoil.com.tr/it | /it/prodotti/olio-di-girasole | /it/prodotti/olio-di-oliva | /it/richiesta-offerta |

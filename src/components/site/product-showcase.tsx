@@ -82,7 +82,7 @@ const PRODUCTS: Product[] = [
     accentColor: "from-amber-500 to-yellow-600",
     lightBg: "bg-gradient-to-br from-amber-50/80 via-white to-amber-50/40",
     borderColor: "border-amber-200 hover:border-amber-500",
-    image: "/media/hero/master-banner.webp",
+    image: "/media/stills/sunflower.webp",
   },
   {
     id: "olive",
@@ -137,7 +137,7 @@ const PRODUCTS: Product[] = [
     accentColor: "from-emerald-600 to-green-700",
     lightBg: "bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/40",
     borderColor: "border-emerald-200 hover:border-emerald-500",
-    image: "/media/hero/banner-signature.webp",
+    image: "/media/stills/olive.webp",
   },
   {
     id: "corn",

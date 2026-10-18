@@ -76,6 +76,26 @@ npm run lint
 npm run build
 ```
 
+## GitHub Actions
+
+`.github/workflows/ci-deploy.yml` iki iş çalıştırır:
+
+- **ci** — her push ve pull request'te `lint`, `typecheck`, `test`, `build`.
+- **deploy** — yalnızca `main`'e push'ta ve CI geçtiyse `firebase deploy --only hosting:nilasyayag` (Next.js web frameworks). Dağıtım sonrası `https://nilasyayag.web.app/tr` için 200 kontrolü yapılır.
+
+Deploy için depo ayarlarında (Settings → Secrets and variables → Actions) şunlar gerekir:
+
+| Tür | Ad | Açıklama |
+| --- | --- | --- |
+| Secret | `FIREBASE_SERVICE_ACCOUNT` | `ajansonline` projesinde Firebase Hosting Admin + Cloud Functions Admin + Service Account User rolleri olan servis hesabının JSON anahtarı |
+| Secret | `NILASYA_SESSION_SECRET` | Yönetici oturum imza anahtarı |
+| Secret | `NILASYA_ADMIN_PASSWORD` | Süper yönetici parolası |
+| Secret | `RESEND_API_KEY`, `NOTIFY_FROM` | E-posta bildirimi (isteğe bağlı) |
+| Secret | `FIREBASE_WEB_API_KEY` | Diğer yönetici kullanıcıların Firebase Auth girişi için (isteğe bağlı) |
+| Variable | `NEXT_PUBLIC_SITE_URL`, `NOTIFY_EMAIL` | Boşsa `https://www.asiaoil.com.tr` ve `export@asiaoil.com.tr` kullanılır |
+
+İş akışı bu değerlerden `.env.local` üretir; Firebase CLI dosyayı Cloud Functions ortamına taşır. `DEPLOY.bat` / `DEPLOY.ps1` yerel dağıtım için kullanılmaya devam edebilir; ikisi aynı anda çalıştırılmamalıdır.
+
 ## Firebase Maliyet Optimizasyonu & Zamanlayici Notu (13.10.2026)
 
 - **Deploy Gerekli mi?**: Hayir, zamanlayici (Cloud Scheduler) ayarlari Google Cloud uzerinde canli olarak guncellenmistir. Su an herhangi bir deploy yapilmasina gerek yoktur.

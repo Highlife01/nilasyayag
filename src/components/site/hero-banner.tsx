@@ -1,12 +1,12 @@
 "use client"
 
-import Image from "next/image"
-import { useState, useEffect, useSyncExternalStore } from "react"
-import { ChevronLeft, ChevronRight, ArrowRight, ShieldCheck, Ship, Sparkles, Pause, Play } from "lucide-react"
-import { pathFor, type Locale } from "@/lib/i18n/config"
+import { useCallback, useEffect, useState } from "react"
+import type { Locale } from "@/lib/i18n/config"
+import { pathFor } from "@/lib/i18n/config"
 
-type HeroBannerProps = {
+type Props = {
   locale: Locale
+  whatsappNumber?: string
   labels: {
     previous: string
     next: string
@@ -16,485 +16,527 @@ type HeroBannerProps = {
   }
 }
 
-const INTERVAL = 7000
-const MOTION_QUERY = "(prefers-reduced-motion: reduce)"
-
-function subscribeMotion(callback: () => void) {
-  const query = window.matchMedia(MOTION_QUERY)
-  query.addEventListener("change", callback)
-  return () => query.removeEventListener("change", callback)
+type SlideData = {
+  image: string
+  tag: Record<Locale, string>
+  title: Record<Locale, string>
+  subtitle: Record<Locale, string>
+  highlights: Record<Locale, [string, string, string]>
 }
 
-function getPrefersReducedMotion() {
-  return window.matchMedia(MOTION_QUERY).matches
+const SLIDES: SlideData[] = [
+  {
+    image: "/media/hero/hero-1.webp",
+    tag: {
+      tr: "ENDÜSTRİYEL RAFİNASYON & OTOMATİK DOLUM TESİSİ",
+      en: "CONTINUOUS REFINING & AUTOMATED BOTTLING PLANT",
+      ar: "مصنع التكرير المستمر والتعبئة الآلية عالية السرعة",
+      fr: "RAFFINERIE CONTINUE & LIGNE D'EMBOUTEILLAGE AUTOMATISÉE",
+      de: "KONTINUIERLICHE RAFFINERIE & AUTOMATISIERTE ABFÜLLUNG",
+      es: "REFINERÍA CONTINUA Y PLANTA DE ENVASADO AUTOMATIZADO",
+      ru: "НЕПРЕРЫВНАЯ РАФИНАЦИЯ И АВТОМАТИЗИРОВАННЫЙ РОЗЛИВ",
+      it: "RAFFINERIA CONTINUA E IMPIANTO DI IMBOTTIGLIAMENTO AUTOMATICO",
+    },
+    title: {
+      tr: "Bitkisel Yağ Üretiminde İhracat Odaklı Rafinasyon",
+      en: "Export-Engineered Edible Oil Refining & Bottling",
+      ar: "تكرير وتعبئة الزيوت النباتية بمعايير التصدير العالمية",
+      fr: "Raffinage et Conditionnement d'Huiles Alimentaires pour l'Export",
+      de: "Exportorientierte Speiseöl-Raffination & Hochleistungsabfüllung",
+      es: "Refinación y Envasado de Aceites Comestibles para Exportación",
+      ru: "Экспортно-ориентированная рафинация и розлив пищевых масел",
+      it: "Raffinazione e Confezionamento di Oli Alimentari per l'Export",
+    },
+    subtitle: {
+      tr: "Avrupa, Orta Doğu, Afrika ve Amerika pazarlarındaki distribütörler için ISO 22000, FSSC 22000, Helal ve Kosher sertifikalı tam otomatik PET, teneke ve dökme dolum hatları.",
+      en: "High-speed automated PET, tinplate, and bulk filling lines certified to ISO 22000, FSSC 22000, Halal, and Kosher standards for global importers and retail chains.",
+      ar: "خطوط تعبئة آلية عالية السرعة للعبوات البلاستيكية والصفائح المعدنية والسائبة بشهادات ISO 22000 وFSSC 22000 وحلال وكوشير للمستوردين حول العالم.",
+      fr: "Lignes de remplissage automatisées PET, bidons métalliques et vrac certifiées ISO 22000, FSSC 22000, Halal et Casher pour les importateurs mondiaux.",
+      de: "Vollautomatische PET-, Weißblech- und Bulk-Abfülllinien nach ISO 22000, FSSC 22000, Halal und Koscher für internationale Importeure und Handelsketten.",
+      es: "Líneas automatizadas de llenado en PET, hojalata y granel certificadas bajo ISO 22000, FSSC 22000, Halal y Kosher para importadores globales.",
+      ru: "Высокоскоростные линии розлива в ПЭТ, жестяную тару и флекситанки, сертифицированные по ISO 22000, FSSC 22000, Halal и Kosher.",
+      it: "Linee di riempimento automatizzate per PET, banda stagnata e sfuso certificate ISO 22000, FSSC 22000, Halal e Kosher per importatori globali.",
+    },
+    highlights: {
+      tr: ["ISO 22000 & FSSC 22000", "Çok Hatlı Otomatik Dolum", "Parti Bazlı COA Analizi"],
+      en: ["ISO 22000 & FSSC 22000", "Multi-Line Automated Filling", "Batch-Level COA Analytics"],
+      ar: ["شهادات ISO 22000 وFSSC 22000", "خطوط تعبئة آلية متطورة", "شهادة تحليل COA لكل تشغيلة"],
+      fr: ["ISO 22000 & FSSC 22000", "Embouteillage Automatisé", "Analyse COA par Lot"],
+      de: ["ISO 22000 & FSSC 22000", "Automatische Mehrlinien-Abfüllung", "Chargen-COA-Laboranalyse"],
+      es: ["ISO 22000 y FSSC 22000", "Envasado Automatizado", "Análisis COA por Lote"],
+      ru: ["ISO 22000 и FSSC 22000", "Автоматизированный розлив", "Лабораторный COA на партию"],
+      it: ["ISO 22000 & FSSC 22000", "Imbottigliamento Automatizzato", "Analisi COA per Lotto"],
+    },
+  },
+  {
+    image: "/media/hero/hero-2.webp",
+    tag: {
+      tr: "RAFİNE VİNTERİZE AYÇİÇEK YAĞI SERİSİ",
+      en: "REFINED WINTERIZED SUNFLOWER OIL RANGE",
+      ar: "مجموعة زيت عباد الشمس المكرر والمنقى",
+      fr: "GAMME D'HUILE DE TOURNESOL RAFFINÉE HIVÉRISÉE",
+      de: "RAFFINIERTES WINTERISIERTES SONNENBLUMENÖL",
+      es: "GAMA DE ACEITE DE GIRASOL REFINADO WINTERIZADO",
+      ru: "РАФИНИРОВАННОЕ ВИНТЕРИЗИРОВАННОЕ ПОДСОЛНЕЧНОЕ МАСЛО",
+      it: "GAMMA DI OLIO DI GIRASOLE RAFFINATO WINTERIZZATO",
+    },
+    title: {
+      tr: "Perakende PET ve Endüstriyel Tenekede Kristal Berraklık",
+      en: "Crystal-Clear Refined Sunflower Oil in PET & Tin",
+      ar: "زيت عباد الشمس المكرر فائق النقاء بعبوات التجزئة والجملة",
+      fr: "Huile de Tournesol Raffinée Cristalline en PET et Bidons",
+      de: "Kristallklares Sonnenblumenöl in Retail-PET & Industriedosen",
+      es: "Aceite de Girasol Refinado Cristalino en PET y Lata Industrial",
+      ru: "Кристально чистое подсолнечное масло в ПЭТ и жестяной таре",
+      it: "Olio di Girasole Raffinato Cristallino in PET e Latta Industriale",
+    },
+    subtitle: {
+      tr: "Codex Alimentarius CXS 210-1999 standardında (FFA ≤ %0,10, Peroksit ≤ 1,0 meq O₂/kg), azot yastıklamalı 1L, 2L, 5L ergonomik PET şişe ve 10L/18L/20L ihracat tenekeleri.",
+      en: "Refined, bleached, winterized, and deodorized to Codex CXS 210-1999 (FFA ≤ 0.10%, Peroxide ≤ 1.0 meq O₂/kg) in nitrogen-flushed 1L, 2L, 5L PET bottles and 18L export tins.",
+      ar: "مكرر ومنقى ومزال الرائحة وفق معيار كودكس CXS 210-1999 (حموضة ≤ 0.10%) بعبوات PET سعة 1 و2 و5 لتر وصفائح معدنية 18 لتر محمية بالنيتروجين.",
+      fr: "Raffinée, hivérisée et désodorisée selon Codex CXS 210-1999 (FFA ≤ 0,10 %) en bouteilles PET 1L, 2L, 5L sous azote et bidons métalliques d'exportation 18L.",
+      de: "Raffiniert, winterisiert und desodoriert nach Codex CXS 210-1999 (FFA ≤ 0,10 %) in stickstoffüberlagerten 1L-, 2L-, 5L-PET-Flaschen und 18L-Exportkanistern.",
+      es: "Refinado, winterizado y desodorizado según Codex CXS 210-1999 (FFA ≤ 0,10 %) en botellas PET de 1L, 2L, 5L con nitrógeno y latas de exportación de 18L.",
+      ru: "Рафинированное дезодорированное масло по стандарту Codex CXS 210-1999 (FFA ≤ 0,10%) в ПЭТ-бутылках 1л, 2л, 5л под азотом и канистрах 18л.",
+      it: "Raffinato, winterizzato e deodorato secondo Codex CXS 210-1999 (FFA ≤ 0,10%) in bottiglie PET da 1L, 2L, 5L sotto azoto e latte export da 18L.",
+    },
+    highlights: {
+      tr: ["FFA ≤ %0,10 · Lovibond ≤ 1,2R", "1L / 2L / 5L PET & 18L Teneke", "24 Ay Azot Korumalı Raf Ömrü"],
+      en: ["FFA ≤ 0.10% · Lovibond ≤ 1.2R", "1L / 2L / 5L PET & 18L Tin", "24-Month Nitrogen-Flushed Shelf Life"],
+      ar: ["حموضة ≤ 0.10% ونقاء فائق", "عبوات 1 و2 و5 لتر وصفائح 18 لتر", "صلاحية 24 شهراً بحماية النيتروجين"],
+      fr: ["FFA ≤ 0,10 % · Lovibond ≤ 1,2R", "PET 1L / 2L / 5L & Bidon 18L", "Conservation 24 Mois sous Azote"],
+      de: ["FFA ≤ 0,10 % · Lovibond ≤ 1,2R", "1L / 2L / 5L PET & 18L Weißblech", "24 Monate Haltbarkeit unter Stickstoff"],
+      es: ["FFA ≤ 0,10 % · Lovibond ≤ 1,2R", "PET 1L / 2L / 5L y Lata 18L", "24 Meses de Vida Útil con Nitrógeno"],
+      ru: ["FFA ≤ 0,10% · Lovibond ≤ 1,2R", "ПЭТ 1л / 2л / 5л и жесть 18л", "Срок годности 24 месяца под азотом"],
+      it: ["FFA ≤ 0,10% · Lovibond ≤ 1,2R", "PET 1L / 2L / 5L e Latta 18L", "24 Mesi di Conservazione sotto Azoto"],
+    },
+  },
+  {
+    image: "/media/hero/hero-3.webp",
+    tag: {
+      tr: "AKDENİZ SOĞUK SIKIM SIZMA & RİVİERA ZEYTİNYAĞI",
+      en: "MEDITERRANEAN EXTRA VIRGIN & RIVIERA OLIVE OIL",
+      ar: "زيت الزيتون البكر الممتاز والريفييرا من البحر المتوسط",
+      fr: "HUILE D'OLIVE VIERGE EXTRA & RIVIERA MÉDITERRANÉENNE",
+      de: "MEDITERRANES NATIVES OLIVENÖL EXTRA & RIVIERA",
+      es: "ACEITE DE OLIVA VIRGEN EXTRA Y RIVIERA DEL MEDITERRÁNEO",
+      ru: "СРЕДИЗЕМНОМОРСКОЕ ОЛИВКОВОЕ МАСЛО EXTRA VIRGIN И RIVIERA",
+      it: "OLIO EXTRA VERGINE DI OLIVA E RIVIERA DEL MEDITERRANEO",
+    },
+    title: {
+      tr: "Otantik Akdeniz Zeytinyağında Kurumsal İhracat Kalitesi",
+      en: "Cold-Pressed Extra Virgin & Riviera Olive Oil Collection",
+      ar: "تشكيلة زيت الزيتون البكر الممتاز المعصور على البارد للتصدير",
+      fr: "Collection d'Huile d'Olive Vierge Extra Première Pression à Froid",
+      de: "Kaltgepresstes Natives Olivenöl Extra & Riviera für den Welthandel",
+      es: "Colección de Aceite de Oliva Virgen Extra Prensado en Frío",
+      ru: "Коллекция оливкового масла Extra Virgin холодного отжима",
+      it: "Collezione di Olio Extra Vergine di Oliva Estratto a Freddo",
+    },
+    subtitle: {
+      tr: "IOC (Uluslararası Zeytin Konseyi) standartlarına tam uyumlu (< 27°C soğuk sıkım, serbest asitlik ≤ %0,8), UV korumalı koyu Marasca/Dorica cam şişeler ve 3L/5L laklı teneke ambalajlar.",
+      en: "Compliant with International Olive Council (IOC) standards (< 27°C cold extraction, acidity ≤ 0.8%) in UV-shielded dark Marasca/Dorica glass bottles and 3L/5L lacquered tins.",
+      ar: "مطابق لمعايير المجلس الدولي للزيتون IOC (عصر بارد أقل من 27 درجة مئوية، حموضة ≤ 0.8%) في زجاجات ماراسكا داكنة وصفائح معدنية 3 و5 لتر.",
+      fr: "Conforme aux normes du Conseil Oléicole International (extraction à froid < 27 °C, acidité ≤ 0,8 %) en bouteilles verre sombre Marasca/Dorica et bidons 3L/5L.",
+      de: "Konform mit den Standards des Internationalen Olivenrates IOC (< 27 °C Kaltpressung, Säuregehalt ≤ 0,8 %) in dunklen Marasca-Glasflaschen und 3L/5L-Dosen.",
+      es: "Conforme a las normas del Consejo Oleícola Internacional COI (extracción en frío < 27 °C, acidez ≤ 0,8 %) en botellas Marasca oscuras y latas de 3L/5L.",
+      ru: "Соответствует стандартам Международного совета по оливкам IOC (холодный отжим < 27°C, кислотность ≤ 0,8%) в темном стекле Marasca и жести 3л/5л.",
+      it: "Conforme agli standard del Consiglio Oleicolo Internazionale COI (estrazione a freddo < 27 °C, acidità ≤ 0,8%) in bottiglie Marasca scure e latte da 3L/5L.",
+    },
+    highlights: {
+      tr: ["IOC Standartlarında Soğuk Sıkım", "500ml / 1L Marasca Cam & 5L Teneke", "Tek Bahçe & Kupaj İzlenebilirliği"],
+      en: ["IOC-Certified Cold Extraction", "500ml / 1L Marasca Glass & 5L Tin", "Single-Origin Grove Traceability"],
+      ar: ["عصر بارد معتمد من IOC", "زجاج ماراسكا 500 مل / 1 لتر وصفيحة 5 لتر", "تتبع كامل للمصدر والجودة"],
+      fr: ["Extraction à Froid Certifiée IOC", "Verre Marasca 500ml / 1L & Bidon 5L", "Traçabilité des Oliveraies"],
+      de: ["IOC-zertifizierte Kaltpressung", "500ml / 1L Marasca-Glas & 5L Dose", "Lückenlose Herkunftsrückverfolgung"],
+      es: ["Extracción en Frío Certificada COI", "Vidrio Marasca 500ml / 1L y Lata 5L", "Trazabilidad de Origen Completa"],
+      ru: ["Холодный отжим по стандарту IOC", "Стекло Marasca 500мл / 1л и жесть 5л", "Полная прослеживаемость партий"],
+      it: ["Estrazione a Freddo Certificata COI", "Vetro Marasca 500ml / 1L e Latta 5L", "Tracciabilità Completa di Filiera"],
+    },
+  },
+  {
+    image: "/media/hero/hero-4.webp",
+    tag: {
+      tr: "PRIVATE LABEL (ÖZEL MARKA / OEM) & HORECA AMBALAJ",
+      en: "PRIVATE LABEL OEM & HORECA BULK PACKAGING",
+      ar: "تصنيع العلامات التجارية الخاصة OEM وعبوات هوريكا بالجملة",
+      fr: "MARQUE DISTRIBUTEUR (MDD / OEM) & CONDITIONNEMENT HORECA",
+      de: "PRIVATE LABEL (HANDELSMARKEN / OEM) & HORECA-GEBINDE",
+      es: "MARCA PRIVADA (OEM) Y ENVASES INDUSTRIALES HORECA",
+      ru: "ЧАСТНАЯ МАРКА (СТМ / OEM) И УПАКОВКА ДЛЯ HORECA",
+      it: "PRIVATE LABEL (MARCHIO PRIVATO / OEM) E FORMATI HORECA",
+    },
+    title: {
+      tr: "Markanıza Özel Etiket, Ambalaj ve Akredite COA Kalitesi",
+      en: "Turnkey Private Label OEM & HoReCa Bulk Packaging",
+      ar: "حلول متكاملة للعلامات التجارية الخاصة وعبوات الفنادق والمطاعم",
+      fr: "Solutions Clés en Main Marque Distributeur & Emballages HoReCa",
+      de: "Schlüsselfertige Handelsmarken-Abfüllung & HoReCa-Großgebinde",
+      es: "Soluciones Llave en Mano de Marca Privada y Formato HoReCa",
+      ru: "Комплексное производство под вашей маркой (СТМ) и тара HoReCa",
+      it: "Produzione Chiavi in Mano Private Label e Confezioni HoReCa",
+    },
+    subtitle: {
+      tr: "Ulusal market zincirleri ve gıda distribütörleri için hedef ülke mevzuatına uygun çok dilli etiket, litografik baskılı teneke, GS1 barkodlama ve ihracat kolisi üretimi.",
+      en: "Multilingual regulatory label adaptation, lithographed tinplate printing, GS1 barcoding, and double-wall export cartons tailored for supermarket chains and foodservice distributors.",
+      ar: "تصميم ملصقات متعددة اللغات مطابقة للوائح البلد المستورد وطباعة صفائح معدنية وترميز GS1 وكراتين تصدير مزدوجة لسلاسل المتاجر والموزعين.",
+      fr: "Étiquetage multilingue réglementaire, impression lithographique sur métal, codes-barres GS1 et cartons double cannelure pour la grande distribution et la RHF.",
+      de: "Mehrsprachige Etikettierung nach Zielland-Verordnung, lithografischer Blechdruck, GS1-Codierung und Exportkartons für Supermarktketten und Großhandel.",
+      es: "Etiquetado multilingüe normativo, impresión litográfica en hojalata, códigos GS1 y cajas de exportación de doble pared para cadenas minoristas.",
+      ru: "Многоязычная этикетка по стандартам страны импорта, литография на жести, штрихкоды GS1 и усиленные экспортные короба для торговых сетей.",
+      it: "Etichettatura multilingue normativa, stampa litografica su banda stagnata, codici GS1 e cartoni export a doppia onda per GDO e distributori.",
+    },
+    highlights: {
+      tr: ["Çok Dilli Etiket & Litografi", "HoReCa 10L / 18L / 20L Teneke", "5 İş Gününde Numune & Teklif"],
+      en: ["Multilingual Label & Lithography", "HoReCa 10L / 18L / 20L Tins", "5-Day Sample & Technical Quote"],
+      ar: ["طباعة ملصقات وصفائح مخصصة", "عبوات هوريكا 10 و18 و20 لتر", "عينات وعرض سعر فني خلال 5 أيام"],
+      fr: ["Étiquetage Multilingue & Litho", "Bidons HoReCa 10L / 18L / 20L", "Échantillons & Devis sous 5 Jours"],
+      de: ["Mehrsprachiges Etikett & Litho", "HoReCa 10L / 18L / 20L Kanister", "Muster & Angebot in 5 Werktagen"],
+      es: ["Etiqueta Multilingüe y Litografía", "Latas HoReCa 10L / 18L / 20L", "Muestras y Cotización en 5 Días"],
+      ru: ["Многоязычная этикетка и литография", "Тара HoReCa 10л / 18л / 20л", "Образцы и расчет за 5 дней"],
+      it: ["Etichetta Multilingue e Litografia", "Latte HoReCa 10L / 18L / 20L", "Campioni e Offerta in 5 Giorni"],
+    },
+  },
+  {
+    image: "/media/hero/hero-5.webp",
+    tag: {
+      tr: "DOĞRUDAN FABRİKA İHRACAT OFİSİ & LİMAN LOJİSTİĞİ",
+      en: "DIRECT FACTORY EXPORT DESK & PORT LOGISTICS",
+      ar: "مكتب التصدير المباشر من المصنع والخدمات اللوجستية البحرية",
+      fr: "BUREAU D'EXPORTATION DIRECTE USINE & LOGISTIQUE PORTUAIRE",
+      de: "DIREKTER WERKSEXPORT & INTERNATIONALE HAFENLOGISTIK",
+      es: "OFICINA DE EXPORTACIÓN DIRECTA DE FÁBRICA Y LOGÍSTICA PORTUARIA",
+      ru: "ПРЯМОЙ ЭКСПОРТНЫЙ ОТДЕЛ ЗАВОДА И ПОРТОВАЯ ЛОГИСТИКА",
+      it: "UFFICIO EXPORT DIRETTO DI FABBRICA E LOGISTICA PORTUALE",
+    },
+    title: {
+      tr: "Konteyner, Flexitank ve Palet Bazlı Doğrudan İhracat",
+      en: "Container, Flexitank & Pallet-Scale Direct Export",
+      ar: "شحن مباشر بالحاويات والفلكسي تانك والطبليات من ميناء مرسين",
+      fr: "Logistique d'Exportation par Conteneur, Flexitank & Palette",
+      de: "Container-, Flexitank- & Paletten-Direktlieferung ab Werk",
+      es: "Exportación Directa por Contenedor, Flexitank y Palet",
+      ru: "Прямые поставки в контейнерах, флекситанках и на паллетах",
+      it: "Logistica Export Diretta per Container, Flexitank e Pallet",
+    },
+    subtitle: {
+      tr: "Mersin ve İskenderun limanlarından FOB, CIF, CFR, DAP ve EXW teslim şekilleriyle 20' FCL, 40' HC ve 24 MT Flexitank yüklemeleri, SGS gözetimi ve tam ihracat evrak desteği.",
+      en: "20ft FCL, 40ft HC, and 24 MT Flexitank vessel loadings from Mersin and Iskenderun ports under FOB, CIF, CFR, DAP, or EXW Incoterms with SGS survey and full customs documentation.",
+      ar: "تحميل حاويات 20 قدم و40 قدم هاي كيوب وفلكسي تانك 24 طن من ميناءي مرسين وإسكندرون بشروط FOB وCIF وCFR وDAP مع فحص SGS وكامل وثائق التصدير.",
+      fr: "Chargements 20' FCL, 40' HC et Flexitank 24 MT depuis les ports de Mersin et Iskenderun sous Incoterms FOB, CIF, CFR, DAP ou EXW avec inspection SGS.",
+      de: "20'-FCL-, 40'-HC- und 24-MT-Flexitank-Verladungen ab den Häfen Mersin und Iskenderun unter FOB, CIF, CFR, DAP oder EXW inklusive SGS-Inspektion und Zolldokumenten.",
+      es: "Cargas en contenedor 20' FCL, 40' HC y Flexitank de 24 TM desde los puertos de Mersin e Iskenderun bajo Incoterms FOB, CIF, CFR, DAP o EXW con inspección SGS.",
+      ru: "Отгрузка контейнеров 20' FCL, 40' HC и флекситанков 24 т из портов Мерсин и Искендерун на условиях FOB, CIF, CFR, DAP и EXW с инспекцией SGS.",
+      it: "Imbarchi 20' FCL, 40' HC e Flexitank da 24 MT dai porti di Mersin e Iskenderun con resa FOB, CIF, CFR, DAP o EXW, ispezione SGS e documentazione doganale.",
+    },
+    highlights: {
+      tr: ["FOB / CIF / CFR / DAP / EXW", "20' FCL · 40' HC · 24 MT Flexitank", "SGS Gözetimi & Tam İhracat Evrakı"],
+      en: ["FOB / CIF / CFR / DAP / EXW", "20' FCL · 40' HC · 24 MT Flexitank", "SGS Inspection & Export Dossier"],
+      ar: ["شروط FOB / CIF / CFR / DAP", "حاويات 20 و40 قدم وفلكسي تانك 24 طن", "فحص SGS ووثائق تصدير كاملة"],
+      fr: ["Incoterms FOB / CIF / CFR / DAP", "20' FCL · 40' HC · Flexitank 24 MT", "Inspection SGS & Liasse Export"],
+      de: ["FOB / CIF / CFR / DAP / EXW", "20' FCL · 40' HC · 24 MT Flexitank", "SGS-Prüfung & Exportdokumente"],
+      es: ["FOB / CIF / CFR / DAP / EXW", "20' FCL · 40' HC · Flexitank 24 TM", "Inspección SGS y Dossier Export"],
+      ru: ["FOB / CIF / CFR / DAP / EXW", "20' FCL · 40' HC · Флекситанк 24 т", "Инспекция SGS и полный пакет документов"],
+      it: ["FOB / CIF / CFR / DAP / EXW", "20' FCL · 40' HC · Flexitank 24 MT", "Ispezione SGS e Documenti Export"],
+    },
+  },
+]
+
+const UI_COPY: Record<
+  Locale,
+  {
+    ctaQuote: string
+    ctaProducts: string
+    activeBadge: string
+  }
+> = {
+  tr: {
+    ctaQuote: "Toptan Teklif Al (RFQ)",
+    ctaProducts: "Ürün Kataloğu",
+    activeBadge: "Aktif",
+  },
+  en: {
+    ctaQuote: "Request Bulk Quote (RFQ)",
+    ctaProducts: "Product Catalog",
+    activeBadge: "Active",
+  },
+  ar: {
+    ctaQuote: "اطلب عرض سعر للجملة",
+    ctaProducts: "كتالوج المنتجات",
+    activeBadge: "نشط",
+  },
+  fr: {
+    ctaQuote: "Demander un Devis (RFQ)",
+    ctaProducts: "Catalogue Produits",
+    activeBadge: "Actif",
+  },
+  de: {
+    ctaQuote: "Großhandelsangebot (RFQ)",
+    ctaProducts: "Produktkatalog",
+    activeBadge: "Aktiv",
+  },
+  es: {
+    ctaQuote: "Solicitar Cotización (RFQ)",
+    ctaProducts: "Catálogo de Productos",
+    activeBadge: "Activo",
+  },
+  ru: {
+    ctaQuote: "Запросить Оптовый Прайс",
+    ctaProducts: "Каталог Продукции",
+    activeBadge: "Активно",
+  },
+  it: {
+    ctaQuote: "Richiedi Preventivo (RFQ)",
+    ctaProducts: "Catalogo Prodotti",
+    activeBadge: "Attivo",
+  },
 }
 
-export function HeroBanner({ locale, labels }: HeroBannerProps) {
-  const [active, setActive] = useState(0)
-  const [playing, setPlaying] = useState(true)
-  const reduced = useSyncExternalStore(subscribeMotion, getPrefersReducedMotion, () => false)
+const MARQUEE_ITEMS = [
+  "DIRECT EDIBLE OIL MANUFACTURER",
+  "REFINED SUNFLOWER OIL EXPORTER",
+  "EXTRA VIRGIN OLIVE OIL",
+  "PRIVATE LABEL OEM BOTTLING",
+  "1L - 5L PET & 18L TINPLATE",
+  "24 MT FLEXITANK BULK",
+  "ISO 22000 · FSSC 22000 · HALAL · KOSHER",
+  "FOB MERSIN & CIF WORLDWIDE",
+  "BATCH-LEVEL COA ANALYTICS",
+]
 
-  const isTr = locale === "tr"
+export function HeroBanner({
+  locale,
+  whatsappNumber = "+90 543 975 01 32",
+  labels,
+}: Props) {
+  const [current, setCurrent] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+  const isRtl = locale === "ar"
+  const cleanWa = whatsappNumber.replace(/\D/g, "") || "905439750132"
+  const ui = UI_COPY[locale] || UI_COPY.en
 
-  const slides = [
-    {
-      id: "refinery",
-      src: "/media/hero/master-banner.webp",
-      kicker: isTr ? "TAM ENTEGRE BİTKİSEL YAĞ RAFİNASYON TESİSİ • TÜRKİYE" : "HIGH-TECH EDIBLE OIL REFINING PLANT • TÜRKİYE",
-      titlePart1: isTr ? "Dünya Pazarları İçin Yüksek Saflıkta " : "Pure Seed & Olive Oil Excellence for ",
-      titleHighlight: isTr ? "Bitkisel Sıvı Yağ İhracatı" : "Global Markets",
-      description: isTr
-        ? "Yıllık 120.000 ton entegre rafinasyon kapasitesi; Mersin Uluslararası Limanı (MIP) ve İzmir Limanı çıkışlı rafine ayçiçek yağı (HS 1512.19), natürel sızma zeytinyağı (HS 1509.20) ve Private Label ihracatı."
-        : "120,000 MT annual refining capacity producing crystal-clear sunflower oil (HS 1512.19), cold-pressed Aegean extra virgin olive oil (HS 1509.20), and private-label packaging for 60+ countries.",
-      badges: isTr
-        ? ["120.000 MT Yıllık Kapasite", "Çok Kademeli Vinterizasyon", "ISO 22000, Helal & Kosher"]
-        : ["120,000 MT Annual Capacity", "Multi-Stage Winterization", "ISO 22000, Halal & Kosher"],
-      specs: [
-        { label: isTr ? "Yıllık Rafinasyon" : "Annual Capacity", val: "120.000 MT" },
-        { label: isTr ? "Ana Yükleme Limanı" : "Main Seaports", val: "Mersin MIP & İzmir" },
-        { label: isTr ? "Teslimat Terimleri" : "Incoterms 2020", val: "FOB / CIF / CFR" },
-        { label: isTr ? "Akreditasyon" : "Certification", val: "ISO 22000 & Helal" },
-      ],
-      productParam: "sunflower",
-      cardIcon: "🏭",
-      cardBadge: isTr ? "ENTEGRE FABRİKA KAPASİTESİ" : "FACTORY PRODUCTION SCALE",
-      tabTitle: isTr ? "ENTEGRE RAFİNASYON TESİSİ" : "HIGH-TECH REFINING PLANT",
-      alt: "Asia Oil - Refined Sunflower Oil & Extra Virgin Olive Oil Global Export Collection from Anatolia to the World",
-    },
-    {
-      id: "sunflower",
-      src: "/media/stills/sunflower.webp",
-      kicker: isTr ? "CODEX STAN 210 • RAFİNE AYÇİÇEK YAĞI (HS 1512.19)" : "CODEX STAN 210 • REFINED SUNFLOWER OIL (HS 1512.19)",
-      titlePart1: isTr ? "İnce Rafine, Kokusuz & 232°C " : "Fine Refined, Odorless & 232°C ",
-      titleHighlight: isTr ? "Yüksek Duman Noktası" : "High Smoke Point",
-      description: isTr
-        ? "FFA < %0.10 serbest asitlik, altın sarısı kristal berraklık ve 0.5L PET şişeden 18L tenekeye ve 24.000L flexitanka kadar eksiksiz ihracat ambalajları."
-        : "Ultra-low FFA < 0.10% acidity, brilliant crystal golden clarity, packaged from 0.5L PET bottles to 18L export tins and 24,000L bulk flexitanks.",
-      badges: isTr
-        ? ["FFA < %0.10 Minimum Asitlik", "232°C Yüksek Duman Noktası", "Sıvı Azot ile Oksijensiz Dolum"]
-        : ["FFA < 0.10% Ultra-Low Acidity", "232°C High Smoke Point", "Nitrogen Headspace Flush"],
-      specs: [
-        { label: isTr ? "Serbest Asitlik" : "Free Fatty Acid", val: "FFA < %0.10" },
-        { label: isTr ? "Duman Noktası" : "Smoke Point", val: "232°C (Sabit)" },
-        { label: isTr ? "Ambalaj Seçenekleri" : "Packaging", val: "0.5L - 18L & Flexi" },
-        { label: isTr ? "Standart & GTİP" : "Standard & HS", val: "HS 1512.19 · Codex" },
-      ],
-      productParam: "sunflower",
-      cardIcon: "🌻",
-      cardBadge: isTr ? "CANLI AYÇİÇEK ANALİZ FÖYÜ" : "SUNFLOWER OIL LAB SPEC",
-      tabTitle: isTr ? "RAFİNE AYÇİÇEK YAĞI" : "REFINED SUNFLOWER OIL",
-      alt: "Asia Oil - Pure Refined Sunflower Oil 1L PET Bottle and 5L Export Tin Can (HS 1512.19)",
-    },
-    {
-      id: "olive",
-      src: "/media/stills/olive.webp",
-      kicker: isTr ? "EGE VE AKDENİZ • SOĞUK SIKIM ZEYTİNYAĞI (HS 1509.20)" : "AEGEAN & MEDITERRANEAN • COLD-PRESSED OLIVE OIL (HS 1509.20)",
-      titlePart1: isTr ? "Erken Hasat Ege Zeytinlerinden " : "Cold-Pressed Early Harvest Aegean ",
-      titleHighlight: isTr ? "Soğuk Sıkım Natürel Sızma" : "Extra Virgin Olive Oil",
-      description: isTr
-        ? "27°C altında soğuk mekanik sıkımla üretilen, zengin polifenol (>350 mg/kg) ve düşük asit oranına sahip üstün lezzetli natürel sızma ve riviera zeytinyağları."
-        : "Mechanical cold extraction below 27°C, rich polyphenols (>350 mg/kg), balanced fruitiness, and low acidity in dark Marasca glass bottles and export tins.",
-      badges: isTr
-        ? ["Soğuk Sıkım (≤ 27°C)", "Zengin Doğal Polifenoller", "IOC Extra Virgin Standardı"]
-        : ["Cold Pressed (≤ 27°C)", "High Natural Polyphenols", "IOC Extra Virgin Standard"],
-      specs: [
-        { label: isTr ? "Sıkım Sıcaklığı" : "Extraction Temp", val: "≤ 27°C (Cold)" },
-        { label: isTr ? "Oleik Asit Değeri" : "Acidity", val: "≤ %0.80 Extra" },
-        { label: isTr ? "Polifenol Düzeyi" : "Polyphenols", val: "350+ mg/kg" },
-        { label: isTr ? "Menşe & GTİP" : "Origin & HS", val: "Ege · HS 1509.20" },
-      ],
-      productParam: "olive",
-      cardIcon: "🫒",
-      cardBadge: isTr ? "EGE SIZMA ZEYTİNYAĞI" : "AEGEAN EXTRA VIRGIN SPEC",
-      tabTitle: isTr ? "SOĞUK SIKIM ZEYTİNYAĞI" : "AEGEAN EXTRA VIRGIN",
-      alt: "Asia Oil - Cold-Pressed Extra Virgin Olive Oil Dark Glass Bottles (HS 1509.20)",
-    },
-    {
-      id: "privatelabel",
-      src: "/media/hero/banner-signature.webp",
-      kicker: isTr ? "ÖZEL MARKA • PRİVATE LABEL & MULTİ-AMBALAJ" : "PRIVATE LABEL OEM & RETAIL PACKAGING",
-      titlePart1: isTr ? "Markanıza Özel Ambalaj, " : "Retail-Ready Private Label & ",
-      titleHighlight: isTr ? "Etiketleme & Barkod Çözümleri" : "OEM Packaging for Your Brand",
-      description: isTr
-        ? "PET şişe, litografili ihracat tenekesi veya 24.000L flexitank; hedef pazarınızın (AB, Körfez, ABD, Afrika) dillerinde yasal etiket tasarımı ve barkodlu koli."
-        : "PET bottles, lithographed food-grade tins, and 24,000L flexitanks with certified multilingual labeling (EU, GCC, FDA, Africa) and custom carton design.",
-      badges: isTr
-        ? ["Özel Marka & Çok Dilli Etiket", "0.5L - 18L & Flexitank", "EAN Barkod & İhracat Kolisi"]
-        : ["Private Label & Multilingual", "0.5L to 18L & Flexitank", "EAN Barcode & Export Carton"],
-      specs: [
-        { label: isTr ? "Şişe & Teneke Hacmi" : "Bottle & Tin Sizes", val: "0.5L - 18L Teneke" },
-        { label: isTr ? "Dökme / Flexitank" : "Bulk Flexitank", val: "21.5 - 24 MT" },
-        { label: isTr ? "Çok Dilli Etiket" : "Label Compliance", val: "EU / GCC / FDA" },
-        { label: isTr ? "Minimum Sipariş" : "MOQ", val: "1x20' FCL" },
-      ],
-      productParam: "both",
-      cardIcon: "🏷️",
-      cardBadge: isTr ? "ÖZEL MARKA & OEM AMBALAJ" : "PRIVATE LABEL OEM DESK",
-      tabTitle: isTr ? "ÖZEL MARKA & OEM AMBALAJ" : "PRIVATE LABEL OEM",
-      alt: "Asia Oil - Private Label OEM Edible Oil PET Bottles and Tin Packaging Range",
-    },
-    {
-      id: "maritime",
-      src: "/media/stills/warehouse.webp",
-      kicker: isTr ? "MERSİN PORT (MIP) & İZMİR LİMANI • GLOBAL SEVKİYAT" : "MERSIN PORT (MIP) & IZMIR • GLOBAL DISPATCH",
-      titlePart1: isTr ? "Akdeniz'in Ana Kapısından " : "Container Logistics from Mersin MIP to ",
-      titleHighlight: isTr ? "60+ Ülkeye Konteyner İhracatı" : "60+ Countries Worldwide",
-      description: isTr
-        ? "FOB, CFR, CIF teslimat koşulları; EUR.1 Dolaşım Belgesi, Menşe Şahadetnamesi, Helal/Kosher ve SGS / Bureau Veritas bağımsız gözetim dosyası."
-        : "FOB, CFR, CIF Incoterms 2020; complete export dossier with EUR.1, Certificate of Origin, Phytosanitary, and SGS / Bureau Veritas surveyor seal.",
-      badges: isTr
-        ? ["Mersin Port (MIP) Terminali", "20' / 40' FCL & Flexitank", "SGS & Bureau Veritas Denetimi"]
-        : ["Mersin Port (MIP) Terminal", "20' / 40' FCL & Flexitank", "SGS & Bureau Veritas Inspection"],
-      specs: [
-        { label: isTr ? "Ana Sevkiyat Terminali" : "Dispatch Port", val: "Mersin (MIP) & İzmir" },
-        { label: isTr ? "Konteyner Tipleri" : "Container Types", val: "20' / 40' / Flexitank" },
-        { label: isTr ? "Gümrük & Dolaşım" : "Customs Certs", val: "EUR.1 & COO" },
-        { label: isTr ? "Gözetim & Mühür" : "Inspection Seal", val: "SGS / Bureau Veritas" },
-      ],
-      productParam: "sunflower",
-      cardIcon: "🚢",
-      cardBadge: isTr ? "LİMAN SEVKİYAT & SÖRVEY" : "PORT LOGISTICS & SURVEY",
-      tabTitle: isTr ? "GLOBAL LİMAN SEVKİYATI" : "DIRECT PORT EXPORT",
-      alt: "Asia Oil - Mersin International Port Container Terminal & Export Warehouse Loading",
-    },
-  ]
+  const nextSlide = useCallback(() => {
+    setCurrent((prev) => (prev + 1) % SLIDES.length)
+  }, [])
 
-  const count = slides.length
+  const prevSlide = useCallback(() => {
+    setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length)
+  }, [])
 
   useEffect(() => {
-    if (reduced || !playing) return
-    const timer = window.setInterval(() => {
-      setActive((prev) => (prev + 1) % count)
-    }, INTERVAL)
-    return () => window.clearInterval(timer)
-  }, [playing, reduced, count])
+    if (isPaused) return
+    const interval = setInterval(nextSlide, 7000)
+    return () => clearInterval(interval)
+  }, [isPaused, nextSlide])
 
-  const go = (step: number) => {
-    setActive((prev) => (prev + step + count) % count)
-  }
+  const activeSlide = SLIDES[current]
+  const tag = activeSlide.tag[locale] || activeSlide.tag.en
+  const title = activeSlide.title[locale] || activeSlide.title.en
+  const subtitle = activeSlide.subtitle[locale] || activeSlide.subtitle.en
+  const highlights = activeSlide.highlights[locale] || activeSlide.highlights.en
 
-  const current = slides[active]
+  const whatsappPrefill = encodeURIComponent(
+    locale === "tr"
+      ? `Merhaba ASIA OIL, www.asiaoil.com.tr web sitenizden ulaşıyorum. "${title}" hakkında toptan ihracat teklifi almak istiyorum.`
+      : `Hello ASIA OIL, I am contacting you via www.asiaoil.com.tr regarding "${title}". I would like to request a wholesale export quotation.`
+  )
 
   return (
     <section
-      aria-label={isTr ? "Asia Oil Ana Vitrin ve Küresel İhracat Özeti" : "Asia Oil Hero Showcase & Global Export Desk"}
-      className="relative flex flex-col overflow-hidden bg-white text-slate-950 border-b-2 border-slate-300"
+      className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden bg-slate-50 text-slate-900 select-none border-b border-slate-200/80"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      aria-roledescription="carousel"
+      aria-label={title}
     >
-      {/* PART 1: FULL-VISIBILITY UNCROPPED HERO BANNER STAGE + 5-SLIDE SELECTOR (Fits 100% in First Screen) */}
-      <div className="relative flex flex-col bg-[#061810]">
-        {/* Full-Visibility Banner Stage: 100% of the hero artwork is visible without text/white-mask obstruction or cropping */}
-        <div className="relative w-full aspect-[16/9] lg:aspect-auto lg:h-[calc(100dvh-12.5rem)] lg:min-h-[420px] lg:max-h-[760px] overflow-hidden bg-[#061810] select-none">
-          {slides.map((slide, idx) => {
-            const shouldRenderImage = idx === active || idx === (active + 1) % count || idx === (active - 1 + count) % count
-            return (
-              <div
-                key={slide.id}
-                aria-hidden={idx !== active}
-                className={`absolute inset-0 transition-opacity duration-700 ease-out ${
-                  idx === active ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-                }`}
-              >
-                {shouldRenderImage ? (
-                  <>
-                    {/* Ambient Blurred Edge Fill for Ultrawide / Tall Viewports */}
-                    <Image
-                      src={slide.src}
-                      alt=""
-                      fill
-                      aria-hidden="true"
-                      quality={50}
-                      sizes="100vw"
-                      className="object-cover object-center scale-110 blur-2xl opacity-60 brightness-75 pointer-events-none"
-                    />
-                    {/* Primary Full-Visibility Uncropped Hero Image (object-contain guarantees 100% of banner is visible) */}
-                    <Image
-                      src={slide.src}
-                      alt={slide.alt}
-                      fill
-                      priority={idx === 0}
-                      fetchPriority={idx === 0 ? "high" : "low"}
-                      loading={idx === 0 ? "eager" : "lazy"}
-                      quality={88}
-                      sizes="100vw"
-                      className="object-contain object-center drop-shadow-[0_20px_50px_rgba(0,0,0,0.65)]"
-                    />
-                  </>
-                ) : null}
-              </div>
-            )
-          })}
-
-          {/* Subtle Left / Right Carousel Controls */}
-          <button
-            type="button"
-            onClick={() => go(-1)}
-            aria-label={labels.previous}
-            className="absolute start-3 sm:start-6 top-1/2 -translate-y-1/2 z-20 size-10 sm:size-12 rounded-full bg-slate-950/75 hover:bg-emerald-700 text-white border border-white/25 shadow-xl backdrop-blur-md grid place-items-center transition hover:scale-105 active:scale-95 cursor-pointer"
-          >
-            <ChevronLeft className="size-5 sm:size-6 rtl:-scale-x-100" />
-          </button>
-          <button
-            type="button"
-            onClick={() => go(1)}
-            aria-label={labels.next}
-            className="absolute end-3 sm:end-6 top-1/2 -translate-y-1/2 z-20 size-10 sm:size-12 rounded-full bg-slate-950/75 hover:bg-emerald-700 text-white border border-white/25 shadow-xl backdrop-blur-md grid place-items-center transition hover:scale-105 active:scale-95 cursor-pointer"
-          >
-            <ChevronRight className="size-5 sm:size-6 rtl:-scale-x-100" />
-          </button>
-
-          {/* Top-Left Slide Counter & Play/Pause Pill */}
-          <div className="absolute top-3 start-3 sm:top-5 sm:start-6 z-20 inline-flex items-center gap-2 rounded-full bg-slate-950/75 border border-white/20 px-3 py-1.5 text-xs font-mono font-bold text-white backdrop-blur-md shadow-lg">
-            <span className="text-amber-400 font-black">0{active + 1}</span>
-            <span className="text-white/40">/</span>
-            <span className="text-white/80">0{count}</span>
-            <button
-              type="button"
-              onClick={() => setPlaying((p) => !p)}
-              aria-label={playing ? labels.pause : labels.play}
-              className="ms-1 grid size-6 place-items-center rounded-full bg-white/10 hover:bg-white/25 text-white transition cursor-pointer"
+      {/* Background 4K Visual Showcase */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {SLIDES.map((slide, idx) => {
+          const isCurrent = idx === current
+          const isNext = idx === (current + 1) % SLIDES.length
+          const shouldRenderImg = idx === 0 || isCurrent || isNext
+          const slideTitle = slide.title[locale] || slide.title.en
+          return (
+            <div
+              key={slide.image}
+              aria-hidden={!isCurrent}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                isCurrent ? "opacity-100" : "opacity-0"
+              }`}
             >
-              {playing ? <Pause className="size-3" /> : <Play className="size-3" />}
-            </button>
+              {shouldRenderImg && (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={slide.image}
+                  alt={slideTitle}
+                  width={3840}
+                  height={2160}
+                  decoding={idx === 0 ? "sync" : "async"}
+                  fetchPriority={idx === 0 ? "high" : "low"}
+                  loading={idx === 0 ? "eager" : "lazy"}
+                  className={`absolute inset-0 w-full h-full object-cover object-right transform transition-transform duration-[8000ms] ${
+                    isCurrent ? "scale-105" : "scale-100"
+                  }`}
+                />
+              )}
+              <div
+                className={`absolute inset-0 bg-gradient-to-r ${
+                  isRtl
+                    ? "from-white/15 via-white/80 via-45% to-white/96"
+                    : "from-white/96 via-white/80 via-45% to-white/15"
+                }`}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-50/90 via-transparent via-55% to-white/50" />
+            </div>
+          )
+        })}
+      </div>
+
+      <div className="hero-grid absolute inset-0 z-0 opacity-35 pointer-events-none" />
+
+      {/* Main Slide Content */}
+      <div className="container-x relative z-10 pt-16 sm:pt-24 pb-12 flex-1 flex flex-col justify-center">
+        <div className="max-w-3xl space-y-6">
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-black tracking-widest uppercase shadow-xs backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>{tag}</span>
+          </div>
+
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-slate-900">
+            {title}
+          </h1>
+
+          <p className="geo-summary text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl font-normal">
+            {subtitle}
+          </p>
+
+          <div className="flex flex-wrap gap-2.5 pt-2">
+            {highlights.map((h) => (
+              <span
+                key={h}
+                className="px-3.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-slate-200/90 text-xs font-semibold text-slate-700 shadow-xs backdrop-blur-md flex items-center gap-2 transition hover:border-emerald-300"
+              >
+                <span className="text-emerald-600 font-bold">✓</span>
+                {h}
+              </span>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4 pt-4">
+            <a
+              href={pathFor(locale, "quote")}
+              className="px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/35 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
+            >
+              <span>📦</span>
+              <span>{ui.ctaQuote}</span>
+            </a>
+
+            <a
+              href={`https://wa.me/${cleanWa}?text=${whatsappPrefill}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-4 rounded-xl bg-white hover:bg-emerald-50/80 border border-emerald-300 text-emerald-800 font-bold text-sm shadow-xs backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
+            >
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>WhatsApp: {whatsappNumber}</span>
+            </a>
+
+            <a
+              href={pathFor(locale, "sunflower")}
+              className="px-6 py-4 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 font-bold text-sm shadow-xs backdrop-blur-md hover:border-slate-300 transition"
+            >
+              {ui.ctaProducts} &rarr;
+            </a>
           </div>
         </div>
 
-        {/* 5-Slide Interactive Controller Bar at Bottom of Visual Stage */}
-        <div className="relative z-20 border-t border-emerald-900/60 bg-[#071d14] py-3 shadow-lg">
-          <div className="w-full px-4 sm:px-8 lg:px-14 xl:px-20 2xl:px-28">
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3">
-              {slides.map((s, idx) => {
-                const isSelected = active === idx
-                return (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => {
-                      setActive(idx)
-                      setPlaying(false)
-                    }}
-                    className={`relative text-start p-2.5 sm:p-3 rounded-xl transition-all duration-200 cursor-pointer ${
-                      idx === 4 ? "col-span-2 sm:col-span-1" : ""
-                    } ${
-                      isSelected
-                        ? "border-2 bg-white border-amber-400 text-slate-950 shadow-lg ring-2 ring-amber-400/30"
-                        : "border border-emerald-800/80 bg-emerald-950/60 hover:bg-emerald-900/70 text-emerald-100"
+        {/* Left / Right Carousel Controls */}
+        <div
+          className={`hidden sm:flex items-center gap-3 absolute top-1/2 -translate-y-1/2 ${
+            isRtl ? "left-6" : "right-6"
+          }`}
+        >
+          <button
+            type="button"
+            onClick={prevSlide}
+            aria-label={labels.previous}
+            className="w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-slate-200 text-slate-800 grid place-items-center shadow-md backdrop-blur-md transition hover:scale-110 active:scale-90 cursor-pointer"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={nextSlide}
+            aria-label={labels.next}
+            className="w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-slate-200 text-slate-800 grid place-items-center shadow-md backdrop-blur-md transition hover:scale-110 active:scale-90 cursor-pointer"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Bottom Strip: 5 Slide Indicators */}
+      <div className="relative z-10 border-t border-slate-200/80 bg-white/85 backdrop-blur-xl py-4">
+        <div className="container-x">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            {SLIDES.map((slide, i) => {
+              const slideTitle = slide.tag[locale] || slide.tag.en
+              const isActive = i === current
+              return (
+                <button
+                  key={slide.image}
+                  type="button"
+                  onClick={() => setCurrent(i)}
+                  className={`relative text-left p-3.5 rounded-2xl transition border cursor-pointer ${
+                    isActive
+                      ? "bg-white border-emerald-500 shadow-md ring-2 ring-emerald-500/20"
+                      : "bg-white/60 border-slate-200/80 hover:bg-white hover:border-slate-300 shadow-xs"
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-[10px] font-mono font-bold mb-1">
+                    <span className={isActive ? "text-emerald-700 font-extrabold" : "text-slate-400"}>
+                      0{i + 1}
+                    </span>
+                    {isActive && (
+                      <span className="text-emerald-600 font-sans text-[9px] uppercase tracking-wider font-extrabold">
+                        {ui.activeBadge}
+                      </span>
+                    )}
+                  </div>
+                  <p
+                    className={`text-xs font-bold line-clamp-1 leading-snug ${
+                      isActive ? "text-slate-900" : "text-slate-600"
                     }`}
                   >
-                    <div className="flex items-center justify-between text-xs font-mono font-bold mb-1">
-                      <span
-                        className={`inline-flex items-center justify-center size-5 rounded-md text-[11px] font-black ${
-                          isSelected ? "bg-emerald-800 text-white" : "bg-white/10 text-amber-300"
-                        }`}
-                      >
-                        0{idx + 1}
-                      </span>
-                      {isSelected && (
-                        <span className="text-emerald-800 font-sans text-[10px] uppercase tracking-wider font-black flex items-center gap-1">
-                          <span className="size-1.5 rounded-full bg-emerald-600 animate-ping" />
-                          {isTr ? "AKTİF" : "ACTIVE"}
-                        </span>
-                      )}
-                    </div>
-                    <p
-                      className={`text-[11px] sm:text-xs font-black line-clamp-1 leading-snug ${
-                        isSelected ? "text-slate-950" : "text-white/90"
-                      }`}
-                    >
-                      {s.tabTitle}
-                    </p>
-                    {isSelected && (
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-600 via-amber-500 to-emerald-600 rounded-b-xl" />
-                    )}
-                  </button>
-                )
-              })}
-            </div>
+                    {slideTitle}
+                  </p>
+
+                  {isActive && (
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 rounded-b-2xl animate-pulse" />
+                  )}
+                </button>
+              )
+            })}
           </div>
         </div>
       </div>
 
-      {/* PART 2: EXECUTIVE B2B HEADLINE, SEO H1, LIVE SPEC TERMINAL & DIRECT RFQ BAR */}
-      <div className="relative z-10 bg-gradient-to-b from-slate-50 via-white to-slate-50/70 py-10 sm:py-12 lg:py-14 border-t border-slate-200">
-        <div className="hero-grid absolute inset-0 z-0 opacity-45 pointer-events-none" />
-        <div className="w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28 relative z-10">
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-center w-full">
-            {/* Left Column: High-Impact SEO H1 Typography & Action Suite */}
-            <div className="lg:col-span-7 xl:col-span-8 space-y-4 sm:space-y-5">
-              {/* High-Tech Glowing Status Radar Chip */}
-              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-emerald-950 border border-emerald-500/60 text-emerald-200 text-xs font-black tracking-widest uppercase shadow-sm">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                </span>
-                <span className="text-white font-extrabold">{current.kicker}</span>
-              </div>
-
-              {/* Primary SEO H1 Headline */}
-              <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight leading-[1.08] text-slate-950 max-w-5xl">
-                <span>{current.titlePart1}</span>
-                <span className="bg-gradient-to-r from-emerald-800 via-teal-800 to-emerald-950 bg-clip-text text-transparent underline decoration-emerald-500/30 decoration-4 underline-offset-8">
-                  {current.titleHighlight}
-                </span>
-              </h1>
-
-              {/* Authoritative B2B GEO Summary Paragraph */}
-              <p className="geo-summary text-base sm:text-lg text-slate-800 leading-relaxed max-w-3xl font-semibold">
-                {current.description}
-              </p>
-
-              {/* 3 High-Contrast Value-Assurance Badges */}
-              <div className="flex flex-wrap gap-2.5 pt-1">
-                {current.badges.map((badgeText) => (
-                  <span
-                    key={badgeText}
-                    className="px-3.5 py-1.5 rounded-xl bg-white border-2 border-slate-300 text-xs font-extrabold text-slate-950 shadow-xs flex items-center gap-2 transition hover:border-emerald-600"
-                  >
-                    <span className="grid size-4 place-items-center rounded-full bg-emerald-700 text-white text-[10px] font-black">
-                      ✓
-                    </span>
-                    <span>{badgeText}</span>
-                  </span>
-                ))}
-              </div>
-
-              {/* High-Impact CTA Button Group */}
-              <div className="flex flex-wrap items-center gap-3.5 pt-2">
-                <a
-                  href={pathFor(locale, "quote")}
-                  className="btn-shine px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-900 hover:from-emerald-600 hover:to-teal-600 text-white font-black text-sm tracking-wide shadow-xl shadow-emerald-950/30 ring-4 ring-emerald-600/15 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2.5 cursor-pointer border border-emerald-400/30"
-                >
-                  <span>📦</span>
-                  <span>{isTr ? "Resmi Teklif İste (RFQ)" : "Request a Quote (RFQ)"}</span>
-                </a>
-
-                <a
-                  href="https://wa.me/905325000000?text=Hello%20Asia%20Oil%2C%20I%20would%20like%20to%20request%20a%20B2B%20quotation"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-5 py-3.5 rounded-xl bg-white hover:bg-emerald-50 border-2 border-emerald-600 text-emerald-950 font-black text-sm shadow-sm hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2 cursor-pointer"
-                >
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" />
-                  <span>WhatsApp: +90 532 500 00 00</span>
-                </a>
-
-                <a
-                  href="#products-catalog"
-                  className="px-5 py-3.5 rounded-xl bg-white hover:bg-slate-100 border-2 border-slate-300 text-slate-950 font-black text-sm shadow-sm hover:border-slate-500 transition flex items-center gap-1.5 cursor-pointer"
-                >
-                  <span>{isTr ? "Ürünleri İnceleyin" : "Explore Products"}</span>
-                  <ArrowRight className="size-4 rtl:-scale-x-100" />
-                </a>
-              </div>
-
-              {/* Quick Fast-Response High-Contrast Trust Bar */}
-              <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-800 pt-1">
-                <span className="flex items-center gap-1.5 text-emerald-900">
-                  <Sparkles className="size-4 text-amber-500 fill-amber-500" />
-                  <span>{isTr ? "2 Saatte Proforma Yanıtı" : "Proforma within 2 Hours"}</span>
-                </span>
-                <span className="text-slate-400">•</span>
-                <span className="flex items-center gap-1.5 text-slate-900">
-                  <Ship className="size-4 text-emerald-700" />
-                  <span>Mersin Port (MIP) &amp; İzmir FOB/CIF</span>
-                </span>
-                <span className="text-slate-400">•</span>
-                <span className="flex items-center gap-1.5 text-slate-900">
-                  <ShieldCheck className="size-4 text-emerald-700" />
-                  <span>{isTr ? "SGS / Bureau Veritas Gözetimi" : "SGS / Bureau Veritas Inspection"}</span>
-                </span>
-              </div>
-            </div>
-
-            {/* Right Column: Live Spec Terminal Card (Visible on all screens) */}
-            <div className="lg:col-span-5 xl:col-span-4">
-              <div className="relative rounded-3xl border-2 border-slate-300 bg-white p-6 sm:p-7 shadow-xl">
-                {/* Card Header */}
-                <div className="flex items-center justify-between border-b-2 border-slate-200 pb-4">
-                  <div className="flex items-center gap-3">
-                    <span className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 text-2xl shadow-md text-white">
-                      {current.cardIcon}
-                    </span>
-                    <div>
-                      <span className="text-[10px] font-mono font-black uppercase tracking-widest text-emerald-800 block">
-                        {current.cardBadge}
-                      </span>
-                      <span className="font-display text-base font-black text-slate-950">
-                        {current.tabTitle}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => go(-1)}
-                      aria-label={labels.previous}
-                      className="size-8 rounded-full bg-slate-100 hover:bg-slate-950 hover:text-white border border-slate-300 text-slate-900 grid place-items-center transition cursor-pointer"
-                    >
-                      <ChevronLeft className="size-4 rtl:-scale-x-100" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => go(1)}
-                      aria-label={labels.next}
-                      className="size-8 rounded-full bg-slate-100 hover:bg-slate-950 hover:text-white border border-slate-300 text-slate-900 grid place-items-center transition cursor-pointer"
-                    >
-                      <ChevronRight className="size-4 rtl:-scale-x-100" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* 4-Field Specification Matrix */}
-                <div className="mt-5 grid grid-cols-2 gap-3">
-                  {current.specs.map((item) => (
-                    <div key={item.label} className="rounded-2xl border-2 border-slate-200 bg-slate-50 p-3.5">
-                      <span className="block text-[10px] font-black uppercase tracking-wider text-slate-600">
-                        {item.label}
-                      </span>
-                      <span className="mt-1 block font-mono text-xs font-black text-slate-950 truncate">
-                        {item.val}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Fast Quote Button inside Card */}
-                <a
-                  href={`${pathFor(locale, "quote")}?product=${current.productParam}`}
-                  className="mt-5 flex w-full h-12 items-center justify-center gap-2 rounded-xl bg-slate-950 hover:bg-emerald-900 text-white text-xs font-black shadow-lg transition-all duration-200 group"
-                >
-                  <span>{isTr ? "Bu Spesifikasyonla Teklif İste" : "Request Spec Quotation"}</span>
-                  <ArrowRight className="size-4 transition group-hover:translate-x-1 rtl:-scale-x-100" />
-                </a>
-
-                {/* Guarantee Micro-Footnote */}
-                <p className="mt-3 text-center text-[10px] font-bold text-slate-600">
-                  {isTr
-                    ? "✓ EUR.1 Dolaşım Belgesi & Akredite Laboratuvar Raporu"
-                    : "✓ Includes EUR.1 Certificate & Accredited Lab Analysis"}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Infinite High-Contrast Dark Marquee Ticker */}
-      <div className="relative z-10 border-t-2 border-emerald-950 bg-[#06170f] text-emerald-100 py-3.5 overflow-hidden shadow-inner" aria-hidden="true">
-        <div className="marquee flex w-max gap-8 font-mono text-[11px] uppercase tracking-[.25em] text-white font-extrabold">
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-amber-400 font-black">•</span>DIRECT REFINERY EXPORTER</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-emerald-400 font-black">•</span>MERSIN MIP &amp; IZMIR SEAPORT TERMINALS</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-amber-400 font-black">•</span>EXTRA VIRGIN OLIVE OIL (HS 1509.20 · ≤ 27°C)</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-emerald-400 font-black">•</span>REFINED SUNFLOWER OIL (HS 1512.19 · FFA &lt; 0.10%)</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-amber-400 font-black">•</span>CODEX STAN 210 &amp; IOC CERTIFIED</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-emerald-400 font-black">•</span>SGS &amp; BUREAU VERITAS PRE-SHIPMENT SURVEY</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-amber-400 font-black">•</span>24,000L BULK FLEXITANK &amp; FCL</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-emerald-400 font-black">•</span>PRIVATE LABEL OEM &amp; MULTILINGUAL</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-amber-400 font-black">•</span>ISO 22000 &amp; HALAL &amp; KOSHER</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-amber-400 font-black">•</span>DIRECT REFINERY EXPORTER</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-emerald-400 font-black">•</span>MERSIN MIP &amp; IZMIR SEAPORT TERMINALS</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-amber-400 font-black">•</span>EXTRA VIRGIN OLIVE OIL (HS 1509.20 · ≤ 27°C)</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-emerald-400 font-black">•</span>REFINED SUNFLOWER OIL (HS 1512.19 · FFA &lt; 0.10%)</span>
-          <span className="whitespace-nowrap flex items-center gap-3"><span className="text-amber-400 font-black">•</span>CODEX STAN 210 &amp; IOC CERTIFIED</span>
+      {/* Marquee Ticker */}
+      <div
+        className="relative z-10 border-t border-slate-200/80 bg-slate-100/90 py-2.5 overflow-hidden"
+        aria-hidden
+      >
+        <div className="marquee flex w-max gap-8 font-mono text-[11px] uppercase tracking-[.25em] text-slate-500">
+          {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((kw, i) => (
+            <span key={`${kw}-${i}`} className="whitespace-nowrap flex items-center gap-4">
+              <span className="text-emerald-600 font-bold">&bull;</span>
+              {kw}
+            </span>
+          ))}
         </div>
       </div>
     </section>

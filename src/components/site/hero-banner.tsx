@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import type { Locale } from "@/lib/i18n/config"
 import { pathFor } from "@/lib/i18n/config"
 
@@ -292,6 +292,8 @@ const UI_COPY: Record<
   },
 }
 
+const KEN_BURNS = ["kb-a", "kb-b", "kb-c", "kb-d", "kb-e"]
+
 const MARQUEE_ITEMS = [
   "DIRECT EDIBLE OIL MANUFACTURER",
   "REFINED SUNFLOWER OIL EXPORTER",
@@ -309,25 +311,62 @@ export function HeroBanner({
   whatsappNumber = "+90 543 975 01 32",
   labels,
 }: Props) {
-  const [current, setCurrent] = useState(0)
+  // `cycle` increments on every slide change so the active image's Ken Burns run restarts via its key.
+  const [slideState, setSlideState] = useState({ current: 0, previous: -1, cycle: 0 })
+  const { current, previous, cycle } = slideState
   const [isPaused, setIsPaused] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
   const isRtl = locale === "ar"
   const cleanWa = whatsappNumber.replace(/\D/g, "") || "905439750132"
   const ui = UI_COPY[locale] || UI_COPY.en
 
-  const nextSlide = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % SLIDES.length)
+  const goTo = useCallback((resolve: (prev: number) => number) => {
+    setSlideState((state) => {
+      const next = ((resolve(state.current) % SLIDES.length) + SLIDES.length) % SLIDES.length
+      if (next === state.current) return state
+      return { current: next, previous: state.current, cycle: state.cycle + 1 }
+    })
   }, [])
 
-  const prevSlide = useCallback(() => {
-    setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length)
-  }, [])
+  const nextSlide = useCallback(() => goTo((prev) => prev + 1), [goTo])
+  const prevSlide = useCallback(() => goTo((prev) => prev - 1), [goTo])
 
   useEffect(() => {
     if (isPaused) return
     const interval = setInterval(nextSlide, 7000)
     return () => clearInterval(interval)
   }, [isPaused, nextSlide])
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    let frame = 0
+
+    const update = () => {
+      frame = 0
+      if (motion.matches) {
+        section.style.removeProperty("--hero-py")
+        return
+      }
+      const offset = Math.min(section.offsetHeight, Math.max(0, -section.getBoundingClientRect().top))
+      section.style.setProperty("--hero-py", `${(offset * 0.28).toFixed(1)}px`)
+    }
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(update)
+    }
+
+    update()
+    window.addEventListener("scroll", schedule, { passive: true })
+    window.addEventListener("resize", schedule)
+    motion.addEventListener("change", schedule)
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame)
+      window.removeEventListener("scroll", schedule)
+      window.removeEventListener("resize", schedule)
+      motion.removeEventListener("change", schedule)
+    }
+  }, [])
 
   const activeSlide = SLIDES[current]
   const tag = activeSlide.tag[locale] || activeSlide.tag.en
@@ -343,6 +382,7 @@ export function HeroBanner({
 
   return (
     <section
+      ref={sectionRef}
       className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden bg-slate-50 text-slate-900 select-none border-b border-slate-200/80"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -350,23 +390,25 @@ export function HeroBanner({
       aria-label={title}
     >
       {/* Background 4K Visual Showcase */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <div className="hero-stage absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {SLIDES.map((slide, idx) => {
           const isCurrent = idx === current
+          const isPrevious = idx === previous
           const isNext = idx === (current + 1) % SLIDES.length
-          const shouldRenderImg = idx === 0 || isCurrent || isNext
+          const shouldRenderImg = idx === 0 || isCurrent || isPrevious || isNext
           const slideTitle = slide.title[locale] || slide.title.en
+          // The current run gets a fresh key; the outgoing slide keeps its key so its motion freezes mid-fade.
+          const imageKey = isCurrent ? `kb-${cycle}` : isPrevious ? `kb-${cycle - 1}` : slide.image
           return (
             <div
               key={slide.image}
               aria-hidden={!isCurrent}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                isCurrent ? "opacity-100" : "opacity-0"
-              }`}
+              className={`hero-slide absolute inset-0 ${isCurrent ? "opacity-100" : "opacity-0"}`}
             >
               {shouldRenderImg && (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
+                  key={imageKey}
                   src={slide.image}
                   alt={slideTitle}
                   width={3840}
@@ -374,58 +416,59 @@ export function HeroBanner({
                   decoding={idx === 0 ? "sync" : "async"}
                   fetchPriority={idx === 0 ? "high" : "low"}
                   loading={idx === 0 ? "eager" : "lazy"}
-                  className={`absolute inset-0 w-full h-full object-cover object-right transform transition-transform duration-[8000ms] ${
-                    isCurrent ? "scale-105" : "scale-100"
-                  }`}
+                  className={`absolute inset-0 w-full h-full object-cover object-right contrast-[1.08] saturate-[1.08] ${
+                    isCurrent || isPrevious ? KEN_BURNS[idx % KEN_BURNS.length] : ""
+                  } ${isPrevious ? "kb-hold" : ""}`}
                 />
               )}
               <div
                 className={`absolute inset-0 bg-gradient-to-r ${
                   isRtl
-                    ? "from-white/15 via-white/80 via-45% to-white/96"
-                    : "from-white/96 via-white/80 via-45% to-white/15"
+                    ? "from-transparent via-white/92 via-62% to-white"
+                    : "from-white via-white/92 via-38% to-transparent"
                 }`}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-50/90 via-transparent via-55% to-white/50" />
             </div>
           )
         })}
       </div>
 
-      <div className="hero-grid absolute inset-0 z-0 opacity-35 pointer-events-none" />
+      <div className="hero-grid absolute inset-0 z-0 opacity-25 pointer-events-none" />
 
       {/* Main Slide Content */}
       <div className="container-x relative z-10 pt-16 sm:pt-24 pb-12 flex-1 flex flex-col justify-center">
-        <div className="max-w-3xl space-y-6">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-black tracking-widest uppercase shadow-xs backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <div key={cycle} className="max-w-3xl space-y-6">
+          <div className="rise inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-emerald-950 border border-emerald-700 text-white text-xs font-black tracking-widest uppercase shadow-md">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
             <span>{tag}</span>
           </div>
 
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-slate-900">
+          <h1 className="rise rise-1 font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.06] text-slate-950 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]">
             {title}
           </h1>
 
-          <p className="geo-summary text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl font-normal">
+          <p className="rise rise-2 geo-summary text-base sm:text-lg text-slate-800 leading-relaxed max-w-2xl font-medium">
             {subtitle}
           </p>
 
-          <div className="flex flex-wrap gap-2.5 pt-2">
+          <div className="rise rise-3 flex flex-wrap gap-2.5 pt-2">
             {highlights.map((h) => (
               <span
                 key={h}
-                className="px-3.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-slate-200/90 text-xs font-semibold text-slate-700 shadow-xs backdrop-blur-md flex items-center gap-2 transition hover:border-emerald-300"
+                className="px-3.5 py-2 rounded-xl bg-white border-2 border-slate-300 text-xs font-extrabold text-slate-950 shadow-sm flex items-center gap-2 transition hover:border-emerald-600"
               >
-                <span className="text-emerald-600 font-bold">✓</span>
+                <span className="w-4 h-4 rounded-full bg-emerald-600 text-white text-[10px] font-black inline-flex items-center justify-center">
+                  ✓
+                </span>
                 {h}
               </span>
             ))}
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 pt-4">
+          <div className="rise rise-4 flex flex-wrap items-center gap-4 pt-4">
             <a
               href={pathFor(locale, "quote")}
-              className="px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/35 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
+              className="px-8 py-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 border-2 border-emerald-800 text-white font-black text-sm tracking-wide shadow-xl shadow-emerald-950/25 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
             >
               <span>📦</span>
               <span>{ui.ctaQuote}</span>
@@ -435,15 +478,15 @@ export function HeroBanner({
               href={`https://wa.me/${cleanWa}?text=${whatsappPrefill}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-4 rounded-xl bg-white hover:bg-emerald-50/80 border border-emerald-300 text-emerald-800 font-bold text-sm shadow-xs backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
+              className="px-6 py-4 rounded-xl bg-white hover:bg-emerald-50 border-2 border-emerald-600 text-emerald-950 font-extrabold text-sm shadow-md hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
             >
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" />
               <span>WhatsApp: {whatsappNumber}</span>
             </a>
 
             <a
               href={pathFor(locale, "sunflower")}
-              className="px-6 py-4 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 font-bold text-sm shadow-xs backdrop-blur-md hover:border-slate-300 transition"
+              className="px-6 py-4 rounded-xl bg-slate-950 hover:bg-slate-800 border-2 border-slate-950 text-white font-extrabold text-sm shadow-md transition"
             >
               {ui.ctaProducts} &rarr;
             </a>
@@ -460,7 +503,7 @@ export function HeroBanner({
             type="button"
             onClick={prevSlide}
             aria-label={labels.previous}
-            className="w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-slate-200 text-slate-800 grid place-items-center shadow-md backdrop-blur-md transition hover:scale-110 active:scale-90 cursor-pointer"
+            className="w-12 h-12 rounded-full bg-slate-950/90 hover:bg-emerald-700 border-2 border-white/90 text-white grid place-items-center shadow-xl transition hover:scale-110 active:scale-90 cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
@@ -470,7 +513,7 @@ export function HeroBanner({
             type="button"
             onClick={nextSlide}
             aria-label={labels.next}
-            className="w-12 h-12 rounded-full bg-white/90 hover:bg-white border border-slate-200 text-slate-800 grid place-items-center shadow-md backdrop-blur-md transition hover:scale-110 active:scale-90 cursor-pointer"
+            className="w-12 h-12 rounded-full bg-slate-950/90 hover:bg-emerald-700 border-2 border-white/90 text-white grid place-items-center shadow-xl transition hover:scale-110 active:scale-90 cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
@@ -480,7 +523,7 @@ export function HeroBanner({
       </div>
 
       {/* Bottom Strip: 5 Slide Indicators */}
-      <div className="relative z-10 border-t border-slate-200/80 bg-white/85 backdrop-blur-xl py-4">
+      <div className="relative z-10 border-t-2 border-slate-300 bg-white/95 backdrop-blur-xl py-4 shadow-[0_-8px_24px_rgba(15,23,42,0.08)]">
         <div className="container-x">
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {SLIDES.map((slide, i) => {
@@ -490,33 +533,33 @@ export function HeroBanner({
                 <button
                   key={slide.image}
                   type="button"
-                  onClick={() => setCurrent(i)}
-                  className={`relative text-left p-3.5 rounded-2xl transition border cursor-pointer ${
+                  onClick={() => goTo(() => i)}
+                  className={`relative text-left p-3.5 rounded-2xl transition border-2 cursor-pointer ${
                     isActive
-                      ? "bg-white border-emerald-500 shadow-md ring-2 ring-emerald-500/20"
-                      : "bg-white/60 border-slate-200/80 hover:bg-white hover:border-slate-300 shadow-xs"
+                      ? "bg-slate-950 border-emerald-500 text-white shadow-lg ring-2 ring-emerald-500/30"
+                      : "bg-slate-50 border-slate-300 hover:bg-white hover:border-emerald-600 text-slate-900 shadow-xs"
                   }`}
                 >
-                  <div className="flex items-center justify-between text-[10px] font-mono font-bold mb-1">
-                    <span className={isActive ? "text-emerald-700 font-extrabold" : "text-slate-400"}>
+                  <div className="flex items-center justify-between text-[11px] font-mono font-extrabold mb-1">
+                    <span className={isActive ? "text-amber-400" : "text-emerald-800"}>
                       0{i + 1}
                     </span>
                     {isActive && (
-                      <span className="text-emerald-600 font-sans text-[9px] uppercase tracking-wider font-extrabold">
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-sans text-[9px] uppercase tracking-wider font-black">
                         {ui.activeBadge}
                       </span>
                     )}
                   </div>
                   <p
-                    className={`text-xs font-bold line-clamp-1 leading-snug ${
-                      isActive ? "text-slate-900" : "text-slate-600"
+                    className={`text-xs font-extrabold line-clamp-1 leading-snug ${
+                      isActive ? "text-white" : "text-slate-900"
                     }`}
                   >
                     {slideTitle}
                   </p>
 
                   {isActive && (
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 rounded-b-2xl animate-pulse" />
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-emerald-400 to-teal-400 rounded-b-2xl" />
                   )}
                 </button>
               )
@@ -527,13 +570,13 @@ export function HeroBanner({
 
       {/* Marquee Ticker */}
       <div
-        className="relative z-10 border-t border-slate-200/80 bg-slate-100/90 py-2.5 overflow-hidden"
+        className="relative z-10 border-t border-slate-800 bg-slate-950 py-3 overflow-hidden"
         aria-hidden
       >
-        <div className="marquee flex w-max gap-8 font-mono text-[11px] uppercase tracking-[.25em] text-slate-500">
+        <div className="marquee flex w-max gap-8 font-mono text-[11px] font-bold uppercase tracking-[.25em] text-slate-100">
           {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((kw, i) => (
             <span key={`${kw}-${i}`} className="whitespace-nowrap flex items-center gap-4">
-              <span className="text-emerald-600 font-bold">&bull;</span>
+              <span className="text-amber-400 font-black">&bull;</span>
               {kw}
             </span>
           ))}

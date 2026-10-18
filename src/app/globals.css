@@ -260,6 +260,51 @@ html[lang="ar"] .font-display,
   animation: hero-zoom 16s var(--ease-out) forwards;
 }
 
+/* Home hero banner: scroll parallax stage, long crossfade and a different Ken Burns path per slide. */
+.hero-stage {
+  transform: translate3d(0, var(--hero-py, 0px), 0);
+  will-change: transform;
+}
+
+.hero-slide {
+  transition: opacity 1.6s var(--ease-out);
+}
+
+.kb-a { animation: kb-a 12s linear forwards; }
+.kb-b { animation: kb-b 12s linear forwards; }
+.kb-c { animation: kb-c 12s linear forwards; }
+.kb-d { animation: kb-d 12s linear forwards; }
+.kb-e { animation: kb-e 12s linear forwards; }
+
+.kb-hold {
+  animation-play-state: paused;
+}
+
+@keyframes kb-a {
+  from { transform: scale(1.06) translate(0, 0); }
+  to { transform: scale(1.18) translate(-2.5%, -1.5%); }
+}
+
+@keyframes kb-b {
+  from { transform: scale(1.18) translate(2%, 1%); }
+  to { transform: scale(1.06) translate(0, 0); }
+}
+
+@keyframes kb-c {
+  from { transform: scale(1.06) translate(-2%, 1.5%); }
+  to { transform: scale(1.16) translate(1.5%, -1%); }
+}
+
+@keyframes kb-d {
+  from { transform: scale(1.16) translate(0, -2%); }
+  to { transform: scale(1.06) translate(-1.5%, 1.5%); }
+}
+
+@keyframes kb-e {
+  from { transform: scale(1.06) translate(2%, -1%); }
+  to { transform: scale(1.2) translate(-1%, 2%); }
+}
+
 /* Scroll-driven motion. Browsers without support just show the content. */
 @supports (animation-timeline: view()) {
   .reveal {
@@ -561,6 +606,11 @@ details .acc > * {
   }
 
   .hero-zoom,
+  .kb-a,
+  .kb-b,
+  .kb-c,
+  .kb-d,
+  .kb-e,
   .rise,
   .mask-word > span,
   .reveal,
@@ -584,8 +634,13 @@ details .acc > * {
     transform: none;
   }
 
-  .tilt {
+  .tilt,
+  .hero-stage {
     transform: none !important;
+  }
+
+  .hero-slide {
+    transition-duration: 0.3s;
   }
 
   ::view-transition-old(root),

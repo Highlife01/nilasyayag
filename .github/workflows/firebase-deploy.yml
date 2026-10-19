@@ -39,12 +39,13 @@ jobs:
         run: npm ci
 
       - name: Restore .env.local from GitHub Secrets
-        if: ${{ secrets.DOTENV_LOCAL != '' }}
+        env:
+          DOTENV_LOCAL: ${{ secrets.DOTENV_LOCAL }}
         run: |
-          cat << 'EOF' > .env.local
-          ${{ secrets.DOTENV_LOCAL }}
-          EOF
-          cp .env.local .env
+          if [ -n "$DOTENV_LOCAL" ]; then
+            printf '%s\n' "$DOTENV_LOCAL" > .env.local
+            cp .env.local .env
+          fi
 
       - name: Run Lint, TypeScript & Vitest checks
         run: |
@@ -53,13 +54,16 @@ jobs:
           npm test
 
       - name: Authenticate Google Cloud & Deploy to Firebase Hosting
-        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AJANSONLINE != '' || secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
         env:
           FIREBASE_CLI_EXPERIMENTS: webframeworks
           FUNCTIONS_DISCOVERY_TIMEOUT: "60"
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-sa.json
-          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AJANSONLINE || secrets.FIREBASE_SERVICE_ACCOUNT }}
+          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AJANSONLINE }}
         run: |
+          if [ -z "$SA_JSON" ]; then
+            echo "FIREBASE_SERVICE_ACCOUNT_AJANSONLINE secret is missing"
+            exit 1
+          fi
           printf '%s' "$SA_JSON" > "$GOOGLE_APPLICATION_CREDENTIALS"
           npx --yes firebase-tools@15 deploy --only hosting:nilasyayag --project ajansonline --force
           node scripts/cleanup-hosting-versions.mjs --apply --site=nilasyayag || true

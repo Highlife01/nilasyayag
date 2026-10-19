@@ -315,6 +315,7 @@ export function HeroBanner({
   const [slideState, setSlideState] = useState({ current: 0, previous: -1, cycle: 0 })
   const { current, previous, cycle } = slideState
   const [isPaused, setIsPaused] = useState(false)
+  const [preloadNext, setPreloadNext] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const isRtl = locale === "ar"
   const cleanWa = whatsappNumber.replace(/\D/g, "") || "905439750132"
@@ -330,6 +331,11 @@ export function HeroBanner({
 
   const nextSlide = useCallback(() => goTo((prev) => prev + 1), [goTo])
   const prevSlide = useCallback(() => goTo((prev) => prev - 1), [goTo])
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setPreloadNext(true), 1500)
+    return () => window.clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     if (isPaused) return
@@ -383,19 +389,19 @@ export function HeroBanner({
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden bg-slate-50 text-slate-900 select-none border-b border-slate-200/80"
+      className="relative min-h-[calc(100dvh-7.25rem)] flex flex-col justify-between overflow-hidden bg-slate-50 text-slate-900 select-none border-b border-slate-200/80"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       aria-roledescription="carousel"
       aria-label={title}
     >
-      {/* Background 4K Visual Showcase */}
+      {/* Background High-Contrast Visual Showcase */}
       <div className="hero-stage absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {SLIDES.map((slide, idx) => {
           const isCurrent = idx === current
           const isPrevious = idx === previous
           const isNext = idx === (current + 1) % SLIDES.length
-          const shouldRenderImg = idx === 0 || isCurrent || isPrevious || isNext
+          const shouldRenderImg = isCurrent || isPrevious || (preloadNext && isNext)
           const slideTitle = slide.title[locale] || slide.title.en
           // The current run gets a fresh key; the outgoing slide keeps its key so its motion freezes mid-fade.
           const imageKey = isCurrent ? `kb-${cycle}` : isPrevious ? `kb-${cycle - 1}` : slide.image
@@ -411,8 +417,8 @@ export function HeroBanner({
                   key={imageKey}
                   src={slide.image}
                   alt={slideTitle}
-                  width={3840}
-                  height={2160}
+                  width={2560}
+                  height={1440}
                   decoding={idx === 0 ? "sync" : "async"}
                   fetchPriority={idx === 0 ? "high" : "low"}
                   loading={idx === 0 ? "eager" : "lazy"}
@@ -435,23 +441,23 @@ export function HeroBanner({
 
       <div className="hero-grid absolute inset-0 z-0 opacity-25 pointer-events-none" />
 
-      {/* Main Slide Content */}
-      <div className="container-x relative z-10 pt-16 sm:pt-24 pb-12 flex-1 flex flex-col justify-center">
-        <div key={cycle} className="max-w-3xl space-y-6">
+      {/* Main Slide Content — Full-Page Width & Viewport Centered */}
+      <div className="w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28 relative z-10 py-8 sm:py-10 lg:py-12 flex-1 flex flex-col justify-center">
+        <div key={cycle} className="max-w-4xl space-y-5 xl:space-y-6">
           <div className="rise inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-emerald-950 border border-emerald-700 text-white text-xs font-black tracking-widest uppercase shadow-md">
             <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
             <span>{tag}</span>
           </div>
 
-          <h1 className="rise rise-1 font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.06] text-slate-950 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]">
+          <h1 className="rise rise-1 font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-[1.06] text-slate-950 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]">
             {title}
           </h1>
 
-          <p className="rise rise-2 geo-summary text-base sm:text-lg text-slate-800 leading-relaxed max-w-2xl font-medium">
+          <p className="rise rise-2 geo-summary text-base sm:text-lg xl:text-xl text-slate-800 leading-relaxed max-w-3xl font-medium">
             {subtitle}
           </p>
 
-          <div className="rise rise-3 flex flex-wrap gap-2.5 pt-2">
+          <div className="rise rise-3 flex flex-wrap gap-2.5 pt-1">
             {highlights.map((h) => (
               <span
                 key={h}
@@ -465,7 +471,7 @@ export function HeroBanner({
             ))}
           </div>
 
-          <div className="rise rise-4 flex flex-wrap items-center gap-4 pt-4">
+          <div className="rise rise-4 flex flex-wrap items-center gap-4 pt-3">
             <a
               href={pathFor(locale, "quote")}
               className="px-8 py-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 border-2 border-emerald-800 text-white font-black text-sm tracking-wide shadow-xl shadow-emerald-950/25 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
@@ -496,7 +502,7 @@ export function HeroBanner({
         {/* Left / Right Carousel Controls */}
         <div
           className={`hidden sm:flex items-center gap-3 absolute top-1/2 -translate-y-1/2 ${
-            isRtl ? "left-6" : "right-6"
+            isRtl ? "left-6 lg:left-14" : "right-6 lg:right-14"
           }`}
         >
           <button
@@ -522,9 +528,9 @@ export function HeroBanner({
         </div>
       </div>
 
-      {/* Bottom Strip: 5 Slide Indicators */}
-      <div className="relative z-10 border-t-2 border-slate-300 bg-white/95 backdrop-blur-xl py-4 shadow-[0_-8px_24px_rgba(15,23,42,0.08)]">
-        <div className="container-x">
+      {/* Bottom Strip: 5 Slide Indicators — Full-Page Width */}
+      <div className="relative z-10 border-t-2 border-slate-300 bg-white/95 backdrop-blur-xl py-3.5 shadow-[0_-8px_24px_rgba(15,23,42,0.08)]">
+        <div className="w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28">
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {SLIDES.map((slide, i) => {
               const slideTitle = slide.tag[locale] || slide.tag.en
@@ -535,6 +541,8 @@ export function HeroBanner({
                   type="button"
                   onClick={() => goTo(() => i)}
                   className={`relative text-left p-3.5 rounded-2xl transition border-2 cursor-pointer ${
+                    i === 4 ? "col-span-2 sm:col-span-1" : ""
+                  } ${
                     isActive
                       ? "bg-slate-950 border-emerald-500 text-white shadow-lg ring-2 ring-emerald-500/30"
                       : "bg-slate-50 border-slate-300 hover:bg-white hover:border-emerald-600 text-slate-900 shadow-xs"

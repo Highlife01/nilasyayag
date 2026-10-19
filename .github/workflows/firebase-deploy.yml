@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: firebase-deploy-${{ github.ref }}
+  group: firebase-hosting-deploy-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -46,17 +46,21 @@ jobs:
           EOF
           cp .env.local .env
 
-      - name: Run TypeScript & Vitest checks
+      - name: Run Lint, TypeScript & Vitest checks
         run: |
+          npm run lint
           npm run typecheck
           npm test
 
       - name: Authenticate Google Cloud & Deploy to Firebase Hosting
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AJANSONLINE != '' || secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
         env:
           FIREBASE_CLI_EXPERIMENTS: webframeworks
           FUNCTIONS_DISCOVERY_TIMEOUT: "60"
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-sa.json
+          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AJANSONLINE || secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_AJANSONLINE }}' > "$GOOGLE_APPLICATION_CREDENTIALS"
-          npx --yes firebase-tools@latest deploy --only hosting --project ajansonline --force
+          printf '%s' "$SA_JSON" > "$GOOGLE_APPLICATION_CREDENTIALS"
+          npx --yes firebase-tools@15 deploy --only hosting:nilasyayag --project ajansonline --force
+          node scripts/cleanup-hosting-versions.mjs --apply --site=nilasyayag || true
           rm -f "$GOOGLE_APPLICATION_CREDENTIALS"

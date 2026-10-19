@@ -7,7 +7,8 @@ if (-not $scriptDir) { $scriptDir = "d:\WEB SİTELERİ\asiayag" }
 Set-Location -LiteralPath $scriptDir
 
 $shimPath = (Join-Path $scriptDir "scripts\win-symlink-shim.cjs") -replace '\\', '/'
-$env:NODE_OPTIONS = "--require `"$shimPath`""
+$env:NEXT_CPU_COUNT = "1"
+$env:NODE_OPTIONS = "--require `"$shimPath`" --max-old-space-size=4096"
 
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host " ASIA OIL - FIREBASE HOSTING DEPLOY" -ForegroundColor Cyan
@@ -23,7 +24,7 @@ if (Test-Path -LiteralPath ".firebase") {
 
 $deploySucceeded = $false
 try {
-    firebase deploy --only hosting:nilasyayag
+    firebase deploy --only hosting:nilasyayag --force
     if ($LASTEXITCODE -eq 0) {
         $deploySucceeded = $true
     } else {
@@ -46,5 +47,5 @@ if ($deploySucceeded) {
 }
 
 Write-Host ""
-Write-Host "Islem tamamlandi. Pencereyi kapatmak icin Enter'a basin..." -ForegroundColor Green
-Read-Host
+Write-Host "Islem tamamlandi." -ForegroundColor Green
+

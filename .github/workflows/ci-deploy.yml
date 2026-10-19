@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: firebase-hosting-deploy-${{ github.ref }}
   cancel-in-progress: false
 
 env:
@@ -44,7 +44,7 @@ jobs:
   deploy:
     name: Deploy to Firebase Hosting
     needs: ci
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && secrets.FIREBASE_SERVICE_ACCOUNT != '' && secrets.NILASYA_SESSION_SECRET != ''
     runs-on: ubuntu-latest
     environment:
       name: production

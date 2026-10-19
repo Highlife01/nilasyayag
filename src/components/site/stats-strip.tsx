@@ -154,35 +154,36 @@ const STATS: StatItem[] = [
 
 export function StatsStrip({ locale }: { locale: Locale }) {
   return (
-    <section className="relative z-20 py-10 md:py-14 mx-auto max-w-7xl px-5 md:px-10">
-      <div className="rounded-3xl border-2 border-slate-300 bg-white p-6 shadow-xl md:p-8">
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5 lg:gap-6">
+    <section className="relative z-20 py-10 md:py-14 w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28">
+      <div className="relative overflow-hidden rounded-3xl border-2 border-slate-200/90 bg-white p-6 shadow-[0_20px_50px_-15px_rgba(15,23,42,0.12)] md:p-8">
+        <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-emerald-800 via-teal-600 to-amber-500" />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5">
           {STATS.map((stat, i) => {
             const Icon = stat.icon
             return (
               <div
                 key={i}
-                className="group relative flex flex-col justify-between border-l-2 border-slate-200 pl-4 transition duration-300 hover:translate-y-[-2px] rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-4"
+                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-slate-50/60 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/70 hover:bg-white hover:shadow-lg"
               >
                 <div className="flex items-center justify-between">
-                  <div className={`flex size-11 items-center justify-center rounded-xl ${stat.color} transition duration-300 group-hover:scale-110 shadow-xs border border-slate-200`}>
+                  <div className={`flex size-12 items-center justify-center rounded-xl ${stat.color} transition duration-300 group-hover:scale-110 shadow-xs border border-slate-200/80`}>
                     <Icon className="size-5" />
                   </div>
-                  <span className="font-mono text-xs font-black tracking-wider text-slate-400">
+                  <span className="rounded-full bg-slate-200/70 px-2.5 py-0.5 font-mono text-[11px] font-black tracking-wider text-slate-600 group-hover:bg-emerald-950 group-hover:text-amber-300 transition-colors">
                     0{i + 1}
                   </span>
                 </div>
-                <div className="mt-4">
-                  <div className="font-display text-3xl font-black tracking-tight text-slate-950 md:text-4xl">
+                <div className="mt-5">
+                  <div className="font-display text-3xl font-black tracking-tight text-slate-950 xl:text-4xl">
                     <span className="text-slate-950">{stat.value}</span>
                     <span className="text-lg font-black text-emerald-700">
                       {typeof stat.suffix === "object" ? stat.suffix[locale] || stat.suffix.en : stat.suffix}
                     </span>
                   </div>
-                  <h4 className="mt-1 text-sm font-black text-slate-950 leading-snug">
+                  <h4 className="mt-1.5 text-sm font-black text-slate-950 leading-snug">
                     {stat.label[locale] || stat.label.en}
                   </h4>
-                  <p className="mt-0.5 text-xs text-slate-700 font-semibold leading-relaxed">
+                  <p className="mt-1 text-xs text-slate-600 font-semibold leading-relaxed">
                     {stat.sub[locale] || stat.sub.en}
                   </p>
                 </div>

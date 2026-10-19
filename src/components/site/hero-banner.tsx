@@ -444,16 +444,19 @@ export function HeroBanner({
       {/* Main Slide Content — Full-Page Width & Viewport Centered */}
       <div className="w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28 relative z-10 py-8 sm:py-10 lg:py-12 flex-1 flex flex-col justify-center">
         <div key={cycle} className="max-w-4xl space-y-5 xl:space-y-6">
-          <div className="rise inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-emerald-950 border border-emerald-700 text-white text-xs font-black tracking-widest uppercase shadow-md">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
+          <div className="rise inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-emerald-950/95 border border-emerald-600/80 text-white text-xs font-black tracking-widest uppercase shadow-lg shadow-emerald-950/20 backdrop-blur-md">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#fbbf24]" />
             <span>{tag}</span>
+            <span className="hidden sm:inline-block ml-1 rounded-full bg-white/10 px-2 py-0.5 font-mono text-[10px] text-amber-300">
+              0{current + 1} / 0{SLIDES.length}
+            </span>
           </div>
 
-          <h1 className="rise rise-1 font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-[1.06] text-slate-950 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]">
+          <h1 className="rise rise-1 font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-[1.05] text-slate-950 drop-shadow-[0_2px_10px_rgba(255,255,255,0.95)]">
             {title}
           </h1>
 
-          <p className="rise rise-2 geo-summary text-base sm:text-lg xl:text-xl text-slate-800 leading-relaxed max-w-3xl font-medium">
+          <p className="rise rise-2 geo-summary text-base sm:text-lg xl:text-xl text-slate-800 leading-relaxed max-w-3xl font-medium drop-shadow-[0_1px_4px_rgba(255,255,255,0.9)]">
             {subtitle}
           </p>
 
@@ -461,9 +464,9 @@ export function HeroBanner({
             {highlights.map((h) => (
               <span
                 key={h}
-                className="px-3.5 py-2 rounded-xl bg-white border-2 border-slate-300 text-xs font-extrabold text-slate-950 shadow-sm flex items-center gap-2 transition hover:border-emerald-600"
+                className="px-4 py-2 rounded-xl bg-white/95 backdrop-blur-md border border-slate-300/90 text-xs font-extrabold text-slate-950 shadow-sm flex items-center gap-2.5 transition-all hover:border-emerald-600 hover:shadow-md"
               >
-                <span className="w-4 h-4 rounded-full bg-emerald-600 text-white text-[10px] font-black inline-flex items-center justify-center">
+                <span className="w-4 h-4 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-800 text-white text-[10px] font-black inline-flex items-center justify-center shadow-xs">
                   ✓
                 </span>
                 {h}
@@ -471,10 +474,10 @@ export function HeroBanner({
             ))}
           </div>
 
-          <div className="rise rise-4 flex flex-wrap items-center gap-4 pt-3">
+          <div className="rise rise-4 flex flex-wrap items-center gap-3.5 pt-3">
             <a
               href={pathFor(locale, "quote")}
-              className="px-8 py-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 border-2 border-emerald-800 text-white font-black text-sm tracking-wide shadow-xl shadow-emerald-950/25 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
+              className="btn-shine px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 hover:from-emerald-900 hover:to-teal-900 border border-emerald-900 text-white font-black text-sm tracking-wide shadow-xl shadow-emerald-950/25 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 flex items-center gap-2.5"
             >
               <span>📦</span>
               <span>{ui.ctaQuote}</span>
@@ -484,7 +487,7 @@ export function HeroBanner({
               href={`https://wa.me/${cleanWa}?text=${whatsappPrefill}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-4 rounded-xl bg-white hover:bg-emerald-50 border-2 border-emerald-600 text-emerald-950 font-extrabold text-sm shadow-md hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2"
+              className="px-6 py-4 rounded-xl bg-white/95 backdrop-blur-md hover:bg-emerald-50 border-2 border-emerald-600 text-emerald-950 font-extrabold text-sm shadow-md hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 flex items-center gap-2.5"
             >
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" />
               <span>WhatsApp: {whatsappNumber}</span>
@@ -492,39 +495,47 @@ export function HeroBanner({
 
             <a
               href={pathFor(locale, "sunflower")}
-              className="px-6 py-4 rounded-xl bg-slate-950 hover:bg-slate-800 border-2 border-slate-950 text-white font-extrabold text-sm shadow-md transition"
+              className="px-6 py-4 rounded-xl bg-slate-950/95 hover:bg-emerald-950 border border-slate-800 text-white font-extrabold text-sm shadow-md hover:scale-[1.02] transition-all duration-200"
             >
               {ui.ctaProducts} &rarr;
             </a>
           </div>
         </div>
 
-        {/* Left / Right Carousel Controls */}
+        {/* Left / Right Carousel Controls & Live Port Badge */}
         <div
-          className={`hidden sm:flex items-center gap-3 absolute top-1/2 -translate-y-1/2 ${
-            isRtl ? "left-6 lg:left-14" : "right-6 lg:right-14"
+          className={`hidden sm:flex flex-col items-end gap-3 absolute bottom-8 ${
+            isRtl ? "left-6 lg:left-14 xl:left-20 2xl:left-28" : "right-6 lg:right-14 xl:right-20 2xl:right-28"
           }`}
         >
-          <button
-            type="button"
-            onClick={prevSlide}
-            aria-label={labels.previous}
-            className="w-12 h-12 rounded-full bg-slate-950/90 hover:bg-emerald-700 border-2 border-white/90 text-white grid place-items-center shadow-xl transition hover:scale-110 active:scale-90 cursor-pointer"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={nextSlide}
-            aria-label={labels.next}
-            className="w-12 h-12 rounded-full bg-slate-950/90 hover:bg-emerald-700 border-2 border-white/90 text-white grid place-items-center shadow-xl transition hover:scale-110 active:scale-90 cursor-pointer"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+          <div className="hidden xl:flex items-center gap-3 rounded-2xl bg-slate-950/85 backdrop-blur-xl border border-white/15 px-4 py-2.5 text-xs text-white shadow-2xl">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-mono font-bold tracking-wider text-amber-300">MERSİN MIP &bull; İZMİR</span>
+            <span className="text-white/30">|</span>
+            <span className="font-semibold text-white/90">FOB &bull; CIF &bull; CFR &bull; 24MT FLEXITANK</span>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={prevSlide}
+              aria-label={labels.previous}
+              className="w-12 h-12 rounded-full bg-slate-950/90 hover:bg-emerald-700 border-2 border-white/80 text-white grid place-items-center shadow-xl transition hover:scale-110 active:scale-90 cursor-pointer"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={nextSlide}
+              aria-label={labels.next}
+              className="w-12 h-12 rounded-full bg-slate-950/90 hover:bg-emerald-700 border-2 border-white/80 text-white grid place-items-center shadow-xl transition hover:scale-110 active:scale-90 cursor-pointer"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 

@@ -243,8 +243,9 @@ export function SiteFrame({
       <main id="content">{children}</main>
 
       {/* Modern High-Prestige Corporate Footer */}
-      <footer className="bg-[#0b1c14] text-[#f7f1e3] border-t border-emerald-950/30">
-        <div className="mx-auto max-w-7xl px-5 pt-20 pb-12 md:px-10">
+      <footer className="relative bg-[#07150f] text-[#f7f1e3] border-t border-emerald-900/40">
+        <div className="h-1.5 w-full bg-gradient-to-r from-emerald-700 via-amber-400 to-teal-600" />
+        <div className="w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28 pt-20 pb-12">
           <div className="grid gap-12 lg:grid-cols-12">
             {/* Column 1: Brand & Ports */}
             <div className="lg:col-span-4">

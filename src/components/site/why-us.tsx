@@ -35,14 +35,15 @@ export function WhyUsSection({ locale }: { locale: Locale }) {
   ]
 
   return (
-    <section className="section bg-white border-y-2 border-slate-300">
-      <div className="container-x">
-        <div className="mx-auto max-w-2xl text-center">
+    <section className="section relative overflow-hidden bg-gradient-to-b from-white via-slate-50/70 to-white border-y border-slate-200">
+      <div className="hero-grid pointer-events-none absolute inset-0 opacity-20" />
+      <div className="container-x relative z-10">
+        <div className="mx-auto max-w-3xl text-center">
           <p className="chip mb-3">B2B Excellence</p>
           <h2 className="h2-title text-slate-950">
-            {isTr ? "Neden Küresel Tedarik Ekipleri Asia Oil'i Seçiyor?" : "Why sourcing teams choose ASIA OIL"}
+            {isTr ? "Neden Küresel Tedarik Ekipleri Asia Oil'i Seçiyor?" : "Why Global Sourcing Teams Choose ASIA OIL"}
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-slate-700 font-medium">
+          <p className="mt-4 text-base sm:text-lg leading-relaxed text-slate-700 font-medium">
             {isTr
               ? "Tohum kırmadan ve ilk sıkımdan liman mühürleme ve konteyner yüklemesine kadar tek, akredite ve hesap verebilir tedarik ortağınız."
               : "A single, accountable supply partner from seed crushing and cold extraction to container seal loading and maritime port dispatch."}
@@ -53,21 +54,31 @@ export function WhyUsSection({ locale }: { locale: Locale }) {
           {features.map((item) => (
             <div
               key={item.num}
-              className="rounded-3xl border-2 border-slate-300 bg-white p-7 shadow-md hover:shadow-xl hover:border-emerald-600 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+              className="group relative overflow-hidden rounded-3xl border border-slate-200/90 bg-white p-7 shadow-card hover:shadow-card-hover hover:border-emerald-600/80 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
             >
+              <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-emerald-800 via-teal-600 to-amber-500 opacity-85 group-hover:opacity-100 transition-opacity" />
               <div>
-                <span
-                  className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-emerald-700 via-teal-700 to-emerald-900 text-base font-black text-white shadow-md shadow-emerald-800/30"
-                  aria-hidden="true"
-                >
-                  {item.num}
-                </span>
-                <h3 className="mt-5 font-display text-lg font-black text-slate-950 leading-snug">
+                <div className="flex items-center justify-between">
+                  <span
+                    className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-emerald-800 via-emerald-900 to-slate-950 font-mono text-sm font-black text-amber-300 shadow-md shadow-emerald-950/20 group-hover:scale-105 transition-transform"
+                    aria-hidden="true"
+                  >
+                    0{item.num}
+                  </span>
+                  <span className="rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-800">
+                    {isTr ? "Garantili Standart" : "Verified Standard"}
+                  </span>
+                </div>
+                <h3 className="mt-6 font-display text-xl font-black text-slate-950 leading-snug group-hover:text-emerald-900 transition-colors">
                   {item.title}
                 </h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-slate-700 font-medium">
+                <p className="mt-3 text-sm leading-relaxed text-slate-600 font-medium">
                   {item.desc}
                 </p>
+              </div>
+              <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 text-[11px] font-bold text-emerald-800">
+                <span>✓ ISO 22000 &amp; SGS Verified</span>
+                <span className="font-mono text-amber-600">COA • MIP</span>
               </div>
             </div>
           ))}

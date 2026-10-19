@@ -157,11 +157,12 @@ const CERTS: Certificate[] = [
 
 export function CertificationsStrip({ locale }: { locale: Locale }) {
   return (
-    <section className="bg-white py-20 border-t border-slate-200">
-      <div className="mx-auto max-w-7xl px-5 md:px-10">
+    <section className="relative overflow-hidden bg-gradient-to-b from-slate-50/70 via-white to-slate-50/50 py-20 border-t border-slate-200">
+      <div className="hero-grid pointer-events-none absolute inset-0 opacity-20" />
+      <div className="relative z-10 w-full px-5 sm:px-8 lg:px-14 xl:px-20 2xl:px-28">
         <div className="flex flex-col items-center text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 text-xs font-bold text-emerald-800 border border-emerald-200">
-            <Award className="size-4 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-950 px-4 py-1.5 text-xs font-bold text-amber-300 border border-emerald-700 shadow-sm">
+            <Award className="size-4 text-amber-400" />
             <span>
               {locale === "tr"
                 ? "Küresel Güvenilirlik & Gıda Güvenliği Standartları"
@@ -169,7 +170,7 @@ export function CertificationsStrip({ locale }: { locale: Locale }) {
             </span>
           </div>
 
-          <h2 className="font-display mt-4 text-3xl font-extrabold text-slate-900 md:text-5xl">
+          <h2 className="font-display mt-4 text-3xl font-extrabold text-slate-950 md:text-5xl">
             {locale === "tr" ? (
               <>
                 Uluslararası Akreditasyonlar & <span className="text-emerald-gradient">Sertifikalar</span>
@@ -181,7 +182,7 @@ export function CertificationsStrip({ locale }: { locale: Locale }) {
             )}
           </h2>
 
-          <p className="mt-3 max-w-2xl text-sm text-slate-600 md:text-base">
+          <p className="mt-3 max-w-3xl text-sm text-slate-600 md:text-base font-medium">
             {locale === "tr"
               ? "Asia Oil ürünleri, tohum hasadından varış limanındaki gümrük tahliyesine kadar dünyanın en sıkı gıda hijyeni, kalite ve dış ticaret akreditasyonları altında teslim edilir."
               : "Asia Oil shipments are fully certified and strictly audited under global food safety, quality assurance, and international customs accreditation frameworks."}
@@ -189,33 +190,36 @@ export function CertificationsStrip({ locale }: { locale: Locale }) {
         </div>
 
         {/* Certificate Grid */}
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {CERTS.map((c, i) => (
             <div
               key={i}
-              className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 bg-slate-50/70 p-6 transition duration-300 hover:border-emerald-500 hover:bg-white hover:shadow-xl hover:-translate-y-1"
+              className="group relative overflow-hidden flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-7 shadow-card transition-all duration-300 hover:border-emerald-600 hover:shadow-card-hover hover:-translate-y-1.5"
             >
+              <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-emerald-800 via-teal-600 to-amber-500 opacity-85 group-hover:opacity-100 transition-opacity" />
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold tracking-wider text-emerald-800 bg-emerald-100/70 px-3 py-1 rounded-full">
+                  <span className="font-mono text-xs font-extrabold tracking-wider text-amber-300 bg-emerald-950 border border-emerald-800 px-3.5 py-1.5 rounded-full shadow-xs">
                     {c.code}
                   </span>
-                  <ShieldCheck className="size-5 text-emerald-600" />
+                  <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 group-hover:bg-emerald-900 group-hover:text-amber-300 transition-colors">
+                    <ShieldCheck className="size-5" />
+                  </div>
                 </div>
 
-                <h3 className="font-display mt-4 text-xl font-bold text-slate-900 group-hover:text-emerald-800 transition duration-300">
+                <h3 className="font-display mt-5 text-xl font-black text-slate-950 group-hover:text-emerald-800 transition duration-300">
                   {c.title[locale] || c.title.en}
                 </h3>
 
-                <p className="mt-2 text-xs leading-relaxed text-slate-600">
+                <p className="mt-2.5 text-sm leading-relaxed text-slate-600 font-medium">
                   {c.desc[locale] || c.desc.en}
                 </p>
               </div>
 
-              <div className="mt-6 flex items-center justify-between border-t border-slate-200/80 pt-3 text-[11px] text-slate-400">
-                <span className="font-medium text-slate-500">{c.org}</span>
-                <span className="flex items-center gap-1 text-emerald-700 font-bold">
-                  <CheckCircle2 className="size-3 text-emerald-600" />
+              <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 text-xs">
+                <span className="font-bold text-slate-600">{c.org}</span>
+                <span className="flex items-center gap-1.5 text-emerald-800 font-extrabold">
+                  <CheckCircle2 className="size-4 text-emerald-600" />
                   {locale === "tr" ? "Aktif & Denetimli" : "Audited & Active"}
                 </span>
               </div>

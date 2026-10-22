@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import Image from "next/image"
-import { Globe, Menu, Mail, Ship } from "lucide-react"
+import Link from "next/link"
+import { Globe, Menu, Mail, Ship, LayoutDashboard } from "lucide-react"
 import { ARTICLE_IDS, articleIdBySlug, getDict } from "@/content/index"
 import type { Dict } from "@/content/types"
 import { LOCALE_META, PUBLISHED_LOCALES, pathFor, type Locale, type StaticPage } from "@/lib/i18n/config"
@@ -57,6 +58,7 @@ export function SiteFrame({
   const home = pathFor(locale, "home")
   const articleId = articleSlug ? articleIdBySlug(locale, articleSlug) : null
   const verifiedWhatsapp = (settings.whatsapp || "").replace(/[^0-9]/g, "")
+  const dashboardLabel = locale === "tr" ? "Dashboard Giriş" : "Dashboard Login"
 
   return (
     <div
@@ -90,8 +92,8 @@ export function SiteFrame({
             </span>
           </div>
 
-          {/* Right: Direct Desk Info & Language */}
-          <div className="flex items-center gap-4 sm:gap-5 text-xs">
+          {/* Right: Direct Desk Info, Language & Dashboard Login */}
+          <div className="flex items-center gap-3 sm:gap-4 text-xs shrink-0">
             <a
               href={`mailto:${settings.publicEmail || "export@asiaoil.com.tr"}`}
               className="hidden md:flex items-center gap-1.5 hover:text-amber-300 transition"
@@ -135,6 +137,15 @@ export function SiteFrame({
                 ))}
               </div>
             </details>
+
+            {/* Top-Right Dashboard Login Quick Link */}
+            <Link
+              href="/admin/login"
+              className="inline-flex items-center gap-1.5 rounded-md border border-amber-400/50 bg-emerald-950/90 px-2.5 py-1 text-xs font-bold text-amber-300 shadow-xs hover:border-amber-300 hover:bg-emerald-900 hover:text-white transition"
+            >
+              <LayoutDashboard className="size-3.5 text-amber-400" />
+              <span>{dashboardLabel}</span>
+            </Link>
           </div>
         </div>
       </div>
@@ -169,8 +180,16 @@ export function SiteFrame({
             })}
           </nav>
 
-          {/* Right Action Button & Mobile Menu Trigger */}
-          <div className="flex items-center gap-3">
+          {/* Right Action Buttons (Dashboard Login + Quote CTA) & Mobile Menu Trigger */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <Link
+              href="/admin/login"
+              className="hidden md:inline-flex h-11 items-center gap-2 rounded-xl border-2 border-slate-300 bg-slate-950 hover:bg-emerald-950 hover:border-emerald-700 px-4 text-xs font-black text-amber-300 shadow-sm transition-all duration-200 hover:scale-105 active:scale-95"
+            >
+              <LayoutDashboard className="size-4 text-amber-400" />
+              <span>{dashboardLabel}</span>
+            </Link>
+
             <a
               href={pathFor(locale, "quote")}
               className="btn-shine hidden sm:inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-900 hover:from-emerald-600 hover:to-teal-600 px-6 text-xs font-black text-white shadow-lg shadow-emerald-950/30 transition-all duration-200 hover:scale-105 active:scale-95 border border-emerald-400/30"
@@ -203,6 +222,14 @@ export function SiteFrame({
                   >
                     {dict.ui.quote}
                   </a>
+
+                  <Link
+                    href="/admin/login"
+                    className="mt-2 flex h-12 items-center justify-center gap-2 rounded-xl border-2 border-emerald-800 bg-slate-950 text-sm font-bold text-amber-300 shadow-md hover:bg-emerald-950 transition"
+                  >
+                    <LayoutDashboard className="size-4 text-amber-400" />
+                    <span>{dashboardLabel}</span>
+                  </Link>
 
                   {/* Mobile Language Selection */}
                   <div className="border-t border-slate-200 pt-6 mt-4">

@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "hosting:cleanup:dry": "node scripts/cleanup-hosting-versions.mjs",
-    "hosting:cleanup": "node scripts/cleanup-hosting-versions.mjs --apply"
+    "hosting:cleanup": "node scripts/cleanup-hosting-versions.mjs --apply",
+    "optimize:icons": "node scripts/optimize-icons.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
